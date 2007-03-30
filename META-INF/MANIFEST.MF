@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PL-Prüfung Formal
+Bundle-SymbolicName: de.bsvrz.dua.plformal
+Bundle-Version: 1.0.0
+Bundle-Vendor: BitCtrl Systems GmbH
+Bundle-Localization: plugin
+Require-Bundle: de.bitctrl.dav.daf,
+ de.bitctrl.sys.funclib
+Eclipse-LazyStart: true
+Export-Package: de.bsvrz.dua.plformal.adapter,
+ de.bsvrz.dua.plformal.allgemein,
+ de.bsvrz.dua.plformal.av,
+ de.bsvrz.dua.plformal.dfs,
+ de.bsvrz.dua.plformal.plformal,
+ de.bsvrz.dua.plformal.schnittstellen,
+ de.bsvrz.dua.plformal.vew

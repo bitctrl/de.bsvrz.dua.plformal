@@ -7,10 +7,10 @@ import stauma.dav.clientside.ClientDavInterface;
 import sys.funclib.debug.Debug;
 
 /**
- * Verwaltungsklasse für Datenanmeldungen.
+ * Abstrakte Verwaltungsklasse für Datenanmeldungen.
  * 
- * @author Thierfelder
- *
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * 
  */
 public abstract class DAVAnmeldungsVerwaltung {
 		
@@ -41,9 +41,12 @@ public abstract class DAVAnmeldungsVerwaltung {
 	}
 	
 	/**
-	 * Modifiziert die hier verwalteten Datenanmeldungen dergestalt, dass
-	 * nur die innerhalb der übergebenen Liste beschriebenen Anmeldungen
-	 * bestehen bleiben.
+	 * Modifiziert die hier verwalteten Datenanmeldungen
+	 * dergestalt, dass nur die innerhalb der übergebenen
+	 * Liste beschriebenen Anmeldungen bestehen bleiben.<br>
+	 * D.h. insbesondere, dass eine übergebene leere Liste
+	 * alle bereits durchgeführten Anmeldungen wieder 
+	 * rückgängig macht.
 	 * 
 	 * @param neueAnmeldungen die neue Liste mit Datenanmeldungen
 	 */
@@ -51,12 +54,30 @@ public abstract class DAVAnmeldungsVerwaltung {
 							Collection<DAVDatenAnmeldung> neueAnmeldungen){
 		Collection<DAVObjektAnmeldung> neueObjektAnmeldungen =  
 			new TreeSet<DAVObjektAnmeldung>();
-		
-		for(DAVDatenAnmeldung neueAnmeldung:neueAnmeldungen){
-			neueObjektAnmeldungen.addAll(neueAnmeldung.getObjektAnmeldungen());
+
+		if(neueAnmeldungen != null){
+			for(DAVDatenAnmeldung neueAnmeldung:neueAnmeldungen){
+				neueObjektAnmeldungen.addAll(neueAnmeldung.getObjektAnmeldungen());
+			}
 		}
-		
-		// Debug Anfang
+		this.modifiziereObjektAnmeldung(neueObjektAnmeldungen);
+	}
+
+	/**
+	 * Modifiziert die hier verwalteten Objektanmeldungen
+	 * dergestalt, dass nur die innerhalb der übergebenen
+	 * Liste beschriebenen Anmeldungen bestehen bleiben.<br>
+	 * D.h. insbesondere, dass eine übergebene leere Liste
+	 * alle bereits durchgeführten Anmeldungen wieder 
+	 * rückgängig macht.
+	 * 
+	 * @param neueObjektAnmeldungen die neue Liste mit
+	 * Objektanmeldungen
+	 */
+	public final void modifiziereObjektAnmeldung(final
+			Collection<DAVObjektAnmeldung> neueObjektAnmeldungen){
+
+//		Debug Anfang
 		String info = "Verlangte Anmeldungen: "; //$NON-NLS-1$
 		if(neueObjektAnmeldungen.size() == 0){
 			info += "keine\n"; //$NON-NLS-1$
@@ -75,31 +96,34 @@ public abstract class DAVAnmeldungsVerwaltung {
 		for(DAVObjektAnmeldung aktuelleObjektAnmeldung:aktuelleObjektAnmeldungen){
 			info += aktuelleObjektAnmeldung;
 		}
-		// Debug Ende
-			
-		Collection<DAVObjektAnmeldung> diffObjekteAnmeldungen =  
-			new TreeSet<DAVObjektAnmeldung>();
-		for(DAVObjektAnmeldung neueAnmeldung:neueObjektAnmeldungen){
-			if(!aktuelleObjektAnmeldungen.contains(neueAnmeldung)){
-				diffObjekteAnmeldungen.add(neueAnmeldung);
-			}
-		}
+		System.out.println(info);
+//		Debug Ende
 
-		Collection<DAVObjektAnmeldung> diffObjekteAbmeldungen =  
-			new TreeSet<DAVObjektAnmeldung>();
-		for(DAVObjektAnmeldung aktuelleAnmeldung:aktuelleObjektAnmeldungen){
-			if(!neueObjektAnmeldungen.contains(aktuelleAnmeldung)){
-				diffObjekteAbmeldungen.add(aktuelleAnmeldung);
+		synchronized (this) {
+			Collection<DAVObjektAnmeldung> diffObjekteAnmeldungen =  
+				new TreeSet<DAVObjektAnmeldung>();
+			for(DAVObjektAnmeldung neueAnmeldung:neueObjektAnmeldungen){
+				if(!aktuelleObjektAnmeldungen.contains(neueAnmeldung)){
+					diffObjekteAnmeldungen.add(neueAnmeldung);
+				}
 			}
-		}		
-		
-		info += "--------\nABmeldungen: "; //$NON-NLS-1$
-		info += abmelden(diffObjekteAbmeldungen);
-		info += "ANmeldungen: "; //$NON-NLS-1$
-		info += anmelden(diffObjekteAnmeldungen);
-		LOGGER.info(info);
+
+			Collection<DAVObjektAnmeldung> diffObjekteAbmeldungen =  
+				new TreeSet<DAVObjektAnmeldung>();
+			for(DAVObjektAnmeldung aktuelleAnmeldung:aktuelleObjektAnmeldungen){
+				if(!neueObjektAnmeldungen.contains(aktuelleAnmeldung)){
+					diffObjekteAbmeldungen.add(aktuelleAnmeldung);
+				}
+			}		
+
+			info += "--------\nABmeldungen: "; //$NON-NLS-1$
+			info += abmelden(diffObjekteAbmeldungen);
+			info += "ANmeldungen: "; //$NON-NLS-1$
+			info += anmelden(diffObjekteAnmeldungen);
+			LOGGER.info(info);			
+		}
 	}
-		
+	
 	/**
 	 * Führt alle übergebenen Daten<b>ab</b>meldungen durch
 	 * 

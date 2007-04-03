@@ -1,7 +1,10 @@
 package de.bsvrz.dua.plformal.dfs;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
@@ -9,48 +12,65 @@ import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.allgemein.DAVHilfe;
+import sys.funclib.debug.Debug;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
+/**
+ * Diese Klasse stellt über die Schnittstelle <code>IDatenFlussSteuerungFuerModul</code>
+ * alle Informationen über die Datenflusssteuerung einer bestimmten SWE in Zusammenhang
+ * mit einem bestimmten Modul-Typ zur Verfügung.
+ * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ **/
 public class DatenFlussSteuerungFuerModul implements
-		IDatenFlussSteuerungFuerModul {
+IDatenFlussSteuerungFuerModul {
 
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
+	
 	/**
 	 * Standarddatenflusssteuerung
 	 */
-	public static final IDatenFlussSteuerungFuerModul STANDARD = new DatenFlussSteuerungFuerModul();
+	public static final IDatenFlussSteuerungFuerModul STANDARD =
+						new DatenFlussSteuerungFuerModul();
 
 	/**
 	 * Liste aller Publikationszuordnungen innerhalb der Attributgruppe
 	 */
-	private Collection<PublikationsZuordung> publikationsZuordnungen = new HashSet<PublikationsZuordung>();
+	private Collection<PublikationsZuordung> publikationsZuordnungen = 
+			new ArrayList <PublikationsZuordung>();
+
+	/**
+	 * 
+	 */
+	private Map<DAVObjektAnmeldung, PublikationsZustand> publikationsMap =
+						new TreeMap<DAVObjektAnmeldung, PublikationsZustand>();
+	
 
 	/**
 	 * Fügt diesem Objekt eine Publikationszuordung hinzu
 	 * 
-	 * @param ps
+	 * @param pz
 	 *            die neue Publikationszuordung
 	 */
-	public final void add(final PublikationsZuordung ps) {
-		publikationsZuordnungen.add(ps);
-	}
-
-	/**
-	 * Entfernt eine Publikationszuordung aus diesem Objekt
-	 * 
-	 * @param ps
-	 *            die zu entfernende Publikationszuordung
-	 */
-	public final void remove(final PublikationsZuordung ps) {
-		publikationsZuordnungen.remove(ps);
+	public final void add(final PublikationsZuordung pz) {
+		//for(pz.get)
+		publikationsZuordnungen.add(pz);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<DAVDatenAnmeldung> getDatenAnmeldungen(
-			final SystemObject[] filterObjekte) {
-		Collection<DAVDatenAnmeldung> anmeldungen = new HashSet<DAVDatenAnmeldung>();
+	public Collection<DAVObjektAnmeldung> getDatenAnmeldungen(
+			final SystemObject[] filterObjekte,
+			final Collection<DAVObjektAnmeldung> standardAnmeldungen) {
+		Collection<DAVObjektAnmeldung> anmeldungen = new ArrayList<DAVObjektAnmeldung>();
 
 		if (publikationsZuordnungen != null) {
 			for (PublikationsZuordung pz : publikationsZuordnungen) {
@@ -62,7 +82,7 @@ public class DatenFlussSteuerungFuerModul implements
 						for (SystemObject obj : pz.getObjekte()) {
 							boolean match = false;
 							for (SystemObject filterObj : filterObjekte) {
-								if (DAVHilfe.hasSchnittMenge(obj, filterObj)) {
+								if (DUAHilfe.hasSchnittMenge(obj, filterObj) != null) {
 									match = true;
 									break;
 								}
@@ -83,10 +103,10 @@ public class DatenFlussSteuerungFuerModul implements
 								anmeldung = new DAVDatenAnmeldung(
 										anzumeldendeObjekte
 												.toArray(new SystemObject[0]), dd);
-								anmeldungen.add(anmeldung);
+								
+								anmeldungen.addAll(anmeldung.getObjektAnmeldungen());
 							} catch (Exception e) {
-								// TODO Automatisch erstellter Catch-Block
-								e.printStackTrace();
+								LOGGER.error(DUAKonstanten.EMPTY_STR, e);
 							}
 						}
 					}
@@ -94,15 +114,16 @@ public class DatenFlussSteuerungFuerModul implements
 			}
 		}
 
-		return anmeldungen.size() > 0 ? anmeldungen : null;
+		return anmeldungen;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public final ResultData getPublikationsDatum(
-			final ResultData originalDatum, final Data plausibilisiertesDatum,
-			final Aspect standardAspekt) {
+							final ResultData originalDatum,
+							final Data plausibilisiertesDatum,
+							final Aspect standardAspekt) {
 		ResultData ergebnis = null;
 		boolean publizierenUnterStandardAspekt = standardAspekt != null;
 
@@ -113,20 +134,20 @@ public class DatenFlussSteuerungFuerModul implements
 				 * Original-Datum übergebene (Objekt-Atg)-Kombination innerhalb
 				 * dieser Publikationszuordnung überhaupt erfasst ist.
 				 */
-				boolean atgErfasst = false;
+				boolean erfasst = false;
 				for (AttributeGroup atg : pz.getAtgs()) {
 					if (originalDatum.getDataDescription().getAttributeGroup()
 							.equals(atg)) {
-						atgErfasst = true;
+						erfasst = true;
 						break;
 					}
 				}
-				boolean objErfasst = false;
-				if (atgErfasst) {
+				if (erfasst) {
+					erfasst = false;
 					for (SystemObject obj : pz.getObjekte()) {
-						if (DAVHilfe.hasSchnittMenge(obj, originalDatum
-								.getObject())) {
-							objErfasst = true;
+						if (DUAHilfe.hasSchnittMenge(obj, originalDatum
+								.getObject()) != null) {
+							erfasst = true;
 							break;
 						}
 					}
@@ -135,7 +156,7 @@ public class DatenFlussSteuerungFuerModul implements
 				/**
 				 * Kombination ist erfasst
 				 */
-				if (atgErfasst && objErfasst) {
+				if (erfasst) {
 					if (pz.isPublizieren()) {
 						DataDescription dd = new DataDescription(originalDatum
 								.getDataDescription().getAttributeGroup(), pz
@@ -176,5 +197,19 @@ public class DatenFlussSteuerungFuerModul implements
 		}
 
 		return s;
+	}
+	
+	protected class PublikationsZustand{
+		
+		public Aspect publikationsAspekt = null;
+		
+		public boolean publizieren = false;
+		
+		public PublikationsZustand(final boolean publizieren,
+								   final Aspect publikationsAspekt){
+			this.publizieren = publizieren;
+			this.publikationsAspekt = publikationsAspekt;
+		}
+		
 	}
 }

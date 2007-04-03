@@ -10,9 +10,9 @@ import sys.funclib.operatingMessage.MessageGrade;
 import sys.funclib.operatingMessage.MessageSender;
 import sys.funclib.operatingMessage.MessageState;
 import sys.funclib.operatingMessage.MessageType;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 
 /**
  * Adapterklasse für Verwaltungsmodule.
@@ -91,12 +91,12 @@ implements IVerwaltung {
 	throws Exception {
 		try{
 			this.verbindung = dieVerbindung;
-			DAVKonstanten.initialisiere(dieVerbindung);
+			DUAKonstanten.initialisiere(dieVerbindung);
 			this.nachrichtenSender = MessageSender.getInstance();
-			this.nachrichtenSender.setApplicationLabel(this.getApplikationsName());
+			this.nachrichtenSender.setApplicationLabel(this.getSWETyp().toString());
 			this.initialisiere();
 		}catch(DUAInitialisierungsException ex){
-			String fehler = "Initialisierung der Applikation " + this.getApplikationsName() + //$NON-NLS-1$
+			String fehler = "Initialisierung der Applikation " + this.getSWETyp().toString() + //$NON-NLS-1$
 							" fehlgeschlagen."; //$NON-NLS-1$
 			LOGGER.error(fehler, ex);
 			if(this.nachrichtenSender != null){
@@ -113,7 +113,7 @@ implements IVerwaltung {
 	public void parseArguments(ArgumentList argumente)
 	throws Exception {
 		
-		Debug.init(this.getApplikationsName(), argumente);
+		Debug.init(this.getSWETyp().toString(), argumente);
 		
 		for(String s:argumente.getArgumentStrings()){
 			if(s != null)this.komArgumente.add(s);

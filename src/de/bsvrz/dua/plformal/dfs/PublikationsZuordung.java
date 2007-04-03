@@ -1,29 +1,31 @@
 package de.bsvrz.dua.plformal.dfs;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 
 /**
  * In dieser Klasse sind alle Informationen zusammengefasst, die das
  * Publikationsverhalten bezüglich <b>einer</b> bestimmten SWE, <b>einem</b>
  * bestimmten Modul-Typ und <b>einem</b> Publikationsaspekt beschreiben.
  * 
- * @author Thierfelder
- * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * @version 1.0
  */
 public class PublikationsZuordung {
 
 	/**
-	 * Die Modul-ID
+	 * Der Modul-Typ
 	 */
-	private String modulTyp = null;
+	private ModulTyp modulTyp = null;
 
 	/**
 	 * Der Publikationsaspekt
@@ -33,12 +35,12 @@ public class PublikationsZuordung {
 	/**
 	 * die Objekte, für die ein Publikationsverhalten beschrieben ist
 	 */
-	private List<SystemObject> objekte = new ArrayList<SystemObject>();
+	private Collection<SystemObject> objekte = new HashSet<SystemObject>();
 
 	/**
 	 * die Attributgruppen, für die ein Publikationsverhalten vorgesehen ist
 	 */
-	private List<AttributeGroup> atgs = new ArrayList<AttributeGroup>();
+	private Collection<AttributeGroup> atgs = new HashSet<AttributeGroup>();
 
 	/**
 	 * soll publiziert werden
@@ -47,36 +49,69 @@ public class PublikationsZuordung {
 
 	
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor<br>
+	 * <b>Achtung:</b> Sollte die Menge der übergebenen
+	 * Objekte bzw. Attributgruppen leer sein, so werden
+	 * <b>alle</b> Objekte bzw. Attributgruppen in den
+	 * übergebenen Konfigurationskereichen (bzw. im 
+	 * Standardkonfigurationsbereich) angenommen.
 	 * 
 	 * @param data ein Datenverteiler-Datum mit den
-	 * mit einem Parametersatz assoziierten Daten
+	 * mit einer Publikationszuordnung assoziierten Daten
+	 * @param verwaltung Verbindung zum Verwaltungsmodul
 	 * @throws Exception wenn einer der Parameter nicht
 	 * ausgelesen werden konnte
 	 */
-	public PublikationsZuordung(Data data)
+	public PublikationsZuordung(Data data, IVerwaltung verwaltung)
 	throws Exception{
 		this.aspekt = (Aspect)data.getReferenceValue(
-				DAVKonstanten.ATT_DFS_ASP).getSystemObject();
-		this.modulTyp = data.getUnscaledValue(
-				DAVKonstanten.ATT_DFS_MODUL_TYP).getState()
-				.getName().toString();
+				DUAKonstanten.ATT_DFS_ASP).getSystemObject();
+		this.modulTyp = ModulTyp.getZustand((int)data.getUnscaledValue(
+				DUAKonstanten.ATT_DFS_MODUL_TYP).getState().getValue());
 		this.publizieren = data.getTextValue(
-				DAVKonstanten.ATT_DFS_PUBLIZIEREN).getText()
+				DUAKonstanten.ATT_DFS_PUBLIZIEREN).getText()
 				.toLowerCase().equals("ja"); //$NON-NLS-1$
 
-		for (int iObj = 0; iObj < data.getArray(
-				DAVKonstanten.ATT_DFS_OBJ).getLength(); iObj++) {
-			this.objekte.add(data.getArray(DAVKonstanten.ATT_DFS_OBJ)
-					.getReferenceValue(iObj)
-					.getSystemObject());
+		if(data.getArray(DUAKonstanten.ATT_DFS_OBJ).getLength() == 0){
+			SystemObjectType typTyp = verwaltung.getVerbindung().
+										getDataModel().getType(DUAKonstanten.TYP_TYP);
+			
+			for(SystemObject typ:typTyp.getObjects()){
+				if(typ instanceof SystemObjectType){
+					SystemObjectType objTyp = (SystemObjectType)typ;
+					for(SystemObject obj:DUAHilfe.getAlleObjekteVomTypImKonfigBereich(
+							verwaltung, objTyp, verwaltung.getKonfigurationsBereiche())){
+						this.objekte.add(obj);				
+					}			
+				}
+			}
+		}else{
+			for (int iObj = 0; iObj < data.getArray(
+					DUAKonstanten.ATT_DFS_OBJ).getLength(); iObj++) {
+				this.objekte.add(data.getArray(DUAKonstanten.ATT_DFS_OBJ)
+						.getReferenceValue(iObj)
+						.getSystemObject());
+			}
 		}
-		for (int iAtg = 0; iAtg < data.getArray(
-				DAVKonstanten.ATT_DFS_ATG).getLength(); iAtg++) {
-			this.atgs.add((AttributeGroup) data.getArray(
-					DAVKonstanten.ATT_DFS_ATG)
-					.getReferenceValue(iAtg)
-					.getSystemObject());
+		
+		if(data.getArray(DUAKonstanten.ATT_DFS_ATG).getLength() == 0){
+			SystemObjectType typAtg = verwaltung.getVerbindung().
+										getDataModel().getType(DUAKonstanten.TYP_ATG);
+			
+			for(SystemObject obj:typAtg.getObjects()){
+				if(obj instanceof AttributeGroup){
+					AttributeGroup atg = (AttributeGroup)obj;
+					this.atgs.add(atg);				
+				}
+			}
+		}else{
+			for (int iAtg = 0; iAtg < data.getArray(
+					DUAKonstanten.ATT_DFS_ATG).getLength(); iAtg++) {
+				this.atgs.add((AttributeGroup) data.getArray(
+						DUAKonstanten.ATT_DFS_ATG)
+						.getReferenceValue(iAtg)
+						.getSystemObject());
+			}
 		}
 	}
 	
@@ -90,11 +125,11 @@ public class PublikationsZuordung {
 	}
 
 	/**
-	 * Erfragt die DAV-ID des Modul-Typs
+	 * Erfragt den Modul-Typ, für den diese Piblikationszuordnung gilt
 	 * 
-	 * @return die DAV-ID des Modul-Typs
+	 * @return der Modul-Typs
 	 */
-	public final String getModulTyp() {
+	public final ModulTyp getModulTyp() {
 		return modulTyp;
 	}
 
@@ -112,50 +147,17 @@ public class PublikationsZuordung {
 	 * 
 	 * @return alle hier definierten Attributgruppen
 	 */
-	public final List<AttributeGroup> getAtgs() {
+	public final Collection<AttributeGroup> getAtgs() {
 		return atgs;
 	}
 
 	/**
-	 * Erfragt die Liste aller hier definierten Objekte
+	 * Erfragt die Menge aller hier definierten Objekte
 	 * 
-	 * @return die Liste aller hier definierten Objekte
+	 * @return die Menge aller hier definierten Objekte
 	 */
-	public final List<SystemObject> getObjekte() {
+	public final Collection<SystemObject> getObjekte() {
 		return objekte;
-	}
-
-	/**
-	 * Diese Methode wird nur aufgerufen, wenn die Bedingungen 1-4 aus
-	 * <code>isKompatibelMit</code> erfüllt sind. Sie überprüft lediglich die
-	 * letzte Bedingung 5. Sollte diese Überprüfung positiv ausfallen, dann gibt
-	 * sie eine vollständige Fehlernachricht zurück. Sonst <code>null</code>
-	 * 
-	 * @param fehler1
-	 *            die Beschreibung des Fehlers bis dahin
-	 * @param vergleichsObj
-	 *            das Objekt, mit dem dieses (<code>this</code>) verglichen
-	 *            werden soll
-	 * @return <code>null</code> wenn kein Widerspruch vorliegt und eine den
-	 *         Widerspruch illustrierende Fehlermeldung sonst.
-	 */
-	private final String getInkompatibilitätsFehler(final String fehler1,
-			final PublikationsZuordung vergleichsObj) {
-		if (this.getAtgs() != null && vergleichsObj.getAtgs() != null) {
-			for (AttributeGroup thisAtg : this.getAtgs()) {
-				for (AttributeGroup thatAtg : vergleichsObj.getAtgs()) {
-					if (thisAtg.equals(thatAtg)) {
-						return fehler1
-								+ "\nDie Attributgruppe " + thisAtg +  //$NON-NLS-1$
-								" ist in beiden Publikationszuordnungen" + //$NON-NLS-1$
-								" enthalten.\n(1)\n" + this //$NON-NLS-1$
-								+ "\n(2)\n" + vergleichsObj; //$NON-NLS-1$
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**
@@ -170,70 +172,43 @@ public class PublikationsZuordung {
 	 * 5. die Schnittmenge der Member-Attributgruppen nicht leer ist.<br>
 	 * 
 	 * @param vergleichsObj
-	 *            das Objekt, mit dem dieses (<code>this</code>) verglichen
-	 *            werden soll
+	 *            das Objekt, mit dem dieses verglichen werden soll
 	 * @return <code>null</code> wenn kein Widerspruch vorliegt und eine den
 	 *         Widerspruch illustrierende Fehlermeldung sonst.
 	 */
 	public final String isKompatibelMit(final PublikationsZuordung vergleichsObj) {
-		if (this.modulTyp.equals(vergleichsObj.getModulTyp()) && // 1.
-				this.isPublizieren() && vergleichsObj.isPublizieren() && // 2.
-				!this.getAspekt().equals(vergleichsObj.getAspekt())) { // 3.
-
-			for (SystemObject thisObj : this.getObjekte()) { // 4. + 5.
-				if (thisObj.isOfType(DAVKonstanten.TYP_TYP)) {
-					SystemObjectType thisTyp = (SystemObjectType) thisObj;
-
-					for (SystemObject thatObj : vergleichsObj.getObjekte()) {
-						if (thatObj.isOfType(DAVKonstanten.TYP_TYP)) {
-							SystemObjectType thatTyp = (SystemObjectType) thatObj;
-
-							if (thatObj.equals(thisObj)
-									|| thisTyp.inheritsFrom(thatTyp)
-									|| thatTyp.inheritsFrom(thisTyp)) {
-								return this
-										.getInkompatibilitätsFehler(
-											"Die Objekte " + thisObj + "(1) und " + //$NON-NLS-1$ //$NON-NLS-2$
-											thatObj
-											+ "(2) sind entweder " + //$NON-NLS-1$
-											"gleich oder voneinander abgeleitet.", vergleichsObj); //$NON-NLS-1$
-							}
-						} else {
-							if (thatObj.isOfType(thisTyp)) {
-								return this
-									.getInkompatibilitätsFehler(
-									"Das Objekt " + thatObj + "(2) ist schon " + //$NON-NLS-1$ //$NON-NLS-2$
-									"durch " + thisObj//$NON-NLS-1$
-									+ "(1) beschrieben.", vergleichsObj); //$NON-NLS-1$
-							}
-						}
-					}
-				} else {
-					for (SystemObject thatObj : vergleichsObj.getObjekte()) {
-						if (thatObj.isOfType(DAVKonstanten.TYP_TYP)) {
-							SystemObjectType thatTyp = (SystemObjectType) thatObj;
-
-							if (thisObj.isOfType(thatTyp)) {
-								return this
-										.getInkompatibilitätsFehler(
-										"Das Objekt " + thisObj + "(1) ist schon " + //$NON-NLS-1$ //$NON-NLS-2$
-										"durch " + thatObj//$NON-NLS-1$ 
-										+ "(2) beschrieben.", vergleichsObj); //$NON-NLS-1$
-							}
-						} else {
-							if (thisObj.equals(thatObj)) {
-								return this
-										.getInkompatibilitätsFehler(
-										"Die Objekte " + thisObj + //$NON-NLS-1$
-										"(1) und " + thatObj //$NON-NLS-1$
-										+ "(2) sind gleich.", vergleichsObj); //$NON-NLS-1$
-							}
+		try{
+			if (this.modulTyp.equals(vergleichsObj.getModulTyp()) && // 1.
+					this.isPublizieren() && vergleichsObj.isPublizieren() && // 2.
+					!this.getAspekt().equals(vergleichsObj.getAspekt())) { // 3.
+	
+				for(SystemObject thisObj:this.getObjekte()){	// 4.
+					for(SystemObject thatObj:vergleichsObj.getObjekte()){
+						String fehler = DUAHilfe.hasSchnittMenge(thisObj, thatObj);
+						
+						if(fehler != null){	// 5.
+							if (this.getAtgs() != null && vergleichsObj.getAtgs() != null) {
+								for (AttributeGroup thisAtg : this.getAtgs()) {
+									for (AttributeGroup thatAtg : vergleichsObj.getAtgs()) {
+										if (thisAtg.equals(thatAtg)) {
+											return fehler
+												+ "\nDie Attributgruppe " + thisAtg +  //$NON-NLS-1$
+												" ist in beiden Publikationszuordnungen" + //$NON-NLS-1$
+												" enthalten.\n(1)\n" + this //$NON-NLS-1$
+												+ "\n(2)\n" + vergleichsObj; //$NON-NLS-1$
+										}
+									}
+								}
+							}							
 						}
 					}
 				}
 			}
+		}catch(Exception ex){
+			return "Die Kompatibilitätsprüfung konnte nicht" + //$NON-NLS-1$
+					" vollständig durchgeführt werden: " + ex.getMessage(); //$NON-NLS-1$
 		}
-
+			
 		return null; // keine Widersprüche
 	}
 

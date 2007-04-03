@@ -8,10 +8,12 @@ import stauma.dav.clientside.SenderRole;
 import sys.funclib.debug.Debug;
 
 /**
- * Verwaltungsklasse für Datenanmeldungen zum Senden von Daten 
+ * Verwaltungsklasse für Datenanmeldungen zum Senden von Daten.
+ * Über die Methode <code>modifiziereDatenAnmeldung(..)</code> lassen
+ * sich Daten anmelden bzw. abmelden.
  * 
- * @author Thierfelder
- *
+ * @author BitCtrl Systems GmbH, Thierfelder
+ *  
  */
 public class DAVSendeAnmeldungsVerwaltung 
 extends DAVAnmeldungsVerwaltung{
@@ -22,7 +24,7 @@ extends DAVAnmeldungsVerwaltung{
 	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
-	 * Rolle
+	 * Rolle des Senders
 	 */
 	private SenderRole rolle = null;
 	
@@ -37,7 +39,8 @@ extends DAVAnmeldungsVerwaltung{
 	 * 
 	 * @param dav Datenverteilerverbindung
 	 * @param rolle Rolle
-	 * @param sender die Sender-Klasse
+	 * @param sender die Sender-Klasse der Datenverteiler-
+	 * Daten, für die diese Anmeldungs-Verwaltung arbeiten soll
 	 */
 	public DAVSendeAnmeldungsVerwaltung(final ClientDavInterface dav,
 									    final SenderRole rolle, 

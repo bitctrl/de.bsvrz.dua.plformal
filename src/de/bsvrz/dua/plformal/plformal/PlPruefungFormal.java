@@ -2,23 +2,23 @@ package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import de.bsvrz.dua.plformal.adapter.AbstraktBearbeitungsKnotenAdapter;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
 import de.bsvrz.dua.plformal.dfs.IDatenFlussSteuerung;
 import de.bsvrz.dua.plformal.dfs.IDatenFlussSteuerungFuerModul;
-import de.bsvrz.dua.plformal.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.dfs.ModulTyp;
 
 /**
  * Implementierung des Moduls PL-Prüfung formal.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class PlPruefungFormal
@@ -31,9 +31,11 @@ implements IPPFHilfeListener{
 	private IPPFHilfe ppfParameter = null;
 		
 	/**
-	 * Parameter zur Datenflusssteuerung für diese SWE und dieses Modul
+	 * Parameter zur Datenflusssteuerung für diese
+	 * SWE und dieses Modul
 	 */
-	private IDatenFlussSteuerungFuerModul iDfsMod = DatenFlussSteuerungFuerModul.STANDARD;
+	private IDatenFlussSteuerungFuerModul iDfsMod
+						= DatenFlussSteuerungFuerModul.STANDARD;
 	
 	
 	/**
@@ -43,15 +45,17 @@ implements IPPFHilfeListener{
 	public void initialisiere(IVerwaltung dieVerwaltung)
 	throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
+		this.standardAspekte = new PPFStandardAspekteVersorger(
+				verwaltung).getStandardPubInfos();
 		PPFHilfe.getInstanz(verwaltung).addListener(this);
 		this.aktualisierePublikationIntern();
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getModulName() {
-		return DAVKonstanten.CONST_MODUL_TYP_PLPruefungFormal;
+	public ModulTyp getModulTyp() {
+		return ModulTyp.PL_PRUEFUNG_FORMAL;
 	}
 
 	/**
@@ -59,34 +63,33 @@ implements IPPFHilfeListener{
 	 */
 	public void aktualisierePublikation(IDatenFlussSteuerung iDfs) {
 		if(iDfs != null){
-			this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getApplikationsName(),
-													this.getModulName());
+			this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(),
+													this.getModulTyp());
 			aktualisierePublikationIntern();
 		}
 	}
 	
 	/**
-	 * Diese Routine wird nur innerhalb dieses Moduls benötigt, da die Menge der betrachteten Objekte
-	 * nicht statisch ist, sondern sich mit der Parametrierung der formalen Plausibilitätsprüfung ändert
+	 * Diese Methode verändert die Anmeldungen für die Publikation
+	 * der plausibilisierten Daten.<br>
+	 * Sie wird nur innerhalb dieses Moduls benötigt, da die Menge
+	 * der betrachteten Objekte nicht (wie bei anderen Modulen der
+	 * DUA) statisch ist, sondern sich mit der Parametrierung der
+	 * formalen Plausibilitätsprüfung ändert. 
 	 */
 	private void aktualisierePublikationIntern(){
 		if(this.publizieren){
-			Collection<DAVDatenAnmeldung> anmeldungen = new ArrayList<DAVDatenAnmeldung>();
-	
-			Collection<DAVDatenAnmeldung> anmeldungenPara = 
+			Collection<DAVObjektAnmeldung> anmeldungenStd = 
+				this.standardAspekte != null?this.standardAspekte.
+						getStandardAnmeldungen():new ArrayList<DAVObjektAnmeldung>();
+
+			Collection<DAVObjektAnmeldung> anmeldungen = 
 					this.iDfsMod.getDatenAnmeldungen(this.ppfParameter != null?
-							this.ppfParameter.getBetrachteteObjekte():null);
-			Collection<DAVDatenAnmeldung> anmeldungenStd = 
-					this.standardAspekte != null?this.standardAspekte.getStandardAnmeldungen():null;
-			
-			if(anmeldungenPara != null){
-				anmeldungen.addAll(anmeldungenPara);
+							this.ppfParameter.getBetrachteteObjekte():null, 
+							anmeldungenStd);
+			synchronized(this){
+				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
 			}
-			
-			if(anmeldungenStd != null){
-				anmeldungen.addAll(anmeldungenStd);				
-			}
-			this.publikationsAnmeldungen.modifiziereDatenAnmeldung(anmeldungen);
 		}
 	}
 

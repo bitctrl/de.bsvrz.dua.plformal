@@ -12,7 +12,7 @@ import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 
 /**
  * Diese Klasse stellt die Informationen der Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code>
@@ -48,7 +48,7 @@ public class PPFDatenBeschreibungen {
 	 */
 	public final void addParameterSatz(final Data parameterSatz)
 	throws Exception{
-		AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
+		AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
 		BeschreibungFuerAttributgruppe dummy = atgInfos.get(atg);
 		if(dummy != null){
 			dummy.addParameterSatz(parameterSatz);
@@ -88,19 +88,19 @@ public class PPFDatenBeschreibungen {
 								LOGGER.info("Aspekt " + asp + " wurde nicht gefunden."); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}else{
-							LOGGER.info("Übergebenet Aspekt ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+							LOGGER.info("Übergebenet Aspekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 						}						
 					}else{
 						LOGGER.info("Attributgruppe " + atg + " wurde nicht gefunden."); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}else{
-					LOGGER.info("Übergebene Attributgruppe ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+					LOGGER.info("Übergebene Attributgruppe ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 				}
 			}else{
-				LOGGER.info("Übergebene DataDescription ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+				LOGGER.info("Übergebene DataDescription ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 			}
 		}else{
-			LOGGER.info("Übergebenes ResultData-Objekt ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+			LOGGER.info("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 		
 		return ergebnis;
@@ -112,10 +112,10 @@ public class PPFDatenBeschreibungen {
 	 */
 	@Override
 	public String toString() {
-		String s = DAVKonstanten.STR_UNDEFINIERT;
+		String s = DUAKonstanten.STR_UNDEFINIERT;
 		
 		if(atgInfos.keySet().size() > 0){
-			s = DAVKonstanten.EMPTY_STR;
+			s = DUAKonstanten.EMPTY_STR;
 			for(SystemObject atg:atgInfos.keySet()){
 				s += "Attributgruppe: " + atg + "\n";  //$NON-NLS-1$//$NON-NLS-2$
 				s += this.atgInfos.get(atg);
@@ -153,7 +153,7 @@ public class PPFDatenBeschreibungen {
 		 */
 		protected void addParameterSatz(final Data parameterSatz)
 		throws Exception{
-			Aspect asp = (Aspect)parameterSatz.getReferenceValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
+			Aspect asp = (Aspect)parameterSatz.getReferenceValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
 			BeschreibungFuerAspekt dummy = aspInfos.get(asp);
 			if(dummy != null){
 				dummy.addParameterSatz(parameterSatz);
@@ -178,10 +178,10 @@ public class PPFDatenBeschreibungen {
 		 */
 		@Override
 		public String toString() {
-			String s = DAVKonstanten.STR_UNDEFINIERT;
+			String s = DUAKonstanten.STR_UNDEFINIERT;
 			
 			if(aspInfos.keySet().size() > 0){
-				s = DAVKonstanten.EMPTY_STR;
+				s = DUAKonstanten.EMPTY_STR;
 				for(SystemObject asp:aspInfos.keySet()){
 					s += "Aspekt: " + asp + "\n";  //$NON-NLS-1$//$NON-NLS-2$
 					s += this.aspInfos.get(asp);
@@ -212,7 +212,7 @@ public class PPFDatenBeschreibungen {
 		 */
 		protected final void addParameterSatz(final Data parameterSatz)
 		throws Exception{
-			Data.Array objekte = parameterSatz.getArray(DAVKonstanten.ATL_PL_FORMAL_PARA_SATZ_OBJ);
+			Data.Array objekte = parameterSatz.getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ_OBJ);
 			for(int i = 0; i<objekte.getLength(); i++){
 				SystemObject obj = objekte.getItem(i).asReferenceValue().getSystemObject();
 				BeschreibungFuerObjekt dummy = objInfos.get(obj);
@@ -240,7 +240,7 @@ public class PPFDatenBeschreibungen {
 			
 			if(ergebnis == null){
 				for(SystemObject objAusBaum:objInfos.keySet()){
-					if(objAusBaum.isOfType(DAVKonstanten.TYP_TYP)){
+					if(objAusBaum.isOfType(DUAKonstanten.TYP_TYP)){
 						SystemObjectType typ = (SystemObjectType)objAusBaum;
 						if(objekt.isOfType(typ)){
 							ergebnis = this.objInfos.get(objAusBaum);
@@ -258,10 +258,10 @@ public class PPFDatenBeschreibungen {
 		 */
 		@Override
 		public String toString() {
-			String s = DAVKonstanten.STR_UNDEFINIERT;
+			String s = DUAKonstanten.STR_UNDEFINIERT;
 			
 			if(objInfos.keySet().size() > 0){
-				s = DAVKonstanten.EMPTY_STR;
+				s = DUAKonstanten.EMPTY_STR;
 				for(SystemObject obj:objInfos.keySet()){
 					s += "Objekt: " + obj + "\n";  //$NON-NLS-1$//$NON-NLS-2$
 					s += this.objInfos.get(obj);
@@ -292,7 +292,7 @@ public class PPFDatenBeschreibungen {
 		 */
 		protected final void addParameterSatz(final Data parameterSatz)
 		throws Exception{
-			final Data.Array attribut = parameterSatz.getArray(DAVKonstanten.ATL_PL_FORMAL_PARA_SATZ_ATT_SPEZ);
+			final Data.Array attribut = parameterSatz.getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ_ATT_SPEZ);
 			
 			for(int i = 0; i<attribut.getLength(); i++){
 				final Data attributSpezifikation = attribut.getItem(i);
@@ -315,10 +315,10 @@ public class PPFDatenBeschreibungen {
 		 */
 		@Override
 		public String toString() {
-			String s = DAVKonstanten.STR_UNDEFINIERT;
+			String s = DUAKonstanten.STR_UNDEFINIERT;
 			
 			if(attInfos.size() > 0){
-				s = DAVKonstanten.EMPTY_STR;
+				s = DUAKonstanten.EMPTY_STR;
 				for(PPFAttributSpezifikation attBeschreibung:attInfos){
 					s += attBeschreibung;
 				}

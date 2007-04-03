@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
 
 /**
  * Diese Klasse enthält alle Parameter, die innerhalb eines Datensatzes
@@ -12,10 +11,10 @@ import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
  * <code>atg.datenflussSteuerung</code> vorkommen. Pro SWE wird nur ein
  * Parametersatz vorgehalten. Sollten also innerhalb dieser Attributgruppe
  * mehrere Parametersätze für die gleiche SWE vorkommen, so werden diese
- * gemischt.
+ * (später) gemischt.
  * 
- * @author Thierfelder
- * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * @version 1.0
  */
 public class ParameterSatz {
 
@@ -27,12 +26,13 @@ public class ParameterSatz {
 	/**
 	 * die SWE, deren Publikationsparameter in dieser Klasse stehen
 	 */
-	private String swe = DAVKonstanten.STR_UNDEFINIERT;
+	private SWETyp swe = null;
 
 	/**
 	 * alle Publikationszuordnungen dieses Parametersatzes
 	 */
-	private List<PublikationsZuordung> pubZuordnungen = new ArrayList<PublikationsZuordung>();
+	private List<PublikationsZuordung> pubZuordnungen =
+					new ArrayList<PublikationsZuordung>();
 
 	
 	/**
@@ -40,7 +40,7 @@ public class ParameterSatz {
 	 * 
 	 * @return die ID der SWE
 	 */
-	public final String getSwe() {
+	public final SWETyp getSwe() {
 		return swe;
 	}
 
@@ -49,9 +49,9 @@ public class ParameterSatz {
 	 * in dieser Klasse stehen.
 	 * 
 	 * @param swe
-	 *            ide ID der SWE
+	 *            Die SWE
 	 */
-	public final void setSwe(final String swe) {
+	public final void setSwe(final SWETyp swe) {
 		this.swe = swe;
 	}
 
@@ -60,13 +60,20 @@ public class ParameterSatz {
 	 * Parametersatzes
 	 * 
 	 * @return alle Publikationszuordnungen dieses Parametersatzes
+	 * (oder eine leere Liste)
 	 */
 	public final List<PublikationsZuordung> getPubZuordnung() {
 		return pubZuordnungen;
 	}
 
 	/**
-	 * Fügt der Liste aller Publikationszuordnungen eine hinzu
+	 * Fügt der Liste aller Publikationszuordnungen eine
+	 * neue Publikationszuordnung hinzu. Bevor dies geschieht,
+	 * werden alle schon vorhandenen Publikationszuordnungen
+	 * auf Konsistenz mit der neuen Publikationszuordnung getestet.
+	 * Fällt dieser Test negativ aus, so wird die neue
+	 * Publikationszuordnung ignoriert und eine den Fehler
+	 * dokumentierende Warung ausgegeben.  
 	 * 
 	 * @param pubZuordnung
 	 *            neue Publikationszuordnung
@@ -74,11 +81,12 @@ public class ParameterSatz {
 	public final void add(final PublikationsZuordung pubZuordnung) {
 		boolean addErlaubt = true;
 
-		for (PublikationsZuordung altePz : this.pubZuordnungen) {
+		for (PublikationsZuordung altePz:this.pubZuordnungen) {
 			String fehler = altePz.isKompatibelMit(pubZuordnung);
 			if (fehler != null) {
 				LOGGER.warning(fehler);
 				addErlaubt = false;
+				break;
 			}
 		}
 

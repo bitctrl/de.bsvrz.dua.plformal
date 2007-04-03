@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import stauma.dav.configuration.interfaces.ConfigurationArea;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DAVHilfe;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsHilfe;
 
@@ -50,18 +50,18 @@ extends AbstraktVerwaltungsAdapter{
 	protected void initialisiere()
 	throws DUAInitialisierungsException {		
 		if(super.komArgumente != null){
-			this.kBereiche = DAVHilfe.getKonfigurationsBereicheAlsObjekte(
-					DAVHilfe.getArgument(DAVKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
+			this.kBereiche = DUAHilfe.getKonfigurationsBereicheAlsObjekte(
+					DUAHilfe.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
 							this.komArgumente), super.verbindung);
 			
 			String dummy = "---keine Konfigurationsbereiche angegeben---\n"; //$NON-NLS-1$
 			if(kBereiche.size() > 0){
-				dummy = DAVKonstanten.EMPTY_STR;
+				dummy = DUAKonstanten.EMPTY_STR;
 				for(ConfigurationArea kb:kBereiche){
 					dummy += kb + "\n"; //$NON-NLS-1$
 				}
 			}
-			LOGGER.config("Die Applikation " + this.getApplikationsName() +//$NON-NLS-1$ 
+			LOGGER.config("Die Applikation " + this.getSWETyp().toString() +//$NON-NLS-1$ 
 					" wurde für folgende" +  //$NON-NLS-1$
 					" Konfigurationsbereiche gestartet:\n" + dummy); //$NON-NLS-1$
 			

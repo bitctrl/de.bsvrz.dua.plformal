@@ -5,34 +5,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.configuration.interfaces.AttributeGroup;
-import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DAVHilfe;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
-
 /**
  * Diese Klasse repräsentiert die Attributgruppe
  * <code>atg.datenFlussSteuerung</code> des Typs
  * <code>typ.datenFlussSteuerung</code>.
  * 
- * @author Thierfelder
- * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * @version 1.0
  */
 public class DatenFlussSteuerung
 implements IDatenFlussSteuerung {
-	
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
 	 * Liste aller Parametersätze innerhalb der Attributgruppe
 	 */
 	private List<ParameterSatz> parameterSaetze = new ArrayList<ParameterSatz>();
 
+	
 	/**
 	 * Fügt diesem Objekt einen Parametersatz hinzu
 	 * 
@@ -64,10 +53,10 @@ implements IDatenFlussSteuerung {
 	 * 
 	 * 
 	 * @param swe
-	 *            die DAV-ID der SWE
+	 *            die SWE
 	 * @return der Parametersatz der Datenflusssteuerung für die übergebene SWE
 	 */
-	public final ParameterSatz getParameterSatzFuerSWE(final String swe) {
+	public final ParameterSatz getParameterSatzFuerSWE(final SWETyp swe) {
 		ParameterSatz ps = null;
 
 		for (ParameterSatz psDummy : parameterSaetze) {
@@ -85,15 +74,15 @@ implements IDatenFlussSteuerung {
 	 * bestimmte SWE
 	 * 
 	 * @param swe
-	 *            die DAV-ID der SWE
+	 *            die SWE
 	 * @param modulId
-	 *            die DAV-ID des Moduls, für die die PublikationsZuordnung
+	 *            das Modul, für die die PublikationsZuordnung
 	 *            erfragt werden soll
 	 * @return die Publikationszuordnung für die SWE <code>swe</code> und das
 	 *         Modul <code>modulId</code>
 	 */
 	private final Collection<PublikationsZuordung> getPublikationsZuordnungenFuerModul(
-			final String swe, final String modulId) {
+			final SWETyp swe, final ModulTyp modulId) {
 		ParameterSatz ps = getParameterSatzFuerSWE(swe);
 		Collection<PublikationsZuordung> ergebnis = new HashSet<PublikationsZuordung>();
 
@@ -111,66 +100,8 @@ implements IDatenFlussSteuerung {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<DAVDatenAnmeldung> getDatenAnmeldungen(final String swe,
-			final String modulTyp, final SystemObject[] filterObjekte) {
-		Collection<DAVDatenAnmeldung> anmeldungen = new HashSet<DAVDatenAnmeldung>();
-		Collection<PublikationsZuordung> publikationsZuordnungen = this
-				.getPublikationsZuordnungenFuerModul(swe, modulTyp);
-
-		if (publikationsZuordnungen != null) {
-			for (PublikationsZuordung pz : publikationsZuordnungen) {
-				if (pz.getModulTyp().equals(modulTyp)) {
-
-					if (pz.isPublizieren()) {
-						Collection<SystemObject> anzumeldendeObjekte = new HashSet<SystemObject>();
-
-						if (filterObjekte != null && filterObjekte.length > 0) {
-							for (SystemObject obj : pz.getObjekte()) {
-								boolean match = false;
-								for (SystemObject filterObj : filterObjekte) {
-									if (DAVHilfe
-											.hasSchnittMenge(obj, filterObj)) {
-										match = true;
-										break;
-									}
-								}
-								if (match)
-									anzumeldendeObjekte.add(obj);
-							}
-						} else {
-							anzumeldendeObjekte.addAll(pz.getObjekte());
-						}
-
-						if (anzumeldendeObjekte.size() > 0) {
-							for (AttributeGroup atg : pz.getAtgs()) {
-								DataDescription dd = new DataDescription(atg,
-										pz.getAspekt(), (short) 0);
-								DAVDatenAnmeldung anmeldung;
-								try {
-									anmeldung = new DAVDatenAnmeldung(
-											anzumeldendeObjekte
-													.toArray(new SystemObject[0]),
-											dd);
-									anmeldungen.add(anmeldung);
-								} catch (Exception e) {
-									LOGGER.error("Es konnten keine Daten" + //$NON-NLS-1$
-											" angemeldet werden", e); //$NON-NLS-1$
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return anmeldungen.size() > 0 ? anmeldungen : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public IDatenFlussSteuerungFuerModul getDFSFuerModul(String swe,
-			String modulTyp) {
+	public IDatenFlussSteuerungFuerModul getDFSFuerModul(SWETyp swe,
+			ModulTyp modulTyp) {
 		DatenFlussSteuerungFuerModul dfsModul = new DatenFlussSteuerungFuerModul();
 		for (PublikationsZuordung pz : this
 				.getPublikationsZuordnungenFuerModul(swe, modulTyp)) {

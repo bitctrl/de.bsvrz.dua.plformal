@@ -7,6 +7,7 @@ import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 /**
  * Dieses Interface stellt alle Informationen über die aktuelle
@@ -14,8 +15,8 @@ import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
  * zur Verfügung. Im Wesentlichen stellt es den Zugriff auf ein Objekt des Typs
  * <code>DatenFlussSteuerung</code> sicher.
  * 
- * @author Thierfelder
- * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * @version 1.0
  */
 public interface IDatenFlussSteuerungFuerModul {
 
@@ -30,11 +31,11 @@ public interface IDatenFlussSteuerungFuerModul {
 	 *            definierten Datenanmeldungen geschickt werden, bevor diese
 	 *            Methode ein Ergebnis zurückgibt. <code>null</code> = kein
 	 *            Filter
-	 * @return eine Menge von Datenanmeldungen oder <code>null</code> wenn
-	 *         keine Anmeldungen durchgeführt werden müssen.
+	 * @return eine ggf. leere Menge mit Datenanmeldungen
 	 */
-	public Collection<DAVDatenAnmeldung> getDatenAnmeldungen(
-			final SystemObject[] filterObjekte);
+	public Collection<DAVObjektAnmeldung> getDatenAnmeldungen(
+			final SystemObject[] filterObjekte,
+			final Collection<DAVObjektAnmeldung> standardAnmeldungen);
 
 	/**
 	 * Erfragt eine publikationsfähige Modifikation des übergebenen

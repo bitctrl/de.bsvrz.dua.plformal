@@ -1,7 +1,7 @@
 package de.bsvrz.dua.plformal.plformal;
 
 import stauma.dav.clientside.Data;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 
 /**
  * Diese Klasse repräsentiert alle Informationen, die innerhalb eines
@@ -21,17 +21,17 @@ public class PPFAttributSpezifikation {
 	/**
 	 * Min-Wert
 	 */
-	private long min = DAVKonstanten.LONG_UNDEFINIERT;
+	private long min = DUAKonstanten.LONG_UNDEFINIERT;
 
 	/**
 	 * Max-Wert
 	 */
-	private long max = DAVKonstanten.LONG_UNDEFINIERT;
+	private long max = DUAKonstanten.LONG_UNDEFINIERT;
 
 	/**
 	 * Vergleichs- bzw. Ersetzungsmethode
 	 */
-	private long methode = DAVKonstanten.LONG_UNDEFINIERT;
+	private long methode = DUAKonstanten.LONG_UNDEFINIERT;
 
 	
 	/**
@@ -42,10 +42,10 @@ public class PPFAttributSpezifikation {
 	 */
 	public PPFAttributSpezifikation(final Data attributSpezifikation)
 	throws Exception{
-		this.attributPfad = attributSpezifikation.getTextValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
-		this.min = attributSpezifikation.getUnscaledValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MIN).longValue();
-		this.max = attributSpezifikation.getUnscaledValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MAX).longValue();
-		this.methode = attributSpezifikation.getUnscaledValue(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_OPT).longValue();
+		this.attributPfad = attributSpezifikation.getTextValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
+		this.min = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MIN).longValue();
+		this.max = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MAX).longValue();
+		this.methode = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_OPT).longValue();
 	}
 
 	/**
@@ -89,13 +89,13 @@ public class PPFAttributSpezifikation {
 	 */
 	@Override
 	public String toString() {
-		String s = DAVKonstanten.STR_UNDEFINIERT;
+		String s = DUAKonstanten.STR_UNDEFINIERT;
 
 		if(this.attributPfad != null){
 			s = "Attributpfad: " + this.attributPfad + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 			s += "Min: " + this.min + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 			s += "Max: " + this.max + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
-			s += "Methode: " + DAVKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT. //$NON-NLS-1$
+			s += "Methode: " + DUAKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT. //$NON-NLS-1$
 									get(new Long(this.methode)) + "\n"; //$NON-NLS-1$
 		}
 

@@ -16,11 +16,11 @@ import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DAVHilfe;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
-import de.bsvrz.dua.plformal.schnittstellen.IVerwaltung;
 
 /**
  * Diese Klasse meldet sich auf die Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
@@ -86,9 +86,9 @@ implements IPPFHilfe, ClientReceiverInterface{
 		}
 		this.verwaltung = verwaltung;
 		final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
-									getAttributeGroup(DAVKonstanten.ATG_PL_FORMAL);
+									getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
 		final Aspect asp = verwaltung.getVerbindung().getDataModel().
-							getAspect(DAVKonstanten.ASP_PARA_SOLL);
+							getAspect(DUAKonstanten.ASP_PARA_SOLL);
 		final DataDescription dd = new DataDescription(atg, asp, (short)0);
 		verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd,
 					ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -109,16 +109,17 @@ implements IPPFHilfe, ClientReceiverInterface{
 			/**
 			 * Ermittlung des Objektes, das die formale Plausibilisierung beschreibt
 			 */
-			final SystemObjectType typPPF = (SystemObjectType)verwaltung.getVerbindung().getDataModel().getObject(DAVKonstanten.TYP_PL_FORMAL);
- 			SystemObject[] plausibilisierungsObjekte = DAVHilfe
-								.getAlleObjekteVomTypImKonfigBereich(typPPF, verwaltung
-									.getKonfigurationsBereiche()).toArray(new SystemObject[0]);
+			final SystemObjectType typPPF = (SystemObjectType)verwaltung.getVerbindung().getDataModel().getObject(DUAKonstanten.TYP_PL_FORMAL);
+ 			SystemObject[] plausibilisierungsObjekte = DUAHilfe
+								.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
+									verwaltung.getKonfigurationsBereiche()).toArray(
+											new SystemObject[0]);
 			 			
 			if(plausibilisierungsObjekte.length > 0){
 				INSTANZ = new PPFHilfe(verwaltung, plausibilisierungsObjekte[0]);
 			}else{
 				throw new DUAInitialisierungsException("Es liegt kein Objekt vom Typ " + //$NON-NLS-1$
-						DAVKonstanten.TYP_PL_FORMAL + " vor.");  //$NON-NLS-1$
+						DUAKonstanten.TYP_PL_FORMAL + " vor.");  //$NON-NLS-1$
 			}
 		}
 
@@ -145,7 +146,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 					!resultat.isNoDataAvailable() && resultat.hasData() &&
 					 resultat.getData() != null){
 				
-				final Data.Array parameterSaetze = resultat.getData().getArray(DAVKonstanten.ATL_PL_FORMAL_PARA_SATZ);
+				final Data.Array parameterSaetze = resultat.getData().getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ);
 				
 				for(int i = 0; i<parameterSaetze.getLength(); i++){
 					final Data parameterSatz = parameterSaetze.getItem(i);
@@ -154,12 +155,12 @@ implements IPPFHilfe, ClientReceiverInterface{
 						LOGGER.fine(parameterSatz.toString());
 					
 						final AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue
-														(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
+														(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
 						final Aspect asp = (Aspect)parameterSatz.getReferenceValue
-												(DAVKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
+												(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
 						final DataDescription dd = new DataDescription(atg, asp, (short)0);
 						final Collection<SystemObject> objListe = new HashSet<SystemObject>();
-						final Data.Array objArray = parameterSatz.getArray(DAVKonstanten.ATL_PL_FORMAL_PARA_SATZ_OBJ);
+						final Data.Array objArray = parameterSatz.getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ_OBJ);
 						for(int j = 0; j<objArray.getLength(); j++){
 							objListe.add(objArray.getItem(j).asReferenceValue().getSystemObject());
 						}
@@ -290,10 +291,10 @@ implements IPPFHilfe, ClientReceiverInterface{
 			if(attPfad != null){
 				try{
 					Data dummy = datum.createModifiableCopy();
-					Data plausDatum = DAVHilfe.getAttributDatum(attPfad, dummy);
+					Data plausDatum = DUAHilfe.getAttributDatum(attPfad, dummy);
 					if(plausDatum != null && 
-						(plausDatum.getAttributeType().isOfType(DAVKonstanten.TYP_GANZ_ZAHL) || 
-						 plausDatum.getAttributeType().isOfType(DAVKonstanten.TYP_KOMMA_ZAHL))){
+						(plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_GANZ_ZAHL) || 
+						 plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_KOMMA_ZAHL))){
 						
 						/**
 						 * Eine Plausibilisierung wird nur durchgeführt, wenn das Attribut sich nicht in einem
@@ -311,52 +312,52 @@ implements IPPFHilfe, ClientReceiverInterface{
 							 * Plausibilisierung
 							 */
 							switch(methode){
-							case (int)DAVKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG:
+							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG:
 								if(implausibelMin || implausibelMax){
-									setStatusPlFormalWert(dummy, true, attPfad, DAVKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
+									setStatusPlFormalWert(dummy, true, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
 								}else{
-									setStatusPlFormalWert(dummy, false, attPfad, DAVKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
+									setStatusPlFormalWert(dummy, false, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
 								}								
 								break;
-							case (int)DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX:
+							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX:
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}else if(implausibelMin){
 									neuerWert = min;
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}
 							break;
-							case (int)DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN:
+							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN:
 								if(implausibelMin){
 									neuerWert = min;
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}							
 							break;
-							case (int)DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX:
+							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX:
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DAVKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}
 							break;
-							case (int)DAVKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG:
+							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG:
 								// mache nichts
 							}
 
 							if(neuerWert != alterWert){
-								if(plausDatum.getAttributeType().isOfType(DAVKonstanten.TYP_GANZ_ZAHL)){
+								if(plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_GANZ_ZAHL)){
 									plausDatum.asUnscaledValue().set((long)neuerWert);	
 								}else{
 									plausDatum.asUnscaledValue().set(neuerWert);	
@@ -410,7 +411,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 	 */
 	@Override
 	public String toString() {
-		String s = DAVKonstanten.STR_UNDEFINIERT;
+		String s = DUAKonstanten.STR_UNDEFINIERT;
 		
 		synchronized (this) {
 			if(this.plBeschreibungen != null){
@@ -443,11 +444,11 @@ implements IPPFHilfe, ClientReceiverInterface{
 											 final String attPfad,
 											 final String attPfadErsetzung){
 		if(datum != null && attPfad != null && attPfadErsetzung != null){
-			final String neuerAttPfad = DAVHilfe.
+			final String neuerAttPfad = DUAHilfe.
 				ersetzeLetztesElemInAttPfad(attPfad, attPfadErsetzung);
 			
 			if(neuerAttPfad != null){
-				Data status = DAVHilfe.getAttributDatum(neuerAttPfad, datum);
+				Data status = DUAHilfe.getAttributDatum(neuerAttPfad, datum);
 				if(status != null){
 					try{
 						status.asUnscaledValue().set(wert?1:0);

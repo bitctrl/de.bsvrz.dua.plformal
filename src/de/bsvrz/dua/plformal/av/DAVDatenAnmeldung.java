@@ -8,15 +8,17 @@ import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 
 /**
- * Beschreibung einer Datenanmeldung mit mehreren
- * Objekten und einer Datenbeschreibung 
+ * Beschreibung einer Datenanmeldung mit (potentiell)
+ * mehreren Systemobjekten und einer Datenbeschreibung.
+ * Die Systemobjekte können hier sowohl Typen wie auch
+ * Instanzen sein.
  * 
- * @author Thierfelder
- *
- */
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ **/
 public class DAVDatenAnmeldung{
 
 	/**
@@ -40,13 +42,14 @@ public class DAVDatenAnmeldung{
 	 * angemeldet sind
 	 * @throws Exception wenn entweder das Systemobjekt,
 	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist 
+	 * Aspekt <code>null</code> ist. Oder, wenn eine Objekt-
+	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
 							 final DataDescription datenBeschreibung)
 	throws Exception{
 		for(SystemObject obj:objekte){
-			if(obj.isOfType(DAVKonstanten.TYP_TYP)){
+			if(obj.isOfType(DUAKonstanten.TYP_TYP)){
 				SystemObjectType typ = (SystemObjectType)obj;
 				for(SystemObject element:typ.getObjects()){
 					this.objektAnmeldungen.add(
@@ -72,7 +75,8 @@ public class DAVDatenAnmeldung{
 	 * noch gefiltert werden soll
 	 * @throws Exception wenn entweder das Systemobjekt,
 	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist
+	 * Aspekt <code>null</code> ist. Oder, wenn eine Objekt-
+	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
 							 final DataDescription datenBeschreibung,
@@ -82,7 +86,7 @@ public class DAVDatenAnmeldung{
 		
 		for(SystemObject obj:objekte){
 			if(kBereiche == null || kBereiche.size() == 0){
-				if(obj.isOfType(DAVKonstanten.TYP_TYP)){
+				if(obj.isOfType(DUAKonstanten.TYP_TYP)){
 					SystemObjectType typ = (SystemObjectType)obj;
 					for(SystemObject element:typ.getObjects()){
 						this.objektAnmeldungen.add(
@@ -93,7 +97,7 @@ public class DAVDatenAnmeldung{
 							new DAVObjektAnmeldung(obj, datenBeschreibung));
 				}				
 			}else{
-				if(obj.isOfType(DAVKonstanten.TYP_TYP)){
+				if(obj.isOfType(DUAKonstanten.TYP_TYP)){
 					SystemObjectType typ = (SystemObjectType)obj;
 					for(SystemObject element:typ.getObjects()){
 						if(kBereiche.contains(element.getConfigurationArea())){
@@ -154,7 +158,7 @@ public class DAVDatenAnmeldung{
 	 * Erfragt alle einzelnen Objekt-Anmeldungen
 	 * die innerhalb von diesem Objekt definiert sind
 	 * 
-	 * @return eine Menge von Objekt-Anmeldungen
+	 * @return eine (ggf. leere) Menge von Objekt-Anmeldungen
 	 */
 	public final Collection<DAVObjektAnmeldung> getObjektAnmeldungen(){
 		return this.objektAnmeldungen;
@@ -169,7 +173,7 @@ public class DAVDatenAnmeldung{
 		String bereiche = "keine\n"; //$NON-NLS-1$
 		
 		if(this.konfigurationsBereiche != null){
-			bereiche = DAVKonstanten.EMPTY_STR;
+			bereiche = DUAKonstanten.EMPTY_STR;
 			for(ConfigurationArea kb:this.konfigurationsBereiche){
 				bereiche += kb.toString() + "\n"; //$NON-NLS-1$
 			}

@@ -1,6 +1,8 @@
-package de.bsvrz.dua.plformal.schnittstellen;
+package de.bsvrz.dua.plformal.allgemein.schnittstellen;
 
 import java.util.Collection;
+
+import de.bsvrz.dua.plformal.dfs.SWETyp;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientReceiverInterface;
@@ -62,20 +64,21 @@ extends StandardApplication,
 	public SystemObject[] getSystemObjekte();
 	
 	/**
-	 * Erfragt die dem Verwaltungsmodul übergebenen Konfigurationsbereiche
+	 * Erfragt die dem Verwaltungsmodul übergebenen
+	 * Konfigurationsbereiche
 	 * 
-	 * @return alle Konfigurationsbereiche, die diesem Verwaltungsmodul übergeben wurden.
+	 * @return alle Konfigurationsbereiche, die diesem
+	 * Verwaltungsmodul übergeben wurden.
 	 */
 	public Collection<ConfigurationArea> getKonfigurationsBereiche();
 	
 	/**
-	 * Diese Methode gibt den Namen der Applikation (SWE) zurück,
-	 * die dieses Interface implementiert. Dieser Name entspricht
-	 * der innerhalb der Datenflusssteuerung angelegten ID 
-	 * für diese SWE.
+	 * Erfragt die SWE, für die die dieses Interface
+	 * implementierende Klasse die Verwaltung darstellt
 	 * 
-	 * @return Name dieser Applikation
+	 * @return die SWE, für die die dieses Interface
+	 * implementierende Klasse die Verwaltung darstellt
 	 */
-	public String getApplikationsName();
+	public SWETyp getSWETyp();
 	
 }

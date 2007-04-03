@@ -9,10 +9,12 @@ import stauma.dav.clientside.ReceiverRole;
 import sys.funclib.debug.Debug;
 
 /**
- * Verwaltungsklasse für Datenanmeldungen zum Empfangen von Daten
+ * Verwaltungsklasse für Datenanmeldungen zum Empfangen von Daten.
+ * Über die Methode <code>modifiziereDatenAnmeldung(..)</code> lassen
+ * sich Daten anmelden bzw. abmelden.
  * 
- * @author Thierfelder
- *
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * 
  */
 public class DAVEmpfangsAnmeldungsVerwaltung 
 extends DAVAnmeldungsVerwaltung{
@@ -23,7 +25,7 @@ extends DAVAnmeldungsVerwaltung{
 	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
-	 * Rolle
+	 * Rolle des Empfängers
 	 */
 	private ReceiverRole rolle = null;
 	
@@ -44,7 +46,8 @@ extends DAVAnmeldungsVerwaltung{
 	 * @param dav Datenverteilerverbindung
 	 * @param rolle Rolle
 	 * @param optionen Optionen
-	 * @param empfaenger die Empfänger-Klasse
+	 * @param empfaenger die Empfänger-Klasse der Datenverteiler-
+	 * Daten, für die diese Anmeldungs-Verwaltung arbeiten soll
 	 */
 	public DAVEmpfangsAnmeldungsVerwaltung(final ClientDavInterface dav,
 										   final ReceiverRole rolle,

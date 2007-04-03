@@ -2,15 +2,18 @@ package de.bsvrz.dua.plformal.av;
 
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.SystemObject;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 
 /**
  * Repräsentiert die Anmeldung eines Systemobjekts
  * unter einer Datenbeschreibung. Die Elemente dieser
  * Klasse lassen sich korrekt und ohne Doppelungen
- * in ein <code>TreeSet</code>-Objekt einspeisen.
+ * in ein <code>TreeSet</code>-Objekt einspeisen
+ * oder als Schlüssel für eine <code>TreeMap</code>
+ * benutzen.
  * 
- * @author Thierfelder
- *
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * 
  */
 public class DAVObjektAnmeldung
 implements Comparable<DAVObjektAnmeldung>{
@@ -35,27 +38,17 @@ implements Comparable<DAVObjektAnmeldung>{
 	 * der das Systemobjekt angemeldet werden soll bzw. ist
 	 * @throws Exception wenn entweder das Systemobjekt,
 	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist 
+	 * Aspekt <code>null</code> ist. Oder, wenn die Objekt-
+	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
 	 */
 	public DAVObjektAnmeldung(final SystemObject objekt,
 							  final DataDescription datenBeschreibung)
 	throws Exception{
-		if(objekt == null){
-			throw new Exception("Übergebenes Objekt" + //$NON-NLS-1$
-					" ist <<null>>"); //$NON-NLS-1$
+		String fehler = DUAHilfe.isKombinationOk(objekt, datenBeschreibung);
+		if(fehler != null){
+			throw new Exception(fehler);
 		}
-		if(datenBeschreibung == null){
-			throw new Exception("Übergebene Datenbeschreibung" + //$NON-NLS-1$
-					" ist <<null>>"); //$NON-NLS-1$
-		}
-		if(datenBeschreibung.getAttributeGroup() == null){
-			throw new Exception("Übergebene Attributgruppe" + //$NON-NLS-1$
-			" ist <<null>>"); //$NON-NLS-1$
-		}
-		if(datenBeschreibung.getAspect() == null){
-			throw new Exception("Übergebener Aspekt" + //$NON-NLS-1$
-			" ist <<null>>"); //$NON-NLS-1$
-		}
+		
 		this.objekt = objekt;
 		this.datenBeschreibung = datenBeschreibung;
 	}
@@ -100,6 +93,30 @@ implements Comparable<DAVObjektAnmeldung>{
 		return result;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Diese Methode muss implementiert werden, da nach der
+	 * Exploration des Baums über <code>compareTo(..)</code>
+	 * nochmals mit <code>equals(..)</code> explizit auf
+	 * Gleichheit getestet wird.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		
+		if(obj instanceof DAVObjektAnmeldung){
+			DAVObjektAnmeldung that = (DAVObjektAnmeldung)obj;
+			result = this.getObjekt().equals(that.getObjekt()) &&
+					 this.getDatenBeschreibung().getAttributeGroup().equals(
+							 that.getDatenBeschreibung().getAttributeGroup()) &&
+					 this.getDatenBeschreibung().getAspect().equals(
+							 that.getDatenBeschreibung().getAspect());
+		}
+
+		return result;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

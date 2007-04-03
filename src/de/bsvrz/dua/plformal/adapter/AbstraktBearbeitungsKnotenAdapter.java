@@ -7,25 +7,23 @@ import stauma.dav.clientside.SenderRole;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.allgemein.Meldungen;
-import de.bsvrz.dua.plformal.allgemein.StandardAspekteVersorger;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IBearbeitungsKnoten;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVSendeAnmeldungsVerwaltung;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsHilfe;
-import de.bsvrz.dua.plformal.schnittstellen.IBearbeitungsKnoten;
-import de.bsvrz.dua.plformal.schnittstellen.IStandardAspekte;
-import de.bsvrz.dua.plformal.schnittstellen.IVerwaltung;
 
 /**
  * Adapterklasse für einen Bearbeitungsknoten.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public abstract class AbstraktBearbeitungsKnotenAdapter
 implements IBearbeitungsKnoten, ClientSenderInterface {
 	
 	/**
-	 * der Logger
+	 * Debug-Logger
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
 	
@@ -45,15 +43,17 @@ implements IBearbeitungsKnoten, ClientSenderInterface {
 	protected IVerwaltung verwaltung = null;
 	
 	/**
-	 * Schnittstelle zu den Informationen über die Standardpublikations-
-	 * Aspekte
+	 * Schnittstelle zu den Informationen über die
+	 * Standard-Publikationsaspekte
 	 */
 	protected IStandardAspekte standardAspekte = null;
 
 	/**
-	 * Parameter der Datenflusssteuerung
+	 * Anmeldungen zum Publizieren von verarbeiteten
+	 * Daten
 	 */
 	protected DAVSendeAnmeldungsVerwaltung publikationsAnmeldungen = null;
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -75,13 +75,13 @@ implements IBearbeitungsKnoten, ClientSenderInterface {
 	public void initialisiere(IVerwaltung dieVerwaltung) 
 	throws DUAInitialisierungsException {
 		if(dieVerwaltung == null || dieVerwaltung.getVerbindung() == null){
-			throw new DUAInitialisierungsException(Meldungen.getString(
-					"Es_konnte_keine_Verbindung_zum_Verwaltungsmodul_hergestellt_werden")); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Es konnte keine Verbindung" + //$NON-NLS-1$
+					" zum Verwaltungsmodul (bzw. zum Datenverteiler" + //$NON-NLS-1$
+					") hergestellt werden"); //$NON-NLS-1$
 		}
 		this.verwaltung = dieVerwaltung;
-		this.standardAspekte = StandardAspekteVersorger.getInstanz(verwaltung).
-					getStandardPubInfos(this.verwaltung.getApplikationsName(), this.getModulName());
-		this.publikationsAnmeldungen = new DAVSendeAnmeldungsVerwaltung(this.verwaltung.getVerbindung(),
+		this.publikationsAnmeldungen = new DAVSendeAnmeldungsVerwaltung(
+				this.verwaltung.getVerbindung(),
 				SenderRole.source(), this);
 		DatenFlussSteuerungsHilfe.getInstanz(verwaltung).addListener(this);
 	}
@@ -95,7 +95,8 @@ implements IBearbeitungsKnoten, ClientSenderInterface {
 		try {
 			this.verwaltung.getVerbindung().sendData(resultat);
 		} catch (Exception e) {
-			LOGGER.error(this.toString(), e);
+			LOGGER.error("Fehler beim Publizieren von" + //$NON-NLS-1$
+					" Daten innerhalb von " + this.toString(), e); //$NON-NLS-1$
 		}
 	}
 
@@ -104,20 +105,26 @@ implements IBearbeitungsKnoten, ClientSenderInterface {
 	 */
 	@Override
 	public String toString() {
-		return "Modul-Typ: " + this.getModulName() + " in SWE " + this.verwaltung.getApplikationsName();  //$NON-NLS-1$//$NON-NLS-2$
+		return "Modul-Typ: " + this.getModulTyp() + //$NON-NLS-1$
+				" in SWE " + this.verwaltung.getSWETyp();  //$NON-NLS-1$
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
-		// wird nicht gebraucht, da nur Quellenanmeldungen durchgeführt werden
+	public void dataRequest(SystemObject object, DataDescription
+			dataDescription, byte state) {
+		/**
+		 * wird nicht gebraucht, da nur Quellenanmeldungen
+		 * durchgeführt werden
+		 */
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
+	public boolean isRequestSupported(SystemObject object,
+			DataDescription dataDescription) {
 		return false;
 	}
 	

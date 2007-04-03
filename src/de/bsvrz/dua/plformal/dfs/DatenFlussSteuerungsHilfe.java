@@ -13,18 +13,18 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DAVHilfe;
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 
 /**
  * Diese Klasse liest die Parameter der Datenflusssteuerung aus 
  * und meldet Änderungen formatiert an andere Module des Typs
  * <code>IDatenFlussSteuerungsListener</code> weiter.
  * 
- * @author Thierfelder
- * 
+ * @author BitCtrl Systems GmbH, Thierfelder
+ * @version 1.0
  */
 public class DatenFlussSteuerungsHilfe
 implements ClientReceiverInterface {
@@ -55,6 +55,11 @@ implements ClientReceiverInterface {
 	 * die aktuellen Parameter der Datenflusssteuerung
 	 */
 	private DatenFlussSteuerung letzteDfs = null;
+	
+	/**
+	 * Verbindung zum Verwaltungsmodul
+	 */
+	private IVerwaltung verwaltung = null;
 
 	
 	/**
@@ -77,13 +82,14 @@ implements ClientReceiverInterface {
 			throw new DUAInitialisierungsException(STD_FEHLER
 					+ "\nKeine Verbindung zum Datenverteiler."); //$NON-NLS-1$
 		}
+		this.verwaltung = verwaltung; 
 
 		if(dfsObjekt != null){
 			try {
 				DataDescription dd = new DataDescription(verwaltung.getVerbindung()
-						.getDataModel().getAttributeGroup(DAVKonstanten.ATG_DFS),
+						.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DFS),
 						verwaltung.getVerbindung().getDataModel().getAspect(
-								DAVKonstanten.ASP_PARA_SOLL), (short) 0);
+								DUAKonstanten.ASP_PARA_SOLL), (short) 0);
 	
 				verwaltung.getVerbindung().subscribeReceiver(this, dfsObjekt, dd,
 						ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -95,13 +101,17 @@ implements ClientReceiverInterface {
 			}
 		}else{
 			LOGGER.warning("Die Datenflusssteuerung ist nicht zur Laufzeit steuerbar.\n" + //$NON-NLS-1$
-					"Es wurde kein Objekt vom Typ " + DAVKonstanten.TYP_DFS + //$NON-NLS-1$
+					"Es wurde kein Objekt vom Typ " + DUAKonstanten.TYP_DFS + //$NON-NLS-1$
 					" identifiziert."); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * Erfragt die statische Instanz dieser Klasse
+	 * Erfragt die statische Instanz dieser Klasse. Diese
+	 * liest die Parameter der Datenflusssteuerung aus
+	 * und meldet Änderungen formatiert an angemeldete Module
+	 * des Typs <code>IDatenFlussSteuerungsListener</code>
+	 * weiter.
 	 * 
 	 * @param verwaltung
 	 *            Verbindung zum Verwaltungsmodul
@@ -116,23 +126,27 @@ implements ClientReceiverInterface {
 	throws DUAInitialisierungsException {
 		if (INSTANZ == null) {
 			/**
-			 * Ermittlung des Objektes, das die Datenflusssteuerung für das
-			 * übergebene Verwaltungsmodul beschreibt
+			 * Ermittlung des Objektes, das die Datenflusssteuerung
+			 * für das übergebene Verwaltungsmodul beschreibt
 			 */
 			final SystemObjectType typDFS = (SystemObjectType) verwaltung
 					.getVerbindung().getDataModel().getObject(
-							DAVKonstanten.TYP_DFS);
+							DUAKonstanten.TYP_DFS);
 			
 			Collection<ConfigurationArea> kBereiche = 
 				verwaltung.getKonfigurationsBereiche(); 
-			SystemObject[] dfsObjekte = DAVHilfe.getAlleObjekteVomTypImKonfigBereich(
-											typDFS, kBereiche).toArray(new SystemObject[0]);
+			SystemObject[] dfsObjekte = DUAHilfe.getAlleObjekteVomTypImKonfigBereich(
+											verwaltung, typDFS, kBereiche).
+											toArray(new SystemObject[0]);
 
 			SystemObject dfsObjekt = (dfsObjekte.length > 0?dfsObjekte[0]:null);
 			
-			if(dfsObjekte.length > 1){
+			if(dfsObjekte.length == 1){
+				LOGGER.info("Es wurde genau ein Objekt vom Typ " + //$NON-NLS-1$
+						DUAKonstanten.TYP_DFS + " identifiziert"); //$NON-NLS-1$		
+			}else if(dfsObjekte.length > 1){
 				LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
-						DAVKonstanten.TYP_DFS + " vor"); //$NON-NLS-1$
+						DUAKonstanten.TYP_DFS + " vor"); //$NON-NLS-1$
 			}
 			
 			INSTANZ = new DatenFlussSteuerungsHilfe(verwaltung, dfsObjekt);
@@ -148,8 +162,8 @@ implements ClientReceiverInterface {
 
 		if (resultate != null && resultate.length > 0) {
 			/**
-			 * nur ein Objekt wird hier behandelt, d.h. dass nur ein Datensatz
-			 * (der letzte) interessiert
+			 * nur ein Objekt wird hier behandelt, d.h. dass nur ein
+			 * Datensatz (der Letzte) interessiert
 			 */
 			final ResultData resultat = resultate[resultate.length - 1];
 
@@ -158,30 +172,29 @@ implements ClientReceiverInterface {
 					&& resultat.getData() != null) {
 
 				Data.Array ps = resultat.getData().getArray(
-						DAVKonstanten.ATL_DFS_PARA_SATZ);
+						DUAKonstanten.ATL_DFS_PARA_SATZ);
 
 				for (int i = 0; i < ps.getLength(); i++) {
 					Data satz = ps.getItem(i);
 					if (satz != null) {
 						ParameterSatz dfPs = new ParameterSatz();
 						
-						final String swe = satz.getUnscaledValue(
-								DAVKonstanten.ATT_DFS_SWE).getState().getName()
-								.toString();
+						final SWETyp swe = SWETyp.getZustand((int)satz.getUnscaledValue(
+								DUAKonstanten.ATT_DFS_SWE).getState().getValue());
 						
 						dfPs.setSwe(swe);
 
 						for (int j = 0; j < satz.getArray(
-								DAVKonstanten.ATT_DFS_PUB_ZUORDNUNG).getLength(); j++) {
+								DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getLength(); j++) {
 							Data pz = satz.getArray(
-									DAVKonstanten.ATT_DFS_PUB_ZUORDNUNG).getItem(j);
+									DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getItem(j);
 							PublikationsZuordung dfPz;
 							try {
-								dfPz = new PublikationsZuordung(pz);
+								dfPz = new PublikationsZuordung(pz, verwaltung);
 								dfPs.add(dfPz);
 							} catch (Exception e) {
 								LOGGER.error("Eine Publikationszuordnung (" +  //$NON-NLS-1$
-										ps + ") konnte nicht korrekt" +  //$NON-NLS-1$
+										pz + ") konnte nicht korrekt" +  //$NON-NLS-1$
 												" ausgelesen werden", e);  //$NON-NLS-1$
 							}
 						}
@@ -211,11 +224,11 @@ implements ClientReceiverInterface {
 
 	/**
 	 * Fügt diesem Element einen neuen Beobachter hinzu. Jedes neue
-	 * Beobachterobjekt wird sofort nach der Anmeldung mit den aktuellen Daten
-	 * versorgt
+	 * Beobachterobjekt wird sofort nach der Anmeldung mit den aktuellen
+	 * Daten versorgt.
 	 * 
 	 * @param listener
-	 *            der neue Listener
+	 *            der neue Beobachter
 	 */
 	public final void addListener(final IDatenFlussSteuerungsListener listener) {
 		if (listener != null) {
@@ -227,7 +240,7 @@ implements ClientReceiverInterface {
 			}
 		} else {
 			LOGGER.warning("Listener kann nicht eingefügt" + //$NON-NLS-1$
-					" werden. Er ist " + DAVKonstanten.NULL + "."); //$NON-NLS-1$ //$NON-NLS-2$
+					" werden. Er ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 	}
 

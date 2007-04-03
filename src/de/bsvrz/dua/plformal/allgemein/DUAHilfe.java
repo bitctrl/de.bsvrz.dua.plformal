@@ -1,16 +1,17 @@
 package de.bsvrz.dua.plformal.allgemein;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.Data;
+import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 
 
 /**
@@ -20,7 +21,7 @@ import sys.funclib.debug.Debug;
  * @author Thierfelder
  *
  */
-public class DAVHilfe {
+public class DUAHilfe {
 	
 	/**
 	 * Debug-Logger
@@ -41,7 +42,8 @@ public class DAVHilfe {
 	 * @return (ggf. leerer) <code>String</code>-Array mit allen
 	 * extrahierten Konfigurationsbereichen. 
 	 */
-	public static final String[] getKonfigurationsBereiche(final String kbString){
+	public static final String[] getKonfigurationsBereiche(
+			final String kbString){
 		String[] s = new String[0];
 		
 		if(kbString != null){
@@ -52,32 +54,59 @@ public class DAVHilfe {
 	}
 	
 	/**
-	 * Erfragt alle Objekte des Typs <code>typ</code>, die innerhalb der übergebenen 
-	 * Konfigurationsbereiche definiert sind.<br>
-	 * <b>Achtung:</b> Sollte die Menge der Konfigurationsbereiche leer oder
-	 * <code>null</code> sein, so werden die Objekte zurückgegeben, die global
-	 * definiert sind.
+	 * Erfragt alle Objekte des Typs <code>typ</code>, die
+	 * innerhalb der übergebenen Konfigurationsbereiche
+	 * definiert sind.<br>
+	 * <b>Achtung:</b> Sollte die Menge der übergebenen
+	 * Konfigurationsbereiche leer oder <code>null</code>
+	 * sein, so werden die Objekte zurückgegeben, die im
+	 * Standardkonfigurationsbereich definiert sind (Der
+	 * Standardkonfigurationsbereich ist der Bereich, in
+	 * dem die aktuelle autarke Organisationseinheit
+	 * definiert ist).
 	 * 
+	 * @param verwaltung Verbindung zum Verwaltungsmodul
 	 * @param typ der Systemobjekt-Typ
-	 * @param konfigurationsBereiche die Menge der Konfigurationsbereiche
+	 * @param konfigurationsBereiche eine Menge von 
+	 * Konfigurationsbereichen
 	 * @return Objekte des Typs <code>typ</code> oder eine leere
-	 * <code>Collection</code>, wenn keine Objekte identifiziert
-	 * werden konnten.
+	 * <code>Collection</code>, wenn keine Objekte vom übergebenen
+	 * Typ identifiziert werden konnten.
 	 */
 	public static final Collection<SystemObject> getAlleObjekteVomTypImKonfigBereich(
+			final IVerwaltung verwaltung,
 			final SystemObjectType typ,
 			final Collection<ConfigurationArea> konfigurationsBereiche){
 		Collection<SystemObject> objListe = new HashSet<SystemObject>();
 		
+		
 		if(typ != null){
+			Collection<ConfigurationArea> benutzteBereiche = 
+				new HashSet<ConfigurationArea>();
+			
+			if(konfigurationsBereiche != null &&
+			   konfigurationsBereiche.size() > 0){
+				benutzteBereiche = konfigurationsBereiche;				
+			}else{
+				/**
+				 * Es wurden keine Konfigurationsbereiche übergeben:
+				 * Standardkonfigurationsbereich wird verwendet
+				 */
+				benutzteBereiche.add(verwaltung.getVerbindung().
+						getDataModel().getConfigurationAuthority().
+						getConfigurationArea());
+			}
+			
+			String bereicheStr = DUAKonstanten.EMPTY_STR;
+			for(ConfigurationArea bereich:benutzteBereiche){
+				bereicheStr += bereich + "\n"; //$NON-NLS-1$
+			}
+			LOGGER.info("Es wird in folgenden Bereichen nach Objekten" + //$NON-NLS-1$
+					" vom Typ " + typ + " gesucht:\n" + bereicheStr);  //$NON-NLS-1$//$NON-NLS-2$
+			
 			for(SystemObject obj:typ.getObjects()){
-				
-				if(konfigurationsBereiche != null && konfigurationsBereiche.size() > 0){
-					if(konfigurationsBereiche.contains(obj.getConfigurationArea())){
-						objListe.add(obj);
-					}
-				}else{
-					objListe.add(obj);
+				if(benutzteBereiche.contains(obj.getConfigurationArea())){
+					objListe.add(obj);	
 				}
 			}
 		}
@@ -98,14 +127,12 @@ public class DAVHilfe {
 				getKonfigurationsBereicheAlsObjekte(final String kbString,
 													final ClientDavInterface dav){
 		final String[] kbStr = getKonfigurationsBereiche(kbString);
-		Collection<ConfigurationArea> kbListe = new ArrayList<ConfigurationArea>();
+		Collection<ConfigurationArea> kbListe = new HashSet<ConfigurationArea>();
 		
 		for(String kb:kbStr){
 			try{
 				ConfigurationArea area = dav.getDataModel().getConfigurationArea(kb);
-				if(!kbListe.contains(area)){
-					kbListe.add(area);
-				}
+				kbListe.add(area);
 			}catch(UnsupportedOperationException ex){
 				LOGGER.error("Konfigurationsbereich " + kb +  //$NON-NLS-1$
 						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
@@ -176,35 +203,49 @@ public class DAVHilfe {
 	 * 
 	 * @param obj1 Objekt 1
 	 * @param obj2 Objekt 2
-	 * @return <code>true</code>, wenn die beiden Objekte eine gemeinsame 
-	 * Schnittmenge haben (könnten). Dies ist der Fall, wenn sie voneinander
-	 * abgeleitet, Instanzen voneinander, oder einfach identisch sind.
+	 * @return eine Zeichenkette <code>!= null</code>, wenn die beiden
+	 * Objekte eine gemeinsame Schnittmenge (an Objekten) haben (könnten).
+	 * Dies ist der Fall, wenn sie voneinander abgeleitet, Instanzen
+	 * voneinander, oder einfach identisch sind.<br>
+	 * <b>Achtung</b>: Wenn beide Objekte <code>null</code> sind, so
+	 * haben sie hier per Definition eine leere Schnittmenge (keine)
 	 */
-	public static final boolean hasSchnittMenge(final SystemObject obj1,
-												final SystemObject obj2){
-		boolean ergebnis = false;
+	public static final String hasSchnittMenge(final SystemObject obj1,
+											   final SystemObject obj2){
+		String ergebnis = null;
 		
 		if(obj1 != null && obj2 != null){
-			if(obj1.isOfType(DAVKonstanten.TYP_TYP) && 
-			   obj2.isOfType(DAVKonstanten.TYP_TYP)){
+			if(obj1.isOfType(DUAKonstanten.TYP_TYP) && 
+			   obj2.isOfType(DUAKonstanten.TYP_TYP)){
 				SystemObjectType typ1 = (SystemObjectType)obj1;
 				SystemObjectType typ2 = (SystemObjectType)obj2;
-				ergebnis = typ1.equals(typ2) || 
-						   typ1.inheritsFrom(typ2) ||
-						   typ2.inheritsFrom(typ1);				
-			}else if(obj1.isOfType(DAVKonstanten.TYP_TYP) && 
-			   !obj2.isOfType(DAVKonstanten.TYP_TYP)){
+				
+				if(typ1.equals(typ2)){
+					ergebnis = "Die beiden Typen sind identisch: " + typ1;  //$NON-NLS-1$
+				}else if(typ1.inheritsFrom(typ2)){
+					ergebnis = typ1 + " erweitert " + typ2;  //$NON-NLS-1$
+				}else if(typ2.inheritsFrom(typ1)){
+					ergebnis = typ2 + " erweitert " + typ1;  //$NON-NLS-1$
+				}
+
+			}else if(obj1.isOfType(DUAKonstanten.TYP_TYP) && 
+			   !obj2.isOfType(DUAKonstanten.TYP_TYP)){
 				SystemObjectType typ = (SystemObjectType)obj1;
-				ergebnis = obj2.isOfType(typ);
-			}else if(!obj1.isOfType(DAVKonstanten.TYP_TYP) &&
-					obj2.isOfType(DAVKonstanten.TYP_TYP)){
+				
+				if(obj2.isOfType(typ)){
+					ergebnis = obj2 + " ist Instanz von " + typ; //$NON-NLS-1$
+				}
+			}else if(!obj1.isOfType(DUAKonstanten.TYP_TYP) &&
+					obj2.isOfType(DUAKonstanten.TYP_TYP)){
 				SystemObjectType typ = (SystemObjectType)obj2;
-				ergebnis = obj1.isOfType(typ);				
+				
+				if(obj1.isOfType(typ)){
+					ergebnis = obj1 + " ist Instanz von " + typ; //$NON-NLS-1$
+				}
 			}else{
-				/**
-				 * beide sind echte Objekte
-				 */
-				ergebnis = obj1.equals(obj2);
+				if(obj1.equals(obj2)){
+					ergebnis = "Die beiden Objekte sind identisch: " + obj1; //$NON-NLS-1$
+				}
 			}
 		}
 		
@@ -258,13 +299,55 @@ public class DAVHilfe {
 					}
 				}				
 			}else{
-				LOGGER.warning("Übergebener Attributpfad ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+				LOGGER.warning("Übergebener Attributpfad ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 			}			
 		}else{
-			LOGGER.warning("Übergebenes Datum ist " + DAVKonstanten.NULL); //$NON-NLS-1$
+			LOGGER.warning("Übergebenes Datum ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 		
 		return ergebnis;
 	}
 
+	/**
+	 * Erfragt, ob die übergebene Systemobjekt-Attributgruppen-Aspekt-
+	 * Kombination gültig ist.
+	 * 
+	 * @param obj das Systemobjekt
+	 * @param datenBeschreibung die Datenbeschreibung
+	 * @return <code>null</code>, wenn die übergebene Systemobjekt-
+	 * Attributgruppen-Aspekt-Kombination gültig ist, entweder.
+	 * Oder eine die Inkombatibilität beschreibende Fehlermeldung
+	 * sonst.
+	 */
+	public static final String isKombinationOk(final SystemObject obj,
+			final DataDescription datenBeschreibung){
+		String result = null;
+		
+		if(obj == null){
+			result = "Objekt ist " + DUAKonstanten.NULL; //$NON-NLS-1$
+		}else
+		if(datenBeschreibung == null){
+			result = "Datenbeschreibung ist " + DUAKonstanten.NULL; //$NON-NLS-1$
+		}else
+		if(datenBeschreibung.getAttributeGroup() == null){
+			result = "Attributgruppe ist " + DUAKonstanten.NULL;  //$NON-NLS-1$
+		}else
+		if(datenBeschreibung.getAspect() == null){
+			result = "Aspekt ist " + DUAKonstanten.NULL;  //$NON-NLS-1$
+		}else
+		if(!obj.getType().getAttributeGroups().contains(
+					datenBeschreibung.getAttributeGroup())){
+			result = "Attributgruppe " + datenBeschreibung.getAttributeGroup() +  //$NON-NLS-1$
+					" ist für Objekt " + obj +  //$NON-NLS-1$ 
+					" nicht definiert";  //$NON-NLS-1$
+		}else
+		if(!datenBeschreibung.getAttributeGroup().getAspects().
+				contains(datenBeschreibung.getAspect())){
+			result = "Aspekt " + datenBeschreibung.getAspect() +  //$NON-NLS-1$
+					" ist für Attributgruppe " + datenBeschreibung.getAttributeGroup() +  //$NON-NLS-1$ 
+					" nicht definiert";  //$NON-NLS-1$)
+		}
+			
+		return result;
+	}
 }

@@ -12,7 +12,7 @@ import stauma.dav.configuration.interfaces.SystemObjectType;
  * @author Thierfelder
  *
  */
-public class DAVKonstanten {
+public class DUAKonstanten {
 	
 		
 	/*************************************************************
@@ -30,6 +30,8 @@ public class DAVKonstanten {
 	public static final String STR_UNDEFINIERT = "undefiniert"; //$NON-NLS-1$
 	
 	public static final String TYP_TYP = "typ.typ"; //$NON-NLS-1$
+	
+	public static final String TYP_ATG = "typ.attributgruppe"; //$NON-NLS-1$
 	
 	public static final String EMPTY_STR = ""; //$NON-NLS-1$
 	
@@ -137,37 +139,7 @@ public class DAVKonstanten {
 	public static final String ATT_DFS_PUB_ZUORDNUNG = "PublikationsZuordnung"; //$NON-NLS-1$
 	
 	public static final String ATT_DFS_PUBLIZIEREN = "Publizieren"; //$NON-NLS-1$
-	
-	/**
-	 * Identifikatoren für Module
-	 */
-	public static final String CONST_MODUL_TYP_PLPruefungFormal = "PlPrüfungFormal"; //$NON-NLS-1$
-	public static final String CONST_MODUL_TYP_PLPruefungLogischUFD = "PlPrüfungLogischUFD"; //$NON-NLS-1$
-	public static final String CONST_MODUL_TYP_PLPruefungLogischWZD = "PlPrüfungLogischWZG"; //$NON-NLS-1$
-	public static final String CONST_MODUL_TYP_PLPruefungMesswertErsetzungLVE = "PlPrüfungMesswertErsetzungLVE"; //$NON-NLS-1$
-	public static final String CONST_MODUL_TYP_PLPruefungMesswertErsetzungUFD = "PlPrüfungMesswertErsetzungUFD"; //$NON-NLS-1$
-	public static final String CONST_MODUL_TYP_PLPruefungLangZeitUFD = "PlPrüfungLangZeitUFD"; //$NON-NLS-1$
-	
-	/**
-	 * Identifikatoren für SWE
-	 */
-	public static final String CONST_SWE_PL_Pruefung_formal = "SWE_PL_Prüfung_formal"; //$NON-NLS-1$
-	public static final String CONST_SWE_PL_Pruefung_logisch_LVE = "SWE_PL_Prüfung_logisch_LVE"; //$NON-NLS-1$
-	public static final String CONST_SWE_PL_Pruefung_logisch_UFD = "SWE_PL_Prüfung_logisch_UFD"; //$NON-NLS-1$
-	public static final String CONST_SWE_PL_Pruefung_logisch_WZG = "SWE_PL_Prüfung_logisch_WZG"; //$NON-NLS-1$
-	public static final String CONST_SWE_Messwertersetzung_LVE = "SWE_Messwertersetzung_LVE"; //$NON-NLS-1$
-	public static final String CONST_SWE_Abfrage_Pufferdaten = "SWE_Abfrage_Pufferdaten"; //$NON-NLS-1$
-	public static final String CONST_SWE_Datenaufbereitung_LVE = "SWE_Datenaufbereitung_LVE"; //$NON-NLS-1$
-	public static final String CONST_SWE_Datenaufbereitung_UFD = "SWE_Datenaufbereitung_UFD"; //$NON-NLS-1$
-	public static final String CONST_SWE_Aggregation_LVE = "SWE_Aggregation_LVE"; //$NON-NLS-1$
-	public static final String CONST_SWE_Ergaenzung_BASt = "SWE_Ergänzung_BASt"; //$NON-NLS-1$
-	public static final String CONST_SWE_Gueteberechnung = "SWE_Güteberechnung"; //$NON-NLS-1$
-	public static final String CONST_SWE_Messwerersetzung_UFD = "SWE_Messwertersetzung_UFD"; //$NON-NLS-1$
-	public static final String CONST_SWE_PL_Pruefung_UFD = "SWE_PL_Prüfung_Langzeit_UFD"; //$NON-NLS-1$
-	public static final String CONST_SWE_Glaettewarung_und_Prognose = "SWE_Glättewarnung_und_Prognose"; //$NON-NLS-1$
-	
-	
-	
+		
 	/**
 	 * Initialisiert diese Klasse statisch und liest alle Konstanten ein,
 	 * die nur in Zusammenhang mit einer Datenverteilerverbindung ermittelt 

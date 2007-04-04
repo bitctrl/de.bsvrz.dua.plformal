@@ -1,4 +1,7 @@
-package de.bsvrz.dua.plformal.dfs;
+package de.bsvrz.dua.plformal.dfs.schnittstellen;
+
+import de.bsvrz.dua.plformal.dfs.ModulTyp;
+import de.bsvrz.dua.plformal.dfs.SWETyp;
 
 
 /**

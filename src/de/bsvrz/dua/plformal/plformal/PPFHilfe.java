@@ -165,7 +165,8 @@ implements IPPFHilfe, ClientReceiverInterface{
 							objListe.add(objArray.getItem(j).asReferenceValue().getSystemObject());
 						}
 						final DAVDatenAnmeldung neueAnmeldung = new DAVDatenAnmeldung(objListe.toArray(new SystemObject[0]), dd,
-																	verwaltung.getKonfigurationsBereiche());
+																	verwaltung.getKonfigurationsBereiche(),
+																	verwaltung.getVerbindung());
 						neueAnmeldungen.add(neueAnmeldung);
 					} catch (Throwable e) {
 						LOGGER.error("Parameterdatensatz für die formale" + //$NON-NLS-1$
@@ -203,7 +204,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 			objekte.addAll(anmeldung.getObjekte());
 		}
 		
-		return objekte.size() > 0?objekte.toArray(new SystemObject[0]):null;
+		return objekte.toArray(new SystemObject[0]);
 	}
 
 	/**

@@ -2,28 +2,25 @@ package de.bsvrz.dua.plformal.test;
 
 import java.util.List;
 
-import de.bsvrz.dua.plformal.allgemein.DAVKonstanten;
-import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsHilfe;
-import de.bsvrz.dua.plformal.plformal.PPFHilfe;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientReceiverInterface;
 import stauma.dav.clientside.ClientSenderInterface;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
-import stauma.dav.clientside.DataNotSubscribedException;
 import stauma.dav.clientside.ReceiveOptions;
 import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.clientside.SenderRole;
-import stauma.dav.common.SendSubscriptionNotConfirmed;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
-import stauma.dav.configuration.interfaces.ConfigurationException;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import sys.funclib.ArgumentList;
-import sys.funclib.application.StandardApplication;
-import sys.funclib.application.StandardApplicationRunner;
+import de.bsvrz.dua.plformal.DAVTest;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den
@@ -33,7 +30,7 @@ import sys.funclib.application.StandardApplicationRunner;
  *
  */
 public class PlPruefungFormalTest
-implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
+implements ClientSenderInterface, ClientReceiverInterface{
 	
 	/**
 	 * Kumulation der verschiedenen Kennungen in einen Wert.
@@ -142,34 +139,21 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 	 */
 	private SystemObject ppfObjekt = null;
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
-		// mache nichts		
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void initialize(ClientDavInterface connection) throws Exception {
-		this.dav = connection;
+	@Before
+	public void setUp()
+	throws Exception{
+		dav = DAVTest.getDav();
 		
 		AttributeGroup atg = this.dav.getDataModel().getAttributeGroup(ATG_PID);
 		Aspect eingang = this.dav.getDataModel().getAspect(ASP_EINGANG_PID);
 		Aspect ausgang = this.dav.getDataModel().getAspect(ASP_AUSGANG_PID);
 		SystemObjectType typ = this.dav.getDataModel().getType(TYP);
 
-		AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(DAVKonstanten.ATG_PL_FORMAL);
-		Aspect aspPara = this.dav.getDataModel().getAspect(DAVKonstanten.ASP_PARA_VORGABE);
+		AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
+		Aspect aspPara = this.dav.getDataModel().getAspect(DUAKonstanten.ASP_PARA_VORGABE);
 		
 		ddAusgang = new DataDescription(atg, ausgang, (short)0);
 		ddEingang = new DataDescription(atg, eingang, (short)0);
@@ -179,7 +163,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 		
 
 			
-		for(SystemObject elem:this.dav.getDataModel().getType(DAVKonstanten.TYP_PL_FORMAL).getObjects()){
+		for(SystemObject elem:this.dav.getDataModel().getType(DUAKonstanten.TYP_PL_FORMAL).getObjects()){
 			if(elem.getPid().equals("kv.bitctrl.thierfelder")){
 				this.ppfObjekt = elem;
 			}
@@ -227,11 +211,11 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 		 * Durchläufe wie in Tabelle 5-4
 		 */
 		this.durchlaeufe = new Durchlauf[]{
-			new Durchlauf(DAVKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG, 	DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN),
-			new Durchlauf(DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX, 	DAVKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG),
-			new Durchlauf(DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX, 		DAVKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG),
-			new Durchlauf(DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN, 		DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX),
-			new Durchlauf(DAVKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG, 	DAVKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX)
+			new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG, 	DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN),
+			new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX, 	DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG),
+			new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX, 		DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG),
+			new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN, 		DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX),
+			new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG, 	DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX)
 		};
 		
 		/**
@@ -289,14 +273,27 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 					new TestErgebnis( 5, Implausibel, 63,		WertMax)
 				}
 		};
-		
-		testeAlles();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
+		// mache nichts		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
+		return false;
 	}
 	
 	/**
 	 * Alle Testfälle durchführen und Auswertung anzeigen
 	 */
-	private void testeAlles(){
+	@Test
+	public void testeAlles(){
 		for(int iDurchlauf = 0; iDurchlauf < 5; iDurchlauf++){
 			for(int iDatensatz = 0; iDatensatz < 8; iDatensatz++){
 				TestErgebnis soll = this.ergebnisse[iDurchlauf][iDatensatz];
@@ -306,6 +303,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 				System.out.println("Ist : " + ist);				 //$NON-NLS-1$
 				System.out.println("Ergebnis: ---" + (soll.equals(ist)?  //$NON-NLS-1$
 						"erfolgreich":"nicht erfolgreich") + "---\n");  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+				Assert.assertEquals(soll, ist);
 			}	
 		}
 	}
@@ -315,7 +313,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 		/**
 		 * Parameter setzen
 		 */
-		Data data = this.dav.createData(this.dav.getDataModel().getAttributeGroup(DAVKonstanten.ATG_PL_FORMAL));
+		Data data = this.dav.createData(this.dav.getDataModel().getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL));
 		Data.Array ps = data.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray(); //$NON-NLS-1$
 		ps.setLength(2);
 		
@@ -360,7 +358,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 		
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]); //$NON-NLS-1$
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]); //$NON-NLS-1$
-		System.out.println(DAVKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT.get(dl.testAtt1) + ", "  + DAVKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT.get(dl.testAtt2)); //$NON-NLS-1$
+		System.out.println(DUAKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT.get(dl.testAtt1) + ", "  + DUAKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT.get(dl.testAtt2)); //$NON-NLS-1$
 		
 		try {
 			this.dav.sendData(parameter);
@@ -418,13 +416,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void parseArguments(ArgumentList argumentList) throws Exception {
-		 //	
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -450,18 +442,7 @@ implements StandardApplication, ClientSenderInterface, ClientReceiverInterface{
 				}
 			}
 		}
-	}
-
-	/**
-	 * Startet den Test
-	 * 
-	 * @param args Kommandozeile
-	 */
-	public static void main(String[] args){
-		StandardApplicationRunner.run(new PlPruefungFormalTest(), args);
-	}
-
-	
+	}	
 	
 	
 	/**

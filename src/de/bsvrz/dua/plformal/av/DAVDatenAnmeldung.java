@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
-import stauma.dav.configuration.interfaces.SystemObjectType;
+import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 
 /**
@@ -35,31 +36,28 @@ public class DAVDatenAnmeldung{
 
 	/**
 	 * Standardkonstruktor (alle übergebenen Typen werden
-	 * in ihre Instanzen aufgelöst)
+	 * in ihre Instanzen aufgelöst). Sollten innerhalb der
+	 * Datenbeschreibung sog. Wildcards (in Form von <code>
+	 * null</code>) vorkommen, so werden diese
+	 * hier aufgelöst.
 	 * 
 	 * @param objekte Objekte, für die die Anmeldung gilt
 	 * @param desc Datenbeschreibung, für die die Objekte
 	 * angemeldet sind
-	 * @throws Exception wenn entweder das Systemobjekt,
-	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist. Oder, wenn eine Objekt-
-	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
+	 * @throws NullPointerException
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
-							 final DataDescription datenBeschreibung)
-	throws Exception{
-		for(SystemObject obj:objekte){
-			if(obj.isOfType(DUAKonstanten.TYP_TYP)){
-				SystemObjectType typ = (SystemObjectType)obj;
-				for(SystemObject element:typ.getObjects()){
-					this.objektAnmeldungen.add(
-							new DAVObjektAnmeldung(element, datenBeschreibung));
-				}
-			}else{
-				this.objektAnmeldungen.add(
-						new DAVObjektAnmeldung(obj, datenBeschreibung));
+							 final DataDescription datenBeschreibung,
+							 final ClientDavInterface dav){
+		if(objekte == null || objekte.length == 0){
+			this.objektAnmeldungen.addAll(DUAHilfe.
+					getAlleObjektAnmeldungen(null, datenBeschreibung, dav));
+		}else{
+			for(SystemObject obj:objekte){
+				this.objektAnmeldungen.addAll(DUAHilfe.
+						getAlleObjektAnmeldungen(obj, datenBeschreibung, dav));
 			}
-		}				
+		}
 	}
 	
 	/**
@@ -73,44 +71,43 @@ public class DAVDatenAnmeldung{
 	 * @param desc Datenbeschreibung, für die die Objekte angemeldet sind
 	 * @param kb Liste mit Konfigurationsbereichen, durch die die Objektliste
 	 * noch gefiltert werden soll
-	 * @throws Exception wenn entweder das Systemobjekt,
-	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist. Oder, wenn eine Objekt-
-	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
+	 * @throws NullPointerException 
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
 							 final DataDescription datenBeschreibung,
-							 final Collection<ConfigurationArea> kBereiche)
-	throws Exception{
+							 final Collection<ConfigurationArea> kBereiche,
+							 final ClientDavInterface dav)
+	throws NullPointerException{
 		this.konfigurationsBereiche = kBereiche;
 		
-		for(SystemObject obj:objekte){
-			if(kBereiche == null || kBereiche.size() == 0){
-				if(obj.isOfType(DUAKonstanten.TYP_TYP)){
-					SystemObjectType typ = (SystemObjectType)obj;
-					for(SystemObject element:typ.getObjects()){
-						this.objektAnmeldungen.add(
-								new DAVObjektAnmeldung(element, datenBeschreibung));
-					}
+		if(objekte == null || objekte.length == 0){
+			for(SystemObject finObj:DUAHilfe.getFinaleObjekte(null, dav)){
+				if(kBereiche == null || kBereiche.size() == 0){
+					this.objektAnmeldungen.addAll(DUAHilfe.
+							getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
 				}else{
-					this.objektAnmeldungen.add(
-							new DAVObjektAnmeldung(obj, datenBeschreibung));
-				}				
-			}else{
-				if(obj.isOfType(DUAKonstanten.TYP_TYP)){
-					SystemObjectType typ = (SystemObjectType)obj;
-					for(SystemObject element:typ.getObjects()){
-						if(kBereiche.contains(element.getConfigurationArea())){
-							this.objektAnmeldungen.add(
-									new DAVObjektAnmeldung(element, datenBeschreibung));
-						}						
+					if(kBereiche.contains(finObj.getConfigurationArea())){
+						this.objektAnmeldungen.addAll(
+								DUAHilfe.
+								getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
 					}
-				}else{
-					if(kBereiche.contains(obj.getConfigurationArea())){
-						this.objektAnmeldungen.add(
-								new DAVObjektAnmeldung(obj, datenBeschreibung));
+				}
+			}
+		}else{
+			for(SystemObject obj:objekte){
+				for(SystemObject finObj:DUAHilfe.getFinaleObjekte(obj, dav)){
+					if(kBereiche == null || kBereiche.size() == 0){
+						this.objektAnmeldungen.addAll(DUAHilfe.
+								getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
+					}else{
+						if(kBereiche.contains(finObj.getConfigurationArea())){
+							this.objektAnmeldungen.addAll(
+									DUAHilfe.
+									getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
+						}
 					}
-				}				
+
+				}
 			}
 		}
 	}

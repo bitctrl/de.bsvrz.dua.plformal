@@ -5,12 +5,29 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 
 /**
- * Repräsentiert die Anmeldung eines Systemobjekts
- * unter einer Datenbeschreibung. Die Elemente dieser
- * Klasse lassen sich korrekt und ohne Doppelungen
- * in ein <code>TreeSet</code>-Objekt einspeisen
- * oder als Schlüssel für eine <code>TreeMap</code>
- * benutzen.
+ * Repräsentiert die Anmeldung eines <b>finalen</b> Systemobjekts
+ * (ein finales Systemobjekt ist entweder ein Konfigurationsobjekt
+ * oder ein Dynamisches Objekt) unter einer bestimmten Datenbeschreibung.<br>
+ * <b>Achtung:</b>
+ * <ul>
+ * <li>
+ * Diese Klasse ist so entworfen, dass nur im
+ * Sinne des Datenverteilers kompatible Objekt-Attributgruppe-
+ * Aspekt-Kombinationen akzeptiert werden (via Konstruktor).
+ * </li>
+ * <li>
+ * Weiterhin ist diese Klasse so entworfen, dass beim 
+ * Einspeisen ihrer Elemente in <code>TreeSet</code>- oder 
+ * <code>TreeMap</code>-Strukturen keine Datenverteiler-spezifischen
+ * Widersprüche innerhalb dieser Strukturen auftreten können. D.h.
+ * insbesondere, dass alle Elemente einer solchen Struktur 
+ * konfliktfrei zum Senden oder Empfangen von Daten angemeldet
+ * werden können.<br>
+ * Mit konfliktfrei im Sinne des Datenverteilers
+ * ist gemeint, dass in einer solchen Struktur keine Objekt-
+ * Attributgruppe-Aspekt-Kombinationen doppelt auftreten.
+ * </li>
+ * </ul>
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -19,7 +36,7 @@ public class DAVObjektAnmeldung
 implements Comparable<DAVObjektAnmeldung>{
 
 	/**
-	 * Das Systemobjekt
+	 * Das (finale) Systemobjekt
 	 */
 	private SystemObject objekt = null;
 	
@@ -33,14 +50,16 @@ implements Comparable<DAVObjektAnmeldung>{
 	/**
 	 * Standardkonstruktor
 	 * 
-	 * @param objekt das Systemobjekt
+	 * @param objekt das (finale) Systemobjekt
 	 * @param datenBeschreibung die Datenbeschreibung unter
 	 * der das Systemobjekt angemeldet werden soll bzw. ist
 	 * @throws Exception wenn entweder das Systemobjekt,
 	 * die Datenbeschreibung, deren Attributgruppe oder deren
-	 * Aspekt <code>null</code> ist. Oder, wenn die Objekt-
-	 * Attributgruppen-Aspekt-Kombination an sich ungültig ist. 
-	 */
+	 * Aspekt <code>null</code> ist, wenn die Objekt-
+	 * Attributgruppen-Aspekt-Kombination an sich ungültig bzw.
+	 * inkompatibel ist, oder wenn das übergebene Systemobjekt
+	 * kein Konfigurationsobjekt oder Dynamisches Objekt ist.
+	 **/
 	public DAVObjektAnmeldung(final SystemObject objekt,
 							  final DataDescription datenBeschreibung)
 	throws Exception{
@@ -52,14 +71,14 @@ implements Comparable<DAVObjektAnmeldung>{
 		this.objekt = objekt;
 		this.datenBeschreibung = datenBeschreibung;
 	}
-	
+		
 	/**
 	 * Erfragt die Datenbeschreibung unter der das Systemobjekt 
 	 * angemeldet werden soll bzw. ist 
 	 * 
 	 * @return datenBeschreibung eine Datenbeschreibung
 	 */
-	public DataDescription getDatenBeschreibung() {
+	public final DataDescription getDatenBeschreibung() {
 		return datenBeschreibung;
 	}
 
@@ -68,7 +87,7 @@ implements Comparable<DAVObjektAnmeldung>{
 	 * 
 	 * @return objekt ein Systenobjekt
 	 */
-	public SystemObject getObjekt() {
+	public final SystemObject getObjekt() {
 		return objekt;
 	}
 
@@ -98,8 +117,9 @@ implements Comparable<DAVObjektAnmeldung>{
 	 * 
 	 * Diese Methode muss implementiert werden, da nach der
 	 * Exploration des Baums über <code>compareTo(..)</code>
-	 * nochmals mit <code>equals(..)</code> explizit auf
-	 * Gleichheit getestet wird.
+	 * (bspw. beim Aufruf von <code>contains()</code>) nochmals
+	 * mit <code>equals(..)</code> explizit auf Gleichheit
+	 * getestet wird.
 	 */
 	@Override
 	public boolean equals(Object obj) {

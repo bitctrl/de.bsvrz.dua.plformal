@@ -96,7 +96,6 @@ public abstract class DAVAnmeldungsVerwaltung {
 		for(DAVObjektAnmeldung aktuelleObjektAnmeldung:aktuelleObjektAnmeldungen){
 			info += aktuelleObjektAnmeldung;
 		}
-		System.out.println(info);
 //		Debug Ende
 
 		synchronized (this) {

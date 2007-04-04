@@ -11,8 +11,8 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
  * Verfügung gestellt.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * @version 1.0
- */
+ * 
+ **/
 public class SWETyp
 extends AbstractDavZustand{
 

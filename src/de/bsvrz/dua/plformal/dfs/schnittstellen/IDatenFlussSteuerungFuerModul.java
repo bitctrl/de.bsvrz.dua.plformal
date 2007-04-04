@@ -1,4 +1,4 @@
-package de.bsvrz.dua.plformal.dfs;
+package de.bsvrz.dua.plformal.dfs.schnittstellen;
 
 import java.util.Collection;
 

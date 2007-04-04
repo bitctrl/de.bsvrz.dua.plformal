@@ -2,18 +2,20 @@ package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
+import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
-import de.bsvrz.dua.plformal.dfs.IDatenFlussSteuerung;
-import de.bsvrz.dua.plformal.dfs.IDatenFlussSteuerungFuerModul;
 import de.bsvrz.dua.plformal.dfs.ModulTyp;
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 
 /**
  * Implementierung des Moduls PL-Prüfung formal.
@@ -79,14 +81,25 @@ implements IPPFHilfeListener{
 	 */
 	private void aktualisierePublikationIntern(){
 		if(this.publizieren){
-			Collection<DAVObjektAnmeldung> anmeldungenStd = 
-				this.standardAspekte != null?this.standardAspekte.
-						getStandardAnmeldungen():new ArrayList<DAVObjektAnmeldung>();
+			SystemObject[] objektFilter = new SystemObject[0];
+			
+			if(this.ppfParameter != null){
+				objektFilter = this.ppfParameter.getBetrachteteObjekte();
+			}
+			
+			Collection<DAVObjektAnmeldung> anmeldungenStd =
+							new ArrayList<DAVObjektAnmeldung>();
 
+			if(this.standardAspekte != null){
+				anmeldungenStd = this.standardAspekte.
+									getStandardAnmeldungen(
+									objektFilter);
+			}
+			
 			Collection<DAVObjektAnmeldung> anmeldungen = 
-					this.iDfsMod.getDatenAnmeldungen(this.ppfParameter != null?
-							this.ppfParameter.getBetrachteteObjekte():null, 
+					this.iDfsMod.getDatenAnmeldungen(objektFilter, 
 							anmeldungenStd);
+			
 			synchronized(this){
 				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
 			}

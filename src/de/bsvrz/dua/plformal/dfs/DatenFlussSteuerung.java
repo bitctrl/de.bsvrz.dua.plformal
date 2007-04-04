@@ -5,13 +5,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
+
 /**
  * Diese Klasse repräsentiert die Attributgruppe
  * <code>atg.datenFlussSteuerung</code> des Typs
  * <code>typ.datenFlussSteuerung</code>.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * @version 1.0
+ * 
  */
 public class DatenFlussSteuerung
 implements IDatenFlussSteuerung {
@@ -30,16 +33,6 @@ implements IDatenFlussSteuerung {
 	 */
 	public final void add(final ParameterSatz ps) {
 		parameterSaetze.add(ps);
-	}
-
-	/**
-	 * Entfernt einen Parametersatz aus diesem Objekt
-	 * 
-	 * @param ps
-	 *            der zu entfernende Parametersatz
-	 */
-	public final void remove(final ParameterSatz ps) {
-		parameterSaetze.remove(ps);
 	}
 
 	/**

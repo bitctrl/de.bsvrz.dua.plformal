@@ -17,6 +17,7 @@ import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
 
 /**
  * Diese Klasse liest die Parameter der Datenflusssteuerung aus 
@@ -43,7 +44,7 @@ implements ClientReceiverInterface {
 	/**
 	 * die statische Instanz dieser Klasse
 	 */
-	private static DatenFlussSteuerungsHilfe INSTANZ = null;
+	protected static DatenFlussSteuerungsHilfe INSTANZ = null;
 
 	/**
 	 * Menge aller Beobachter dieser Instanz
@@ -257,5 +258,9 @@ implements ClientReceiverInterface {
 				this.listenerListe.remove(listener);
 			}
 		}
+	}
+	
+	protected final IVerwaltung getVerwaltung(){
+		return this.verwaltung;
 	}
 }

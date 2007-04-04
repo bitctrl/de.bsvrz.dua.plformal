@@ -1,5 +1,7 @@
 package de.bsvrz.dua.plformal;
 
+import java.util.Random;
+
 import stauma.dav.clientside.ClientDavInterface;
 import sys.funclib.ArgumentList;
 import sys.funclib.application.StandardApplication;
@@ -26,6 +28,11 @@ public class DAVTest {
 	 * Verbindung zum Datenverteiler
 	 */
 	protected static ClientDavInterface VERBINDUNG = null;
+
+	/**
+	 * Randomizer
+	 */
+	private static Random R = new Random(System.currentTimeMillis());
 
 	
 	/**
@@ -56,6 +63,29 @@ public class DAVTest {
 		}
 		
 		return VERBINDUNG;
+	}
+
+
+	/**
+	 * Erfragt einen Array mit zufälligen Zahlen von
+	 * 0 bis <code>anzahl</code>. Jede Zahl darf nur 
+	 * einmal im Array vorkommen.
+	 * 
+	 * @param anzahl die Obergrenze
+	 * @return Array mit zufälligen Zahlen von
+	 * 0 bis <code>anzahl</code>
+	 */
+	public static final int[] getZufaelligeZahlen(int anzahl){
+		int belegt = 0;
+		int[] zahlen = new int[anzahl];
+		for(int i = 0; i<anzahl; i++)zahlen[i] = -1;
+		
+		while(belegt < anzahl){
+			int index = R.nextInt(anzahl);
+			if(zahlen[index] == -1)zahlen[index] = belegt++;
+		}
+		
+		return zahlen;
 	}
 
 }

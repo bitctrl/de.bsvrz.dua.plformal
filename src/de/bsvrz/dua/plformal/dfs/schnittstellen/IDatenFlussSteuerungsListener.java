@@ -1,4 +1,4 @@
-package de.bsvrz.dua.plformal.dfs;
+package de.bsvrz.dua.plformal.dfs.schnittstellen;
 
 /**
  * Interface das alle Klassen implementieren müssen,

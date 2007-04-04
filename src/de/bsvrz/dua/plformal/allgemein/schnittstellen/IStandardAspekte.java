@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.Aspect;
+import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 /**
@@ -31,10 +32,14 @@ public interface IStandardAspekte {
 	 * Erfragt die Datenanmeldungen, die für die Publikation
 	 * unter den Standardaspekten durchgeführt werden müssen. 
 	 * 
+	 * @param objektFilter die Objekte, die betrachtet werden
+	 * sollen. Wenn dieser Array leer ist, werden alle definierten
+	 * Standardanmeldungen zurückgegeben.
 	 * @return die Datenanmeldungen, die für die Publikation unter
 	 * den Standardaspekten durchgeführt werden müssen (ggf. leere
 	 * Menge)
 	 */
-	public Collection<DAVObjektAnmeldung> getStandardAnmeldungen();
+	public Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
+			final SystemObject[] objektFilter);
 
 }

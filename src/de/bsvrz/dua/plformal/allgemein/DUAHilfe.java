@@ -1,17 +1,22 @@
 package de.bsvrz.dua.plformal.allgemein;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
+import stauma.dav.configuration.interfaces.Aspect;
+import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 
 /**
@@ -44,13 +49,18 @@ public class DUAHilfe {
 	 */
 	public static final String[] getKonfigurationsBereiche(
 			final String kbString){
-		String[] s = new String[0];
+		List<String> resultListe = new ArrayList<String>();
 		
 		if(kbString != null){
-			s = kbString.split(","); //$NON-NLS-1$
+			String[] s = kbString.split(","); //$NON-NLS-1$
+			for(String dummy:s){
+				if(dummy != null && dummy.length() > 0){
+					resultListe.add(dummy);
+				}
+			}
 		}
 		
-		return s;
+		return resultListe.toArray(new String[0]);
 	}
 	
 	/**
@@ -132,7 +142,7 @@ public class DUAHilfe {
 		for(String kb:kbStr){
 			try{
 				ConfigurationArea area = dav.getDataModel().getConfigurationArea(kb);
-				kbListe.add(area);
+				if(area != null)kbListe.add(area);
 			}catch(UnsupportedOperationException ex){
 				LOGGER.error("Konfigurationsbereich " + kb +  //$NON-NLS-1$
 						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
@@ -178,6 +188,7 @@ public class DUAHilfe {
 	 * @param schluessel der Schlüssel
 	 * @param argumentListe alle Argumente der Kommandozeile
 	 * @return das Wert des DAV-Arguments mit dem übergebenen Schlüssel
+	 * oder <code>null</code>, wenn der Schlüssel nicht gefunden wurde
 	 */
 	public static final String getArgument(final String schluessel,
 										   final List<String> argumentListe){
@@ -310,7 +321,7 @@ public class DUAHilfe {
 
 	/**
 	 * Erfragt, ob die übergebene Systemobjekt-Attributgruppen-Aspekt-
-	 * Kombination gültig ist.
+	 * Kombination gültig bzw. kompatibel ist.
 	 * 
 	 * @param obj das Systemobjekt
 	 * @param datenBeschreibung die Datenbeschreibung
@@ -346,8 +357,96 @@ public class DUAHilfe {
 			result = "Aspekt " + datenBeschreibung.getAspect() +  //$NON-NLS-1$
 					" ist für Attributgruppe " + datenBeschreibung.getAttributeGroup() +  //$NON-NLS-1$ 
 					" nicht definiert";  //$NON-NLS-1$)
+		}else
+		if(! (obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+			  obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class)) ){
+			result = "Es handelt sich weder um ein Konfigurationsobjekt " + //$NON-NLS-1$
+					"noch ein dynamisches Objekt: " + obj; //$NON-NLS-1$
 		}
 			
 		return result;
+	}
+	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static final Collection<SystemObject>
+				getFinaleObjekte(final SystemObject obj,
+								 final ClientDavInterface dav){
+		Collection<SystemObject> finaleObjekte =
+			new HashSet<SystemObject>();
+		
+		if(obj == null){
+			SystemObjectType typ = dav.getDataModel().getType(DUAKonstanten.TYP_TYP);
+			for(SystemObject elem:typ.getElements()){
+				finaleObjekte.addAll(getFinaleObjekte(elem, dav));	
+			}			
+		}else
+		if(obj instanceof SystemObjectType){
+			SystemObjectType typ = (SystemObjectType)obj;
+			finaleObjekte.addAll(typ.getElements());
+		}else
+		if( obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+			obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
+			finaleObjekte.add(obj);
+		}else{
+			LOGGER.info("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
+					" ein Konfigurationsobjekt noch ein dynamisches Objekt"); //$NON-NLS-1$
+		}
+			
+		return finaleObjekte;
+	}
+	
+	
+	public static final Collection<DAVObjektAnmeldung>
+				getAlleObjektAnmeldungen(final SystemObject obj, 
+						final DataDescription datenBeschreibung,
+						final ClientDavInterface dav){
+		Collection<DAVObjektAnmeldung> anmeldungen =
+			new TreeSet<DAVObjektAnmeldung>();
+		
+		Collection<SystemObject> finObjekte = getFinaleObjekte(obj, dav);
+		
+		for(SystemObject finObj:finObjekte){
+			try{
+				if(datenBeschreibung == null || 
+				   (datenBeschreibung.getAttributeGroup() == null &&
+					datenBeschreibung.getAspect() == null)){
+					for(AttributeGroup atg:finObj.getType().getAttributeGroups()){
+						for(Aspect asp:atg.getAspects()){
+							anmeldungen.add(new DAVObjektAnmeldung(
+								finObj, new DataDescription(atg, asp, (short)0)));
+						}					
+					}					
+				}else
+				if(datenBeschreibung.getAttributeGroup() == null){
+					for(AttributeGroup atg:finObj.getType().getAttributeGroups()){
+						try{
+							anmeldungen.add(new DAVObjektAnmeldung(
+								finObj, new DataDescription(atg, datenBeschreibung.
+										getAspect(), (short)0)));
+						}catch(Exception ex){
+							LOGGER.warning(DUAKonstanten.EMPTY_STR, ex);
+						}
+					}
+				}else
+				if(datenBeschreibung.getAspect() == null){
+					for(Aspect asp:datenBeschreibung.getAttributeGroup().getAspects()){
+						anmeldungen.add(new DAVObjektAnmeldung(
+								finObj, new DataDescription(datenBeschreibung.
+										getAttributeGroup(), asp, (short)0)));
+					}					
+				}else{
+					anmeldungen.add(new DAVObjektAnmeldung(finObj, 
+							datenBeschreibung));
+				}
+			}catch(Exception ex){
+				LOGGER.warning(DUAKonstanten.EMPTY_STR, ex);
+			}
+		}
+		
+		return anmeldungen;
 	}
 }

@@ -48,9 +48,13 @@ public interface IPPFHilfe {
 	public List<DAVDatenAnmeldung> getDatenAnmeldungen();
 	
 	/**
-	 * Erfragt alle zur formalen Plausibilisierung vorgesehenen Objekte
+	 * Erfragt alle zur formalen Plausibilisierung vorgesehenen
+	 * Objekte. Diese Objekte werden von den Parametern der
+	 * Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code>
+	 * bereitgestellt.
 	 * 
-	 * @return alle zur formalen Plausibilisierung vorgesehenen Objekte
+	 * @return alle zur formalen Plausibilisierung vorgesehenen
+	 * Objekte in einem Array oder ein leerer Array.
 	 */
 	public SystemObject[] getBetrachteteObjekte();
 	

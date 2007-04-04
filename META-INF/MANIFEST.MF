@@ -13,5 +13,4 @@ Export-Package: de.bsvrz.dua.plformal.adapter,
  de.bsvrz.dua.plformal.av,
  de.bsvrz.dua.plformal.dfs,
  de.bsvrz.dua.plformal.plformal,
- de.bsvrz.dua.plformal.schnittstellen,
  de.bsvrz.dua.plformal.vew

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
@@ -17,6 +18,7 @@ import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 
 /**
  * Diese Klasse stellt über die Schnittstelle <code>IDatenFlussSteuerungFuerModul</code>
@@ -45,12 +47,6 @@ IDatenFlussSteuerungFuerModul {
 	 */
 	private Collection<PublikationsZuordung> publikationsZuordnungen = 
 			new ArrayList <PublikationsZuordung>();
-
-	/**
-	 * 
-	 */
-	private Map<DAVObjektAnmeldung, PublikationsZustand> publikationsMap =
-						new TreeMap<DAVObjektAnmeldung, PublikationsZustand>();
 	
 
 	/**
@@ -71,11 +67,13 @@ IDatenFlussSteuerungFuerModul {
 			final SystemObject[] filterObjekte,
 			final Collection<DAVObjektAnmeldung> standardAnmeldungen) {
 		Collection<DAVObjektAnmeldung> anmeldungen = new ArrayList<DAVObjektAnmeldung>();
-
+		Collection<DAVObjektAnmeldung> anmeldungenStd = new TreeSet<DAVObjektAnmeldung>();
+		anmeldungenStd.addAll(standardAnmeldungen);
+		
 		if (publikationsZuordnungen != null) {
 			for (PublikationsZuordung pz : publikationsZuordnungen) {
 
-				if (pz.isPublizieren()) {
+				if (pz.isPublizieren()) {					
 					Collection<SystemObject> anzumeldendeObjekte = new HashSet<SystemObject>();
 
 					if (filterObjekte != null && filterObjekte.length > 0) {
@@ -87,8 +85,9 @@ IDatenFlussSteuerungFuerModul {
 									break;
 								}
 							}
-							if (match)
-								anzumeldendeObjekte.add(obj);
+							if (match){
+								anzumeldendeObjekte.add(obj);								
+							}
 						}
 					} else {
 						anzumeldendeObjekte.addAll(pz.getObjekte());
@@ -102,9 +101,47 @@ IDatenFlussSteuerungFuerModul {
 							try {
 								anmeldung = new DAVDatenAnmeldung(
 										anzumeldendeObjekte
-												.toArray(new SystemObject[0]), dd);
+												.toArray(new SystemObject[0]), dd,
+						DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
 								
 								anmeldungen.addAll(anmeldung.getObjektAnmeldungen());
+							} catch (Exception e) {
+								LOGGER.error(DUAKonstanten.EMPTY_STR, e);
+							}
+						}
+					}
+				}else{
+					Collection<SystemObject> anzumeldendeObjekte = new HashSet<SystemObject>();
+
+					if (filterObjekte != null && filterObjekte.length > 0) {
+						for (SystemObject obj : pz.getObjekte()) {
+							boolean match = false;
+							for (SystemObject filterObj : filterObjekte) {
+								if (DUAHilfe.hasSchnittMenge(obj, filterObj) != null) {
+									match = true;
+									break;
+								}
+							}
+							if (match){
+								anzumeldendeObjekte.add(obj);								
+							}
+						}
+					} else {
+						anzumeldendeObjekte.addAll(pz.getObjekte());
+					}
+
+					if (anzumeldendeObjekte.size() > 0) {
+						for (AttributeGroup atg : pz.getAtgs()) {
+							DataDescription dd = new DataDescription(atg, pz
+									.getAspekt(), (short) 0);
+							DAVDatenAnmeldung anmeldung;
+							try {
+								anmeldung = new DAVDatenAnmeldung(
+										anzumeldendeObjekte
+												.toArray(new SystemObject[0]), dd,
+					DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
+								
+								anmeldungenStd.removeAll(anmeldung.getObjektAnmeldungen());
 							} catch (Exception e) {
 								LOGGER.error(DUAKonstanten.EMPTY_STR, e);
 							}
@@ -113,6 +150,7 @@ IDatenFlussSteuerungFuerModul {
 				}
 			}
 		}
+		anmeldungen.addAll(anmeldungenStd);
 
 		return anmeldungen;
 	}

@@ -2,15 +2,19 @@ package de.bsvrz.dua.plformal.dfs;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import stauma.dav.clientside.Data;
+import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import stauma.dav.configuration.interfaces.SystemObjectType;
+import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
+import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 /**
  * In dieser Klasse sind alle Informationen zusammengefasst, die das
@@ -18,9 +22,14 @@ import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
  * bestimmten Modul-Typ und <b>einem</b> Publikationsaspekt beschreiben.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * @version 1.0
+ * 
  */
 public class PublikationsZuordung {
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Der Modul-Typ
@@ -46,6 +55,13 @@ public class PublikationsZuordung {
 	 * soll publiziert werden
 	 */
 	private boolean publizieren = false;
+	
+	/**
+	 * Mapt eine Objektanmeldung, d.h. eine Systemobjekt-Attributgruppen-
+	 * Aspekt-Kombination auf das Flag <code>publizieren</code> 
+	 */
+	private Collection<DAVObjektAnmeldung> anmeldungen = 
+									new TreeSet<DAVObjektAnmeldung>();
 
 	
 	/**
@@ -72,38 +88,16 @@ public class PublikationsZuordung {
 				DUAKonstanten.ATT_DFS_PUBLIZIEREN).getText()
 				.toLowerCase().equals("ja"); //$NON-NLS-1$
 
-		if(data.getArray(DUAKonstanten.ATT_DFS_OBJ).getLength() == 0){
-			SystemObjectType typTyp = verwaltung.getVerbindung().
-										getDataModel().getType(DUAKonstanten.TYP_TYP);
-			
-			for(SystemObject typ:typTyp.getObjects()){
-				if(typ instanceof SystemObjectType){
-					SystemObjectType objTyp = (SystemObjectType)typ;
-					for(SystemObject obj:DUAHilfe.getAlleObjekteVomTypImKonfigBereich(
-							verwaltung, objTyp, verwaltung.getKonfigurationsBereiche())){
-						this.objekte.add(obj);				
-					}			
-				}
-			}
-		}else{
-			for (int iObj = 0; iObj < data.getArray(
-					DUAKonstanten.ATT_DFS_OBJ).getLength(); iObj++) {
-				this.objekte.add(data.getArray(DUAKonstanten.ATT_DFS_OBJ)
-						.getReferenceValue(iObj)
-						.getSystemObject());
-			}
+		for (int iObj = 0; iObj < data.getArray(
+				DUAKonstanten.ATT_DFS_OBJ).getLength(); iObj++) {
+			SystemObject dummy = data.getArray(DUAKonstanten.ATT_DFS_OBJ)
+									.getReferenceValue(iObj).getSystemObject();
+			this.objekte.addAll(DUAHilfe.getFinaleObjekte(dummy,
+											verwaltung.getVerbindung()));
 		}
 		
 		if(data.getArray(DUAKonstanten.ATT_DFS_ATG).getLength() == 0){
-			SystemObjectType typAtg = verwaltung.getVerbindung().
-										getDataModel().getType(DUAKonstanten.TYP_ATG);
-			
-			for(SystemObject obj:typAtg.getObjects()){
-				if(obj instanceof AttributeGroup){
-					AttributeGroup atg = (AttributeGroup)obj;
-					this.atgs.add(atg);				
-				}
-			}
+			this.atgs.add(null);
 		}else{
 			for (int iAtg = 0; iAtg < data.getArray(
 					DUAKonstanten.ATT_DFS_ATG).getLength(); iAtg++) {
@@ -113,6 +107,35 @@ public class PublikationsZuordung {
 						.getSystemObject());
 			}
 		}
+		
+		for(AttributeGroup atg:this.atgs){
+			DataDescription datenBeschreibung = new DataDescription(atg, this.aspekt, (short)0);
+			try{
+				DAVDatenAnmeldung neueDatenAnmeldung = new DAVDatenAnmeldung(objekte.toArray(
+							new SystemObject[0]), datenBeschreibung,
+							DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
+				
+				for(DAVObjektAnmeldung neueObjektAnmeldung:neueDatenAnmeldung.getObjektAnmeldungen()){
+					if(this.anmeldungen.contains(neueObjektAnmeldung)){
+						LOGGER.warning("Objektanmeldung bereits vorhanden: " + //$NON-NLS-1$
+								neueObjektAnmeldung);
+					}else{
+						this.anmeldungen.add(neueObjektAnmeldung);
+					}
+				}
+			}catch(Exception ex){
+				LOGGER.warning("Vorgesehene Publikationsanmeldung" + //$NON-NLS-1$
+						" ist nicht gültig", ex); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Collection<DAVObjektAnmeldung> getObjektAnmeldungen(){
+		return this.anmeldungen;
 	}
 	
 	/**

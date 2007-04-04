@@ -2,8 +2,10 @@ package de.bsvrz.dua.plformal.allgemein;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.clientside.ResultData;
@@ -50,7 +52,8 @@ public abstract class StandardAspekteVersorger {
 		/**
 		 * {@inheritDoc}
 		 */
-		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen() {
+		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
+				final SystemObject[] objektFilter) {
 			return new ArrayList<DAVObjektAnmeldung>();
 		}
 
@@ -132,7 +135,8 @@ public abstract class StandardAspekteVersorger {
 						anmeldung = new DAVDatenAnmeldung(
 								new SystemObject[] { zuordnung.typ },
 								new DataDescription(zuordnung.atg, zuordnung.aspAusgang, (short)0),
-								StandardAspekteVersorger.this.verwaltung.getKonfigurationsBereiche());
+								StandardAspekteVersorger.this.verwaltung.getKonfigurationsBereiche(),
+								verwaltung.getVerbindung());
 					
 						anmeldungenGlobal.addAll(anmeldung.getObjektAnmeldungen());
 						
@@ -144,6 +148,7 @@ public abstract class StandardAspekteVersorger {
 							this.publikationsMap.put(objektAnmeldung, zuordnung.aspAusgang);
 						}
 					} catch (Exception e) {
+						e.printStackTrace();
 						throw new DUAInitialisierungsException("Standard-" + //$NON-NLS-1$
 								"Publikaionsinformationen konnten nicht angelegt werden"); //$NON-NLS-1$
 					}
@@ -176,8 +181,27 @@ public abstract class StandardAspekteVersorger {
 		/**
 		 * {@inheritDoc}
 		 */
-		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen() {
-			return anmeldungenGlobal;
+		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
+				final SystemObject[] objektFilter) {
+			Collection<DAVObjektAnmeldung> anmeldungen = 
+							new TreeSet<DAVObjektAnmeldung>();
+			
+			if(objektFilter == null || objektFilter.length == 0){
+				anmeldungen = anmeldungenGlobal;	
+			}else{	
+				HashSet<SystemObject> objekte = new HashSet<SystemObject>();
+				for(SystemObject obj:objektFilter){
+					objekte.add(obj);
+				}
+				
+				for(DAVObjektAnmeldung anmeldung:anmeldungenGlobal){
+					if(objekte.contains(anmeldung.getObjekt())){
+						anmeldungen.add(anmeldung);
+					}
+				}
+			}
+			
+			return anmeldungen;
 		}
 
 		/**

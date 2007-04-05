@@ -2,7 +2,6 @@ package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
@@ -10,12 +9,11 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
-import de.bsvrz.dua.plformal.dfs.ModulTyp;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
+import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
 
 /**
  * Implementierung des Moduls PL-Prüfung formal.
@@ -64,11 +62,9 @@ implements IPPFHilfeListener{
 	 * {@inheritDoc}
 	 */
 	public void aktualisierePublikation(IDatenFlussSteuerung iDfs) {
-		if(iDfs != null){
-			this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(),
+		this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(),
 													this.getModulTyp());
-			aktualisierePublikationIntern();
-		}
+		aktualisierePublikationIntern();
 	}
 	
 	/**

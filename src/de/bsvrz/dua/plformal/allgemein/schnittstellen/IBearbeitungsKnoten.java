@@ -2,8 +2,8 @@ package de.bsvrz.dua.plformal.allgemein.schnittstellen;
 
 import stauma.dav.clientside.ResultData;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.dfs.ModulTyp;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
+import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
 
 /**
  * Allgemeine Beschreibung der Schnittstelle Berarbeitungsknoten.

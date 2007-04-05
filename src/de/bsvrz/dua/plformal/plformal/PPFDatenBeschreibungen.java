@@ -3,7 +3,6 @@ package de.bsvrz.dua.plformal.plformal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
@@ -12,12 +11,17 @@ import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
+import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 /**
- * Diese Klasse stellt die Informationen der Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code>
- * für einen möglichst schnellen Zugriff zur Verfügung. Mittels der Methode <code>getAttributSpezifikationenFuer(..)</code>
- * kann für ein ResultData-Objekt erfragt werden, wie dieses formal zu plausibilisieren ist.
+ * Diese Klasse stellt die Informationen der Attributgruppe
+ * <code>atg.plausibilitätsPrüfungFormal</code> für einen
+ * möglichst schnellen Zugriff zur Verfügung. Mittels der
+ * Methode <code>getAttributSpezifikationenFuer(..)</code>
+ * kann für ein ResultData-Objekt erfragt werden, wie dieses
+ * formal zu plausibilisieren ist.
  * 
  * @author Thierfelder
  *
@@ -25,9 +29,9 @@ import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 public class PPFDatenBeschreibungen {
 	
 	/**
-	 * der Logger
+	 * Debug-Logger
 	 */
-	private static final Logger LOGGER = Logger.getLogger(PPFDatenBeschreibungen.class.getName());
+	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
 	 * Nach Attributgruppen sortierter Suchbaum. Jedes Element enthält alle Informationen,
@@ -48,7 +52,8 @@ public class PPFDatenBeschreibungen {
 	 */
 	public final void addParameterSatz(final Data parameterSatz)
 	throws Exception{
-		AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
+		AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(
+				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
 		BeschreibungFuerAttributgruppe dummy = atgInfos.get(atg);
 		if(dummy != null){
 			dummy.addParameterSatz(parameterSatz);
@@ -129,6 +134,18 @@ public class PPFDatenBeschreibungen {
 	/*****************************************************************************
 	 * Interne Klassen                                                           *
 	 *****************************************************************************/
+	
+	protected class DAVObjektPlausibilisierung
+	extends DAVObjektAnmeldung{
+		
+		protected DAVObjektPlausibilisierung(final SystemObject obj,
+								final DataDescription datenBeschreibung)
+		throws Exception{
+			super(obj, datenBeschreibung);
+		}
+		
+				
+	}
 	
 	/**
 	 * Diese Klasse stellt die Informationen der Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code>

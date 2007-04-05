@@ -2,7 +2,7 @@ package de.bsvrz.dua.plformal.allgemein.schnittstellen;
 
 import java.util.Collection;
 
-import de.bsvrz.dua.plformal.dfs.SWETyp;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientReceiverInterface;

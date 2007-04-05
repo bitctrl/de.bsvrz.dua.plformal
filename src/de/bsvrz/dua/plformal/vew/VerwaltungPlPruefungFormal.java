@@ -9,7 +9,7 @@ import de.bsvrz.dua.plformal.adapter.VerwaltungsAdapterEinfach;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.StandardAspekteVersorger;
 import de.bsvrz.dua.plformal.av.DAVEmpfangsAnmeldungsVerwaltung;
-import de.bsvrz.dua.plformal.dfs.SWETyp;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 import de.bsvrz.dua.plformal.plformal.IPPFHilfe;
 import de.bsvrz.dua.plformal.plformal.IPPFHilfeListener;
 import de.bsvrz.dua.plformal.plformal.PPFHilfe;

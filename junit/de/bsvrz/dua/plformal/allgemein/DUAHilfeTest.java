@@ -15,6 +15,7 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.IntegerAttributeType;
 import stauma.dav.configuration.interfaces.ReferenceAttributeType;
 import stauma.dav.configuration.interfaces.SystemObject;
+import stauma.dav.configuration.interfaces.SystemObjectType;
 import de.bsvrz.dua.plformal.DAVTest;
 
 /**
@@ -38,6 +39,112 @@ public class DUAHilfeTest{
 	public void setUp()
 	throws Exception{
 		VERBINDUNG = DAVTest.getDav();
+	}
+	
+	/**
+	 * Test von <code>getAlleObjektAnmeldungen()</code>
+	 */
+	@Test
+	public void testGetAlleObjektAnmeldungen(){
+		SystemObject o1 = VERBINDUNG.getDataModel().
+		getObject("typ.messQuerschnittAllgemein"); //$NON-NLS-1$
+		SystemObject o2 = VERBINDUNG.getDataModel().
+		getObject("typ.messQuerschnitt"); //$NON-NLS-1$
+		SystemObject o3 = VERBINDUNG.getDataModel().
+		getObject("mq.a100.0010"); //$NON-NLS-1$
+		SystemObject o4 = null;
+		SystemObject o5 = VERBINDUNG.getDataModel().
+		getObject("typ.typ"); //$NON-NLS-1$
+		
+		
+
+		Collection<SystemObject> ist1 = DUAHilfe.getFinaleObjekte(o1, VERBINDUNG);
+		Collection<SystemObject> ist2 = DUAHilfe.getFinaleObjekte(o2, VERBINDUNG);
+		Collection<SystemObject> ist3 = DUAHilfe.getFinaleObjekte(o3, VERBINDUNG);
+		Collection<SystemObject> ist4 = DUAHilfe.getFinaleObjekte(o4, VERBINDUNG);
+		Collection<SystemObject> ist5 = DUAHilfe.getFinaleObjekte(o5, VERBINDUNG);
+
+		Collection<SystemObject> soll1 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll2 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll3 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll4 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll5 = new HashSet<SystemObject>();
+
+		soll1.addAll(((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.messQuerschnitt")).getElements()); //$NON-NLS-1$
+		soll2.addAll(((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.messQuerschnitt")).getElements()); //$NON-NLS-1$
+		soll3.add(VERBINDUNG.getDataModel().
+				getObject("mq.a100.0010")); //$NON-NLS-1$
+		for(SystemObject obj:((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.typ")).getElements()){ //$NON-NLS-1$
+			for(SystemObject elem:((SystemObjectType)obj).getElements()){
+
+				if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
+					soll4.add(elem);
+
+				}
+
+			}
+
+		}
+		soll5 = soll4;
+	}
+
+	/**
+	 * Test von <code>testGetFinaleObjekte()</code>
+	 */
+	@Test
+	public void testGetFinaleObjekte(){
+		SystemObject o1 = VERBINDUNG.getDataModel().
+							getObject("typ.messQuerschnittAllgemein"); //$NON-NLS-1$
+		SystemObject o2 = VERBINDUNG.getDataModel().
+							getObject("typ.messQuerschnitt"); //$NON-NLS-1$
+		SystemObject o3 = VERBINDUNG.getDataModel().
+							getObject("mq.a100.0010"); //$NON-NLS-1$
+		SystemObject o4 = null;
+		SystemObject o5 = VERBINDUNG.getDataModel().
+								getObject("typ.typ"); //$NON-NLS-1$
+
+		Collection<SystemObject> ist1 = DUAHilfe.getFinaleObjekte(o1, VERBINDUNG);
+		Collection<SystemObject> ist2 = DUAHilfe.getFinaleObjekte(o2, VERBINDUNG);
+		Collection<SystemObject> ist3 = DUAHilfe.getFinaleObjekte(o3, VERBINDUNG);
+		Collection<SystemObject> ist4 = DUAHilfe.getFinaleObjekte(o4, VERBINDUNG);
+		Collection<SystemObject> ist5 = DUAHilfe.getFinaleObjekte(o5, VERBINDUNG);
+
+		Collection<SystemObject> soll1 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll2 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll3 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll4 = new HashSet<SystemObject>();
+		Collection<SystemObject> soll5 = new HashSet<SystemObject>();
+
+		soll1.addAll(((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.messQuerschnitt")).getElements()); //$NON-NLS-1$
+		soll2.addAll(((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.messQuerschnitt")).getElements()); //$NON-NLS-1$
+		soll3.add(VERBINDUNG.getDataModel().
+				getObject("mq.a100.0010")); //$NON-NLS-1$
+		for(SystemObject obj:((SystemObjectType)VERBINDUNG.getDataModel().
+				getObject("typ.typ")).getElements()){ //$NON-NLS-1$
+			for(SystemObject elem:((SystemObjectType)obj).getElements()){
+				
+				if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+					elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
+						soll4.add(elem);
+						
+				}
+
+			}
+
+		}
+		soll5 = soll4;
+		
+		Assert.assertEquals("1: ", soll1, ist1); //$NON-NLS-1$
+		Assert.assertEquals("2: ", soll2, ist2); //$NON-NLS-1$
+		Assert.assertEquals("3: ", soll3, ist3); //$NON-NLS-1$
+		Assert.assertEquals("4: ", soll4, ist4); //$NON-NLS-1$
+		Assert.assertEquals("5: ", soll5, ist5); //$NON-NLS-1$
 	}
 	
 	/**

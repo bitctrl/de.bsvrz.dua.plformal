@@ -42,9 +42,9 @@ public class DAVDatenAnmeldung{
 	 * hier aufgelöst.
 	 * 
 	 * @param objekte Objekte, für die die Anmeldung gilt
-	 * @param desc Datenbeschreibung, für die die Objekte
-	 * angemeldet sind
-	 * @throws NullPointerException
+	 * @param datenBeschreibung Datenbeschreibung, für die
+	 * die Objekte angemeldet sind
+	 * @param Verbindung zum Datenverteiler
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
 							 final DataDescription datenBeschreibung,
@@ -71,7 +71,7 @@ public class DAVDatenAnmeldung{
 	 * @param desc Datenbeschreibung, für die die Objekte angemeldet sind
 	 * @param kb Liste mit Konfigurationsbereichen, durch die die Objektliste
 	 * noch gefiltert werden soll
-	 * @throws NullPointerException 
+	 * @param dav Datenverteiler-Verbindung
 	 */
 	public DAVDatenAnmeldung(final SystemObject[] objekte,
 							 final DataDescription datenBeschreibung,
@@ -129,16 +129,18 @@ public class DAVDatenAnmeldung{
 	}	
 
 	/**
-	 * Erfragt die Objekte, für die die Anmeldung gilt
+	 * Erfragt die (finalen) Objekte, für die die Anmeldung gilt
 	 * 
-	 * @return Objekte, für die die Anmeldung gilt
+	 * @return (finale) Objekte, für die die Anmeldung gilt
 	 */
 	public final Collection<SystemObject> getObjekte() {
 		Collection<SystemObject> objekte = 
 							new HashSet<SystemObject>();
+		
 		for(DAVObjektAnmeldung objektAnmeldung:this.objektAnmeldungen){
 			objekte.add(objektAnmeldung.getObjekt());
 		}
+		
 		return objekte;
 	}
 

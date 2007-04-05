@@ -39,7 +39,7 @@ extends AbstraktVerwaltungsAdapter{
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<ConfigurationArea> getKonfigurationsBereiche() {
+	public final Collection<ConfigurationArea> getKonfigurationsBereiche() {
 		return this.kBereiche;
 	}
 

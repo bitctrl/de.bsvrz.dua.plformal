@@ -42,10 +42,14 @@ public class PPFAttributSpezifikation {
 	 */
 	public PPFAttributSpezifikation(final Data attributSpezifikation)
 	throws Exception{
-		this.attributPfad = attributSpezifikation.getTextValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
-		this.min = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MIN).longValue();
-		this.max = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MAX).longValue();
-		this.methode = attributSpezifikation.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_OPT).longValue();
+		this.attributPfad = attributSpezifikation.getTextValue(
+				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
+		this.min = attributSpezifikation.getUnscaledValue(
+				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MIN).longValue();
+		this.max = attributSpezifikation.getUnscaledValue(
+				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MAX).longValue();
+		this.methode = attributSpezifikation.getUnscaledValue(
+				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_OPT).longValue();
 	}
 
 	/**

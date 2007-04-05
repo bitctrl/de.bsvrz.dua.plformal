@@ -3,7 +3,7 @@ package de.bsvrz.dua.plformal.plformal;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.StandardAspekteVersorger;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.dfs.SWETyp;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
  * Diese Klasse repräsentiert die Versorgung des Moduls
@@ -30,7 +30,7 @@ extends StandardAspekteVersorger{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(SWETyp swe)
+	protected void init(SWETyp swe)
 	throws DUAInitialisierungsException{
 		
 		if(SWETyp.PL_PRUEFUNG_FORMAL.equals(swe)){

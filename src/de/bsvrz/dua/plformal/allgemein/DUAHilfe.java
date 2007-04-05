@@ -23,7 +23,7 @@ import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
  * Einige hilfreiche Methoden, die an verschiedenen Stellen
  * innerhalb der DUA Verwendung finden.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class DUAHilfe {
@@ -88,7 +88,6 @@ public class DUAHilfe {
 			final SystemObjectType typ,
 			final Collection<ConfigurationArea> konfigurationsBereiche){
 		Collection<SystemObject> objListe = new HashSet<SystemObject>();
-		
 		
 		if(typ != null){
 			Collection<ConfigurationArea> benutzteBereiche = 
@@ -155,7 +154,8 @@ public class DUAHilfe {
 	/**
 	 * Ersetzt den letzten Teil eines Attribuspfades durch eine bestimmte
 	 * Zeichenkette. Der Aufruf<br>
-	 * <code>"a.b.c.Status.PlFormal.WertMax" = ersetzeLetztesElemInAttPfad("a.b.c.Wert", "Status.PlFormal.WertMax")</code><br>
+	 * <code>"a.b.c.Status.PlFormal.WertMax" = ersetzeLetztesElemInAttPfad(
+	 * "a.b.c.Wert", "Status.PlFormal.WertMax")</code><br>
 	 * bewirkt bspw., dass auf den Statuswert <code>max</code> der formalen
 	 * Plausibilisierung des Elements <code>a.b.c</code> zugegriffen werden kann
 	 * 
@@ -208,61 +208,7 @@ public class DUAHilfe {
 			
 		return ergebnis;
 	}
-	
-	/**
-	 * Vergleicht die beiden übergebenen Objekte miteinander.
-	 * 
-	 * @param obj1 Objekt 1
-	 * @param obj2 Objekt 2
-	 * @return eine Zeichenkette <code>!= null</code>, wenn die beiden
-	 * Objekte eine gemeinsame Schnittmenge (an Objekten) haben (könnten).
-	 * Dies ist der Fall, wenn sie voneinander abgeleitet, Instanzen
-	 * voneinander, oder einfach identisch sind.<br>
-	 * <b>Achtung</b>: Wenn beide Objekte <code>null</code> sind, so
-	 * haben sie hier per Definition eine leere Schnittmenge (keine)
-	 */
-	public static final String hasSchnittMenge(final SystemObject obj1,
-											   final SystemObject obj2){
-		String ergebnis = null;
 		
-		if(obj1 != null && obj2 != null){
-			if(obj1.isOfType(DUAKonstanten.TYP_TYP) && 
-			   obj2.isOfType(DUAKonstanten.TYP_TYP)){
-				SystemObjectType typ1 = (SystemObjectType)obj1;
-				SystemObjectType typ2 = (SystemObjectType)obj2;
-				
-				if(typ1.equals(typ2)){
-					ergebnis = "Die beiden Typen sind identisch: " + typ1;  //$NON-NLS-1$
-				}else if(typ1.inheritsFrom(typ2)){
-					ergebnis = typ1 + " erweitert " + typ2;  //$NON-NLS-1$
-				}else if(typ2.inheritsFrom(typ1)){
-					ergebnis = typ2 + " erweitert " + typ1;  //$NON-NLS-1$
-				}
-
-			}else if(obj1.isOfType(DUAKonstanten.TYP_TYP) && 
-			   !obj2.isOfType(DUAKonstanten.TYP_TYP)){
-				SystemObjectType typ = (SystemObjectType)obj1;
-				
-				if(obj2.isOfType(typ)){
-					ergebnis = obj2 + " ist Instanz von " + typ; //$NON-NLS-1$
-				}
-			}else if(!obj1.isOfType(DUAKonstanten.TYP_TYP) &&
-					obj2.isOfType(DUAKonstanten.TYP_TYP)){
-				SystemObjectType typ = (SystemObjectType)obj2;
-				
-				if(obj1.isOfType(typ)){
-					ergebnis = obj1 + " ist Instanz von " + typ; //$NON-NLS-1$
-				}
-			}else{
-				if(obj1.equals(obj2)){
-					ergebnis = "Die beiden Objekte sind identisch: " + obj1; //$NON-NLS-1$
-				}
-			}
-		}
-		
-		return ergebnis;
-	}
-	
 	/**
 	 * Extrahiert aus einem übergebenen Datum ein darin enthaltenes Datum.
 	 *  
@@ -368,9 +314,13 @@ public class DUAHilfe {
 	}
 	
 	/**
+	 * Erfragt die Menge aller Konfigurationsobjekte bzw. Dynamischen
+	 * Objekte (finale Objekte), die unter Umständen im Parameter
+	 * <code>obj</code> 'versteckt' sind. 
 	 * 
-	 * @param obj
-	 * @return
+	 * @param obj ein Systemobjekt (finales Objekt oder Typ)
+	 * @param dav Verbindung zum Datenverteiler
+	 * @return eine Menge von finalen Systemobjekten
 	 */
 	public static final Collection<SystemObject>
 				getFinaleObjekte(final SystemObject obj,
@@ -378,15 +328,22 @@ public class DUAHilfe {
 		Collection<SystemObject> finaleObjekte =
 			new HashSet<SystemObject>();
 		
-		if(obj == null){
-			SystemObjectType typ = dav.getDataModel().getType(DUAKonstanten.TYP_TYP);
-			for(SystemObject elem:typ.getElements()){
-				finaleObjekte.addAll(getFinaleObjekte(elem, dav));	
-			}			
+		if(obj == null || obj.getPid().equals(DUAKonstanten.TYP_TYP)){
+			SystemObjectType typTyp = dav.getDataModel().getType(DUAKonstanten.TYP_TYP);
+			for(SystemObject typ:typTyp.getElements()){
+				for(SystemObject elem:((SystemObjectType)typ).getElements()){
+					if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
+						finaleObjekte.add(elem);
+					}
+				}
+			}
 		}else
 		if(obj instanceof SystemObjectType){
 			SystemObjectType typ = (SystemObjectType)obj;
-			finaleObjekte.addAll(typ.getElements());
+			for(SystemObject elem:typ.getElements()){
+				finaleObjekte.addAll(getFinaleObjekte(elem, dav));
+			}			
 		}else
 		if( obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
 			obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
@@ -400,6 +357,20 @@ public class DUAHilfe {
 	}
 	
 	
+	/**
+	 * Erfragt die Menge von <code>DAVObjektAnmeldung</code>-Objekten,
+	 * die alle Anmeldungen unter der übergebenen Datenbeschreibung für
+	 * das übergebene Objekt enthält.<br>
+	 * <b>Achtung:</b> Das Objekt wird in seine finalen Instanzen
+	 * aufgelöst. Sollte für das Objekt <code>null</code> übergeben
+	 * worden sein, so wird 'Alle Objekte' angenommen. Gleiches gilt
+	 * für die Elemente der Datenbeschreibung.
+	 * 
+	 * @param obj ein Systemobjekt (auch Typ)
+	 * @param datenBeschreibung eine Datenbeschreibung
+	 * @param dav Verbindung zum Datenverteiler
+	 * @return eine Menge von <code>DAVObjektAnmeldung</code>-Objekten
+	 */
 	public static final Collection<DAVObjektAnmeldung>
 				getAlleObjektAnmeldungen(final SystemObject obj, 
 						final DataDescription datenBeschreibung,

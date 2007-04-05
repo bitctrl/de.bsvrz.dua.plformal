@@ -19,16 +19,17 @@ import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
-import de.bsvrz.dua.plformal.dfs.SWETyp;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
- * Diese Klasse stellt die Standard-Publikationsinformationen für <b>alle</b>
- * SWE innerhalb der DUA zur Verfügung.<br> Diese Informationen können im
- * Konstruktor dieser Klasse für je eine SWE-Modultyp-Kombination
- * als Instanz der Klasse <code>StandardAspekteAdapter</code> angelegt
+ * Instanzen dieser Klasse stellen die Standard-Publikationsinformationen
+ * für <b>eine</b> SWE und <b>einen</b> Modul-Typ innerhalb der DUA zur
+ * Verfügung.<br> Diese Informationen können im Konstruktor dieser Klasse
+ * für je eine SWE-Modultyp-Kombination als Instanz der Klasse <code>
+ * StandardAspekteAdapter</code> angelegt
  * werden.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  * 
  */
 public abstract class StandardAspekteVersorger {
@@ -52,7 +53,7 @@ public abstract class StandardAspekteVersorger {
 		/**
 		 * {@inheritDoc}
 		 */
-		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
+		public final Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
 				final SystemObject[] objektFilter) {
 			return new ArrayList<DAVObjektAnmeldung>();
 		}
@@ -68,8 +69,9 @@ public abstract class StandardAspekteVersorger {
 	
 	
 	/**
+	 * Standardkonstruktor
 	 * 
-	 * @param verwaltung
+	 * @param verwaltung Verbindung zum Verwaltungsmodul
 	 */
 	public StandardAspekteVersorger(final IVerwaltung verwaltung)
 	throws DUAInitialisierungsException{
@@ -77,7 +79,16 @@ public abstract class StandardAspekteVersorger {
 		init(verwaltung.getSWETyp());
 	}
 	
-	public abstract void init(final SWETyp swe)
+	/**
+	 * Initialisiert die Standard-Publikationsinformationen für einen
+	 * kompleten Modul-Typ unter der Vorraussetzung, dass das Modul 
+	 * unter der übergebenen SWE läuft.
+	 *   
+	 * @param swe die SWE unter der das Modul läuft
+	 * @throws DUAInitialisierungsException wenn es Probleme beim
+	 * Initialisieren der Standard-Publikationsinformationen gab
+	 */
+	protected abstract void init(final SWETyp swe)
 	throws DUAInitialisierungsException;
 	
 	/**
@@ -99,7 +110,7 @@ public abstract class StandardAspekteVersorger {
 	 * getStandardPubInfos(..)</code>
 	 * ausgelesen werden.
 	 * 
-	 * @author Thierfelder
+	 * @author BitCtrl Systems GmbH, Thierfelder
 	 * 
 	 */
 	protected class StandardAspekteAdapter
@@ -148,7 +159,6 @@ public abstract class StandardAspekteVersorger {
 							this.publikationsMap.put(objektAnmeldung, zuordnung.aspAusgang);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
 						throw new DUAInitialisierungsException("Standard-" + //$NON-NLS-1$
 								"Publikaionsinformationen konnten nicht angelegt werden"); //$NON-NLS-1$
 					}
@@ -181,7 +191,7 @@ public abstract class StandardAspekteVersorger {
 		/**
 		 * {@inheritDoc}
 		 */
-		public Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
+		public final Collection<DAVObjektAnmeldung> getStandardAnmeldungen(
 				final SystemObject[] objektFilter) {
 			Collection<DAVObjektAnmeldung> anmeldungen = 
 							new TreeSet<DAVObjektAnmeldung>();
@@ -226,7 +236,7 @@ public abstract class StandardAspekteVersorger {
 	 * <code>SystemObjectType-AttributeGroup-Aspect</code>-Kombination zu
 	 * einem Standardpublikationsaspekt
 	 * 
-	 * @author Thierfelder
+	 * @author BitCtrl Systems GmbH, Thierfelder
 	 * 
 	 */
 	protected class StandardPublikationsZuordnung {

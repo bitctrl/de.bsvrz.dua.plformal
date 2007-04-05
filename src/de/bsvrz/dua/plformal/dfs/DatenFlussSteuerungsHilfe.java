@@ -14,10 +14,11 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
  * Diese Klasse liest die Parameter der Datenflusssteuerung aus 
@@ -25,7 +26,7 @@ import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
  * <code>IDatenFlussSteuerungsListener</code> weiter.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * @version 1.0
+ * 
  */
 public class DatenFlussSteuerungsHilfe
 implements ClientReceiverInterface {
@@ -39,7 +40,7 @@ implements ClientReceiverInterface {
 	 * Fehlermeldungstext
 	 */
 	private static final String STD_FEHLER = 
-				"Anmeldung auf Datenflusssteuerung fehlgeschlagen. "; //$NON-NLS-1$
+				"Anmeldung auf Datenflusssteuerung fehlgeschlagen"; //$NON-NLS-1$
 
 	/**
 	 * die statische Instanz dieser Klasse
@@ -81,7 +82,7 @@ implements ClientReceiverInterface {
 	throws DUAInitialisierungsException {
 		if (verwaltung == null) {
 			throw new DUAInitialisierungsException(STD_FEHLER
-					+ "\nKeine Verbindung zum Datenverteiler."); //$NON-NLS-1$
+					+ "\nKeine Verbindung zum Datenverteiler"); //$NON-NLS-1$
 		}
 		this.verwaltung = verwaltung; 
 
@@ -178,25 +179,29 @@ implements ClientReceiverInterface {
 				for (int i = 0; i < ps.getLength(); i++) {
 					Data satz = ps.getItem(i);
 					if (satz != null) {
-						ParameterSatz dfPs = new ParameterSatz();
+						ParameterSatz dfParameterSatz = new ParameterSatz();
 						
 						final SWETyp swe = SWETyp.getZustand((int)satz.getUnscaledValue(
 								DUAKonstanten.ATT_DFS_SWE).getState().getValue());
-						
-						dfPs.setSwe(swe);
+						dfParameterSatz.setSwe(swe);
 
+						/**
+						 * Iteriere über alle Publikationszuordnungen
+						 * innerhalb dieses Parametersatzes
+						 */
 						for (int j = 0; j < satz.getArray(
 								DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getLength(); j++) {
-							Data pz = satz.getArray(
+							Data paraZuordnung = satz.getArray(
 									DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getItem(j);
-							PublikationsZuordung dfPz;
+							PublikationsZuordung dfParaZuordnung;
 							try {
-								dfPz = new PublikationsZuordung(pz, verwaltung);
-								dfPs.add(dfPz);
+								dfParaZuordnung = new PublikationsZuordung(
+										paraZuordnung, verwaltung);
+								dfParameterSatz.add(dfParaZuordnung);
 							} catch (Exception e) {
-								LOGGER.error("Eine Publikationszuordnung (" +  //$NON-NLS-1$
-										pz + ") konnte nicht korrekt" +  //$NON-NLS-1$
-												" ausgelesen werden", e);  //$NON-NLS-1$
+								LOGGER.error("Eine Publikationszuordnung " +  //$NON-NLS-1$
+										"konnte nicht korrekt" +  //$NON-NLS-1$
+										" ausgelesen werden: " + paraZuordnung, e);  //$NON-NLS-1$
 							}
 						}
 
@@ -204,21 +209,23 @@ implements ClientReceiverInterface {
 								.getParameterSatzFuerSWE(swe);
 						
 						if (dummy != null) {
-							for (PublikationsZuordung neuePz : dfPs
+							for (PublikationsZuordung neuePz : dfParameterSatz
 									.getPubZuordnung()) {
 								dummy.add(neuePz);
 							}
 						} else {
-							letzteDfs.add(dfPs);
+							letzteDfs.add(dfParameterSatz);
 						}
 					}
 				}
 			}
 		}
 
-		synchronized (this.listenerListe) {
-			for (IDatenFlussSteuerungsListener listener : this.listenerListe) {
-				listener.aktualisierePublikation(letzteDfs);
+		if(letzteDfs != null){
+			synchronized (this.listenerListe) {
+				for (IDatenFlussSteuerungsListener listener : this.listenerListe) {
+					listener.aktualisierePublikation(letzteDfs);
+				}
 			}
 		}
 	}
@@ -258,9 +265,5 @@ implements ClientReceiverInterface {
 				this.listenerListe.remove(listener);
 			}
 		}
-	}
-	
-	protected final IVerwaltung getVerwaltung(){
-		return this.verwaltung;
 	}
 }

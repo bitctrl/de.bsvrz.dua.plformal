@@ -3,15 +3,18 @@ package de.bsvrz.dua.plformal.dfs;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
+
 import sys.funclib.debug.Debug;
 
 /**
- * Diese Klasse enthält alle Parameter, die innerhalb eines Datensatzes
- * <code>ParameterSatz</code> der Attributgruppe
- * <code>atg.datenflussSteuerung</code> vorkommen. Pro SWE wird nur ein
- * Parametersatz vorgehalten. Sollten also innerhalb dieser Attributgruppe
- * mehrere Parametersätze für die gleiche SWE vorkommen, so werden diese
- * (später) gemischt.
+ * Diese Klasse enthält alle Parameter, die innerhalb
+ * eines Datensatzes <code>ParameterSatz</code> der
+ * Attributgruppe <code>atg.datenflussSteuerung</code>
+ * vorkommen. Pro SWE wird nur ein Parametersatz vorgehalten.
+ * Sollten also innerhalb dieser Attributgruppe mehrere
+ * Parametersätze für die gleiche SWE vorkommen, so werden
+ * diese (später) gemischt.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -36,9 +39,10 @@ public class ParameterSatz {
 
 	
 	/**
-	 * Erfragt die SWE, für die Publikationsparameter in dieser Klasse stehen.
+	 * Erfragt die SWE, für die Publikationsparameter
+	 * in dieser Klasse stehen.
 	 * 
-	 * @return die ID der SWE
+	 * @return die SWE
 	 */
 	public final SWETyp getSwe() {
 		return swe;
@@ -49,7 +53,7 @@ public class ParameterSatz {
 	 * in dieser Klasse stehen.
 	 * 
 	 * @param swe
-	 *            Die SWE
+	 *            die SWE
 	 */
 	public final void setSwe(final SWETyp swe) {
 		this.swe = swe;
@@ -73,7 +77,7 @@ public class ParameterSatz {
 	 * auf Konsistenz mit der neuen Publikationszuordnung getestet.
 	 * Fällt dieser Test negativ aus, so wird die neue
 	 * Publikationszuordnung ignoriert und eine den Fehler
-	 * dokumentierende Warung ausgegeben.  
+	 * dokumentierende Warnung ausgegeben.  
 	 * 
 	 * @param pubZuordnung
 	 *            neue Publikationszuordnung

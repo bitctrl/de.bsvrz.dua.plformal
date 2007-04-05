@@ -1,4 +1,4 @@
-package de.bsvrz.dua.plformal.dfs;
+package de.bsvrz.dua.plformal.dfs.typen;
 
 import java.util.HashMap;
 import java.util.Map;

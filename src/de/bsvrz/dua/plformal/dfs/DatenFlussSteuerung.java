@@ -7,6 +7,8 @@ import java.util.List;
 
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
+import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
+import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
  * Diese Klasse repräsentiert die Attributgruppe
@@ -22,8 +24,9 @@ implements IDatenFlussSteuerung {
 	/**
 	 * Liste aller Parametersätze innerhalb der Attributgruppe
 	 */
-	private List<ParameterSatz> parameterSaetze = new ArrayList<ParameterSatz>();
-
+	private List<ParameterSatz> parameterSaetze =
+								new ArrayList<ParameterSatz>();
+	
 	
 	/**
 	 * Fügt diesem Objekt einen Parametersatz hinzu
@@ -31,25 +34,26 @@ implements IDatenFlussSteuerung {
 	 * @param ps
 	 *            der neue Parametersatz
 	 */
-	public final void add(final ParameterSatz ps) {
+	protected final void add(final ParameterSatz ps) {
 		parameterSaetze.add(ps);
 	}
 
 	/**
-	 * Erfragt den Parametersatz für eine bestimmte SWE <br>
+	 * Erfragt den Parametersatz für eine bestimmte SWE<br>
 	 * <b>Achtung: Es wird innerhalb dieser Klasse immer nur ein
-	 * ParameterSatz-Objekt pro SWE instanziiert werden, auch wenn mehrere
-	 * parametriert sind (die Informationen werden zusammengefasst). Sollten
-	 * widersprüchliche Informationen innerhalb der Parametersätze enthalten
-	 * sein, so werden alle Parametersätze, die diesen Widerspruch enthalten
+	 * ParameterSatz-Objekt pro SWE instanziiert werden, auch
+	 * wenn mehrere parametriert sind (die Informationen werden
+	 * zusammengefasst). Sollten widersprüchliche Informationen
+	 * innerhalb der Parametersätze enthalten sein, so werden
+	 * alle Parametersätze, die diesen Widerspruch enthalten
 	 * ignoriert.</b>
-	 * 
 	 * 
 	 * @param swe
 	 *            die SWE
-	 * @return der Parametersatz der Datenflusssteuerung für die übergebene SWE
+	 * @return der Parametersatz der Datenflusssteuerung für
+	 * die übergebene SWE
 	 */
-	public final ParameterSatz getParameterSatzFuerSWE(final SWETyp swe) {
+	protected final ParameterSatz getParameterSatzFuerSWE(final SWETyp swe) {
 		ParameterSatz ps = null;
 
 		for (ParameterSatz psDummy : parameterSaetze) {
@@ -71,8 +75,8 @@ implements IDatenFlussSteuerung {
 	 * @param modulId
 	 *            das Modul, für die die PublikationsZuordnung
 	 *            erfragt werden soll
-	 * @return die Publikationszuordnung für die SWE <code>swe</code> und das
-	 *         Modul <code>modulId</code>
+	 * @return die Publikationszuordnung für die SWE <code>swe</code>
+	 * 		   und das Modul <code>modulId</code> (ggf. leere Menge)
 	 */
 	private final Collection<PublikationsZuordung> getPublikationsZuordnungenFuerModul(
 			final SWETyp swe, final ModulTyp modulId) {

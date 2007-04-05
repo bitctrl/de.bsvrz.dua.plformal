@@ -15,11 +15,13 @@ import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
 
 /**
  * In dieser Klasse sind alle Informationen zusammengefasst, die das
  * Publikationsverhalten bezüglich <b>einer</b> bestimmten SWE, <b>einem</b>
- * bestimmten Modul-Typ und <b>einem</b> Publikationsaspekt beschreiben.
+ * bestimmten Modul-Typ und <b>einem</b> Publikationsaspekt beschreiben
+ * innerhalb der Datenflusssteuerung beschreiben.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
@@ -42,7 +44,7 @@ public class PublikationsZuordung {
 	private Aspect aspekt = null;
 
 	/**
-	 * die Objekte, für die ein Publikationsverhalten beschrieben ist
+	 * die (finalen) Objekte, für die ein Publikationsverhalten beschrieben ist
 	 */
 	private Collection<SystemObject> objekte = new HashSet<SystemObject>();
 
@@ -57,8 +59,9 @@ public class PublikationsZuordung {
 	private boolean publizieren = false;
 	
 	/**
-	 * Mapt eine Objektanmeldung, d.h. eine Systemobjekt-Attributgruppen-
-	 * Aspekt-Kombination auf das Flag <code>publizieren</code> 
+	 * Die Objektanmeldungen, die innerhalb dieser Publikationszuordnung
+	 * vorgesehen sind (bzw. bei <code>publizieren ==  false</code> explizit
+	 * nicht vorgesehen)
 	 */
 	private Collection<DAVObjektAnmeldung> anmeldungen = 
 									new TreeSet<DAVObjektAnmeldung>();
@@ -78,7 +81,7 @@ public class PublikationsZuordung {
 	 * @throws Exception wenn einer der Parameter nicht
 	 * ausgelesen werden konnte
 	 */
-	public PublikationsZuordung(Data data, IVerwaltung verwaltung)
+	protected PublikationsZuordung(final Data data, final IVerwaltung verwaltung)
 	throws Exception{
 		this.aspekt = (Aspect)data.getReferenceValue(
 				DUAKonstanten.ATT_DFS_ASP).getSystemObject();
@@ -113,14 +116,12 @@ public class PublikationsZuordung {
 			try{
 				DAVDatenAnmeldung neueDatenAnmeldung = new DAVDatenAnmeldung(objekte.toArray(
 							new SystemObject[0]), datenBeschreibung,
-							DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
+							verwaltung.getVerbindung());
 				
 				for(DAVObjektAnmeldung neueObjektAnmeldung:neueDatenAnmeldung.getObjektAnmeldungen()){
-					if(this.anmeldungen.contains(neueObjektAnmeldung)){
+					if(!this.anmeldungen.add(neueObjektAnmeldung)){
 						LOGGER.warning("Objektanmeldung bereits vorhanden: " + //$NON-NLS-1$
 								neueObjektAnmeldung);
-					}else{
-						this.anmeldungen.add(neueObjektAnmeldung);
 					}
 				}
 			}catch(Exception ex){
@@ -131,8 +132,11 @@ public class PublikationsZuordung {
 	}
 	
 	/**
+	 * Erfragt die Objektanmeldungen, die innerhalb dieser Publikationszuordnung
+	 * vorgesehen sind (bzw. bei <code>publizieren ==  false</code> explizit
+	 * nicht vorgesehen sind)
 	 * 
-	 * @return
+	 * @return eine Menge von Objektanmeldungen
 	 */
 	public Collection<DAVObjektAnmeldung> getObjektAnmeldungen(){
 		return this.anmeldungen;
@@ -175,12 +179,12 @@ public class PublikationsZuordung {
 	}
 
 	/**
-	 * Erfragt die Menge aller hier definierten Objekte
+	 * Erfragt die Menge aller hier definierten (finalen) Objekte
 	 * 
-	 * @return die Menge aller hier definierten Objekte
+	 * @return die Menge aller hier definierten (finalen) Objekte
 	 */
 	public final Collection<SystemObject> getObjekte() {
-		return objekte;
+		return this.objekte;
 	}
 
 	/**
@@ -194,37 +198,27 @@ public class PublikationsZuordung {
 	 * <code>this</code> und <code>vergleichsObj</code> besteht UND<br>
 	 * 5. die Schnittmenge der Member-Attributgruppen nicht leer ist.<br>
 	 * 
-	 * @param vergleichsObj
+	 * @param that
 	 *            das Objekt, mit dem dieses verglichen werden soll
 	 * @return <code>null</code> wenn kein Widerspruch vorliegt und eine den
 	 *         Widerspruch illustrierende Fehlermeldung sonst.
 	 */
-	public final String isKompatibelMit(final PublikationsZuordung vergleichsObj) {
+	public final String isKompatibelMit(final PublikationsZuordung that) {
 		try{
-			if (this.modulTyp.equals(vergleichsObj.getModulTyp()) && // 1.
-					this.isPublizieren() && vergleichsObj.isPublizieren() && // 2.
-					!this.getAspekt().equals(vergleichsObj.getAspekt())) { // 3.
+			if (this.modulTyp.equals(that.getModulTyp()) && // 1.
+				this.isPublizieren() && that.isPublizieren() && // 2.
+				!this.getAspekt().equals(that.getAspekt())) { // 3.
 	
-				for(SystemObject thisObj:this.getObjekte()){	// 4.
-					for(SystemObject thatObj:vergleichsObj.getObjekte()){
-						String fehler = DUAHilfe.hasSchnittMenge(thisObj, thatObj);
-						
-						if(fehler != null){	// 5.
-							if (this.getAtgs() != null && vergleichsObj.getAtgs() != null) {
-								for (AttributeGroup thisAtg : this.getAtgs()) {
-									for (AttributeGroup thatAtg : vergleichsObj.getAtgs()) {
-										if (thisAtg.equals(thatAtg)) {
-											return fehler
-												+ "\nDie Attributgruppe " + thisAtg +  //$NON-NLS-1$
-												" ist in beiden Publikationszuordnungen" + //$NON-NLS-1$
-												" enthalten.\n(1)\n" + this //$NON-NLS-1$
-												+ "\n(2)\n" + vergleichsObj; //$NON-NLS-1$
-										}
-									}
-								}
-							}							
+				for(DAVObjektAnmeldung thisAnmeldung:this.getObjektAnmeldungen()){	// 4. & 5.
+					for(DAVObjektAnmeldung thatAnmeldung:that.getObjektAnmeldungen()){
+						if(thisAnmeldung.getObjekt().equals(thatAnmeldung.getObjekt()) && 
+						   thisAnmeldung.getDatenBeschreibung().getAttributeGroup().equals(
+								   thatAnmeldung.getDatenBeschreibung().getAttributeGroup())){
+							return "Die beiden Objektanmeldungen sind für" + //$NON-NLS-1$
+									" die Datenflusssteuerung widersprüchlich:\n" + //$NON-NLS-1$ 
+									thisAnmeldung + "\n" + thatAnmeldung; //$NON-NLS-1$							
 						}
-					}
+					}				
 				}
 			}
 		}catch(Exception ex){

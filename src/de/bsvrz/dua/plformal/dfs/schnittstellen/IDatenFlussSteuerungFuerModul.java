@@ -6,31 +6,40 @@ import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 
 /**
  * Dieses Interface stellt alle Informationen über die aktuelle
- * Datenflusssteuerung <b>für eine bestimmte SWE und einen bestimmten Modul-Typ</b>
- * zur Verfügung. Im Wesentlichen stellt es den Zugriff auf ein Objekt des Typs
+ * Datenflusssteuerung <b>für eine bestimmte SWE und einen
+ * bestimmten Modul-Typ</b> zur Verfügung. Im Wesentlichen
+ * stellt es den Zugriff auf ein Objekt des Typs
  * <code>DatenFlussSteuerung</code> sicher.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * @version 1.0
+ * 
  */
 public interface IDatenFlussSteuerungFuerModul {
 
 	/**
-	 * Erfragt die Menge aller Datenanmeldungen die in Bezug auf die übergebenen
-	 * Objekte durchgeführt werden müssen, um diese nach der Plausibilisierung
-	 * publizieren zu können.
+	 * Erfragt die Menge aller Datenanmeldungen die in
+	 * Bezug auf die übergebenen Objekte durchgeführt
+	 * werden müssen, um diese nach der Plausibilisierung
+	 * publizieren zu können.<br>
+	 * <b>Achtung:</b> Wenn eine Überschneidung von
+	 * Anmeldungen für Standard-Publikationsaspekte mit
+	 * Anmeldungen aus der Datenflusssteuerung besteht,
+	 * für die <b>nicht publizieren</b> gesetzt ist,
+	 * so gilt hier auch die Standardpublikation als 
+	 * ausgeschaltet.
 	 * 
 	 * @param filterObjekte
-	 *            Liste mit Objekten bzw. Typen. Diese Liste gilt als Filter,
+	 *            Liste mit (finalen) Objekten. Diese Liste gilt als Filter,
 	 *            durch den alle innerhalb dieser Publikationszuordnung
 	 *            definierten Datenanmeldungen geschickt werden, bevor diese
 	 *            Methode ein Ergebnis zurückgibt. <code>null</code> = kein
 	 *            Filter
+	 * @param standardAnmeldungen Menge der Anmeldungen unter den
+	 * 			  Standard-Publikationsaspekten
 	 * @return eine ggf. leere Menge mit Datenanmeldungen
 	 */
 	public Collection<DAVObjektAnmeldung> getDatenAnmeldungen(

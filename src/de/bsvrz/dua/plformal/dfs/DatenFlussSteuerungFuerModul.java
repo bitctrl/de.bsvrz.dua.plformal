@@ -13,10 +13,6 @@ import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 
@@ -28,25 +24,28 @@ import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  **/
-public class DatenFlussSteuerungFuerModul implements
-IDatenFlussSteuerungFuerModul {
-
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
+public class DatenFlussSteuerungFuerModul
+implements IDatenFlussSteuerungFuerModul {
 	
 	/**
 	 * Standarddatenflusssteuerung
 	 */
 	public static final IDatenFlussSteuerungFuerModul STANDARD =
 						new DatenFlussSteuerungFuerModul();
-
+	
 	/**
 	 * Liste aller Publikationszuordnungen innerhalb der Attributgruppe
 	 */
 	private Collection<PublikationsZuordung> publikationsZuordnungen = 
 			new ArrayList <PublikationsZuordung>();
+	
+	/**
+	 * Eine Map von einer Objekt-Attributgruppe-Kombination auf
+	 * die Information ob, und unter welchem Aspekt publiziert
+	 * werden soll
+	 */
+	private Map<PublikationObjAtg, PublikationFuerDatum> publikationsMap =
+				new TreeMap<PublikationObjAtg, PublikationFuerDatum>();
 	
 
 	/**
@@ -56,7 +55,15 @@ IDatenFlussSteuerungFuerModul {
 	 *            die neue Publikationszuordung
 	 */
 	public final void add(final PublikationsZuordung pz) {
-		//for(pz.get)
+		for(DAVObjektAnmeldung anmeldung:pz.getObjektAnmeldungen()){
+			PublikationObjAtg pubObjAtg = new PublikationObjAtg(
+					anmeldung.getObjekt(), anmeldung.getDatenBeschreibung().
+					getAttributeGroup());
+			PublikationFuerDatum pub = new PublikationFuerDatum(pz.isPublizieren(), 
+											pz.getAspekt());
+			
+			publikationsMap.put(pubObjAtg, pub);
+		}
 		publikationsZuordnungen.add(pz);
 	}
 
@@ -66,93 +73,39 @@ IDatenFlussSteuerungFuerModul {
 	public Collection<DAVObjektAnmeldung> getDatenAnmeldungen(
 			final SystemObject[] filterObjekte,
 			final Collection<DAVObjektAnmeldung> standardAnmeldungen) {
-		Collection<DAVObjektAnmeldung> anmeldungen = new ArrayList<DAVObjektAnmeldung>();
-		Collection<DAVObjektAnmeldung> anmeldungenStd = new TreeSet<DAVObjektAnmeldung>();
-		anmeldungenStd.addAll(standardAnmeldungen);
-		
-		if (publikationsZuordnungen != null) {
-			for (PublikationsZuordung pz : publikationsZuordnungen) {
+		Collection<DAVObjektAnmeldung> alleAnmeldungen = new ArrayList<DAVObjektAnmeldung>();
+		Collection<DAVObjektAnmeldung> stdAnmeldungen = new TreeSet<DAVObjektAnmeldung>();
+		stdAnmeldungen.addAll(standardAnmeldungen);
 
-				if (pz.isPublizieren()) {					
-					Collection<SystemObject> anzumeldendeObjekte = new HashSet<SystemObject>();
+		for (PublikationsZuordung pz:publikationsZuordnungen) {
+			if (pz.isPublizieren()) {
+				Collection<SystemObject> pzAnzumeldendeObjekte = 
+											new HashSet<SystemObject>();
 
-					if (filterObjekte != null && filterObjekte.length > 0) {
-						for (SystemObject obj : pz.getObjekte()) {
-							boolean match = false;
-							for (SystemObject filterObj : filterObjekte) {
-								if (DUAHilfe.hasSchnittMenge(obj, filterObj) != null) {
-									match = true;
-									break;
-								}
-							}
-							if (match){
-								anzumeldendeObjekte.add(obj);								
-							}
-						}
-					} else {
-						anzumeldendeObjekte.addAll(pz.getObjekte());
-					}
-
-					if (anzumeldendeObjekte.size() > 0) {
-						for (AttributeGroup atg : pz.getAtgs()) {
-							DataDescription dd = new DataDescription(atg, pz
-									.getAspekt(), (short) 0);
-							DAVDatenAnmeldung anmeldung;
-							try {
-								anmeldung = new DAVDatenAnmeldung(
-										anzumeldendeObjekte
-												.toArray(new SystemObject[0]), dd,
-						DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
-								
-								anmeldungen.addAll(anmeldung.getObjektAnmeldungen());
-							} catch (Exception e) {
-								LOGGER.error(DUAKonstanten.EMPTY_STR, e);
+				if (filterObjekte != null && filterObjekte.length > 0) {
+					for (SystemObject obj:pz.getObjekte()) {
+						for (SystemObject filterObj:filterObjekte) {
+							if (obj.equals(filterObj)){
+								pzAnzumeldendeObjekte.add(obj);								
 							}
 						}
 					}
-				}else{
-					Collection<SystemObject> anzumeldendeObjekte = new HashSet<SystemObject>();
+				} else {
+					pzAnzumeldendeObjekte.addAll(pz.getObjekte());
+				}
 
-					if (filterObjekte != null && filterObjekte.length > 0) {
-						for (SystemObject obj : pz.getObjekte()) {
-							boolean match = false;
-							for (SystemObject filterObj : filterObjekte) {
-								if (DUAHilfe.hasSchnittMenge(obj, filterObj) != null) {
-									match = true;
-									break;
-								}
-							}
-							if (match){
-								anzumeldendeObjekte.add(obj);								
-							}
-						}
-					} else {
-						anzumeldendeObjekte.addAll(pz.getObjekte());
-					}
-
-					if (anzumeldendeObjekte.size() > 0) {
-						for (AttributeGroup atg : pz.getAtgs()) {
-							DataDescription dd = new DataDescription(atg, pz
-									.getAspekt(), (short) 0);
-							DAVDatenAnmeldung anmeldung;
-							try {
-								anmeldung = new DAVDatenAnmeldung(
-										anzumeldendeObjekte
-												.toArray(new SystemObject[0]), dd,
-					DatenFlussSteuerungsHilfe.INSTANZ.getVerwaltung().getVerbindung());
-								
-								anmeldungenStd.removeAll(anmeldung.getObjektAnmeldungen());
-							} catch (Exception e) {
-								LOGGER.error(DUAKonstanten.EMPTY_STR, e);
-							}
-						}
+				for(DAVObjektAnmeldung pzAnmeldung:pz.getObjektAnmeldungen()){
+					if( pzAnzumeldendeObjekte.contains(pzAnmeldung.getObjekt()) ){
+						alleAnmeldungen.add(pzAnmeldung);
 					}
 				}
+			}else{
+				stdAnmeldungen.removeAll(pz.getObjektAnmeldungen());
 			}
 		}
-		anmeldungen.addAll(anmeldungenStd);
+		alleAnmeldungen.addAll(stdAnmeldungen);
 
-		return anmeldungen;
+		return alleAnmeldungen;
 	}
 
 	/**
@@ -163,60 +116,32 @@ IDatenFlussSteuerungFuerModul {
 							final Data plausibilisiertesDatum,
 							final Aspect standardAspekt) {
 		ResultData ergebnis = null;
-		boolean publizierenUnterStandardAspekt = standardAspekt != null;
+		Aspect publikationsAspect = null;
 
-		if (publikationsZuordnungen != null) {
-			for (PublikationsZuordung pz : publikationsZuordnungen) {
-				/**
-				 * Zunächst muss heraus gefunden werden, ob die im
-				 * Original-Datum übergebene (Objekt-Atg)-Kombination innerhalb
-				 * dieser Publikationszuordnung überhaupt erfasst ist.
-				 */
-				boolean erfasst = false;
-				for (AttributeGroup atg : pz.getAtgs()) {
-					if (originalDatum.getDataDescription().getAttributeGroup()
-							.equals(atg)) {
-						erfasst = true;
-						break;
-					}
-				}
-				if (erfasst) {
-					erfasst = false;
-					for (SystemObject obj : pz.getObjekte()) {
-						if (DUAHilfe.hasSchnittMenge(obj, originalDatum
-								.getObject()) != null) {
-							erfasst = true;
-							break;
-						}
-					}
-				}
-
-				/**
-				 * Kombination ist erfasst
-				 */
-				if (erfasst) {
-					if (pz.isPublizieren()) {
-						DataDescription dd = new DataDescription(originalDatum
-								.getDataDescription().getAttributeGroup(), pz
-								.getAspekt(), (short) 0);
-						ergebnis = new ResultData(originalDatum.getObject(),
-								dd, System.currentTimeMillis(),
-								plausibilisiertesDatum);
-						publizierenUnterStandardAspekt = false;
-						break;
-					} else if (pz.getAspekt().equals(standardAspekt)) {
-						publizierenUnterStandardAspekt = false;
-					}
+		PublikationObjAtg pubObjAtg = new PublikationObjAtg(
+				originalDatum.getObject(), originalDatum.getDataDescription().
+				getAttributeGroup());
+		PublikationFuerDatum pubDatum = this.publikationsMap.get(pubObjAtg);
+		
+		if(pubDatum != null){
+			if(pubDatum.publizieren){
+				publikationsAspect = pubDatum.asp;
+			}else{
+				if(pubDatum.asp != standardAspekt){
+					publikationsAspect = standardAspekt;
 				}
 			}
+		}else{
+			publikationsAspect = standardAspekt;
 		}
-
-		if (publizierenUnterStandardAspekt) {
+		
+		if(publikationsAspect != null){
 			DataDescription dd = new DataDescription(originalDatum
-					.getDataDescription().getAttributeGroup(), standardAspekt,
-					(short) 0);
-			ergebnis = new ResultData(originalDatum.getObject(), dd, System
-					.currentTimeMillis(), plausibilisiertesDatum);
+					.getDataDescription().getAttributeGroup(),
+					publikationsAspect, (short) 0);
+			ergebnis = new ResultData(originalDatum.getObject(),
+					dd, System.currentTimeMillis(),
+					plausibilisiertesDatum);			
 		}
 
 		return ergebnis;
@@ -237,17 +162,117 @@ IDatenFlussSteuerungFuerModul {
 		return s;
 	}
 	
-	protected class PublikationsZustand{
+	
+	/**
+	 * Diese Klasse wird nur als Schlüssel-Objekt innerhalb der internen
+	 * Struktur <code>publikationsMap</code> benötigt. Sie speichert
+	 * ein (finales) Systemobjekt zusammen mit einer Attributgruppe.
+	 * Die Klasse ist so designed, dass sie effektiv als Schlüssel
+	 * innerhalb von <code>TreeMap</code>-Objekten eingesetzt werden
+	 * kann.
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 *
+	 */
+	protected class PublikationObjAtg
+	implements Comparable<PublikationObjAtg>{
 		
-		public Aspect publikationsAspekt = null;
+		/**
+		 * ein Systemobjekt
+		 */
+		protected SystemObject obj;
 		
-		public boolean publizieren = false;
+		/**
+		 * eine Attributgruppe
+		 */
+		protected AttributeGroup atg;
 		
-		public PublikationsZustand(final boolean publizieren,
-								   final Aspect publikationsAspekt){
-			this.publizieren = publizieren;
-			this.publikationsAspekt = publikationsAspekt;
+		
+		/**
+		 * Standardkonstruktor
+		 * 
+		 * @param obj ein Objekt
+		 * @param atg eine Attributgruppe
+		 */
+		protected PublikationObjAtg(final SystemObject obj,
+									final AttributeGroup atg){
+			this.obj = obj;
+			this.atg = atg;			
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public int compareTo(PublikationObjAtg that) {
+			int result = Long.valueOf(this.obj.getId())
+								.compareTo(that.obj.getId());
+
+			if(result == 0){
+				result = Long.valueOf(this.atg.getId()).compareTo(that.atg.getId());
+			}
+
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * Diese Methode muss implementiert werden, da nach der
+		 * Exploration des Baums über <code>compareTo(..)</code>
+		 * (bspw. beim Aufruf von <code>contains()</code>) nochmals
+		 * mit <code>equals(..)</code> explizit auf Gleichheit
+		 * getestet wird.
+		 */
+		@Override
+		public boolean equals(Object obj1) {
+			boolean result = false;
+			
+			if(obj1 instanceof PublikationObjAtg){
+				PublikationObjAtg that = (PublikationObjAtg)obj1;
+				result = this.obj.equals(that.obj) &&
+						 that.atg.equals(that.atg);
+			}
+			
+			return result;
 		}
 		
 	}
+	
+	
+	/**
+	 * Diese Klasse wird nur als Wert-Objekt zu einem Schlüssel vom
+	 * Typ <code>PublikationObjAtg</code> innerhalb der internen
+	 * Struktur <code>publikationsMap</code> benötigt. Sie speichert
+	 * die Information, ob und unter welchem Aspekt publiziert werden
+	 * soll.
+	 * 
+	 * @author BitCtrl Systems GmbH, Thierfelder
+	 *
+	 */
+	protected class PublikationFuerDatum{
+		
+		/**
+		 * Soll publiziert werden?
+		 */
+		protected boolean publizieren = false;
+		
+		/**
+		 * Unter welchem Aspekt soll ein Datum publiziert werden
+		 */
+		protected Aspect asp = null;
+		
+		/**
+		 * Standardkonstruktor
+		 * 
+		 * @param publizieren soll publiziert werden?
+		 * @param asp unter welchem Aspekt soll ein Datum
+		 * publiziert werden
+		 */
+		protected PublikationFuerDatum(final boolean publizieren,
+									   final Aspect asp){
+			this.asp = asp;
+			this.publizieren = publizieren;
+		}
+	}
+	
 }

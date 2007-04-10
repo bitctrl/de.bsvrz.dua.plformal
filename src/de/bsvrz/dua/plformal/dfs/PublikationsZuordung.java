@@ -96,7 +96,8 @@ public class PublikationsZuordung {
 			SystemObject dummy = data.getArray(DUAKonstanten.ATT_DFS_OBJ)
 									.getReferenceValue(iObj).getSystemObject();
 			this.objekte.addAll(DUAHilfe.getFinaleObjekte(dummy,
-											verwaltung.getVerbindung()));
+											verwaltung.getVerbindung(),
+											verwaltung.getKonfigurationsBereiche()));
 		}
 		
 		if(data.getArray(DUAKonstanten.ATT_DFS_ATG).getLength() == 0){

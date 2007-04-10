@@ -1,9 +1,34 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 import stauma.dav.clientside.ClientReceiverInterface;
 import stauma.dav.clientside.Data;
@@ -17,109 +42,155 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
+import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
+import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
 
 /**
- * Diese Klasse meldet sich auf die Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
- * eines Objekts vom Typ <code>typ.plausibilitätsPrüfungFormal</code> an. Es stellt die darin
- * enthaltenen Informationen über die Schnittstelle <code>IPPFHilfe</code> allen
- * angemeldeten Instanzen von <code>IPPFHilfeListener</code> zur Verfügung.
+ * Diese Klasse meldet sich auf die Attributgruppe
+ * <code>atg.plausibilitätsPrüfungFormal</code> eines
+ * Objekts vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
+ * an. Es stellt die darin enthaltenen Informationen über
+ * die Schnittstelle <code>IPPFVersorger</code> allen angemeldeten
+ * Instanzen von <code>IPPFVersorgerListener</code> zur Verfügung.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class PPFHilfe
-implements IPPFHilfe, ClientReceiverInterface{
+public class PPFVersorger
+implements IPPFVersorger, ClientReceiverInterface{
 		
 	/**
-	 * der Logger
+	 * Debug-Logger
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
 	
 	/**
 	 * die statische Instanz dieser Klasse
 	 */
-	private static PPFHilfe INSTANZ = null;
-		
-	/**
-	 * Verbindung zum Verwaltungsmodul
-	 */
-	private IVerwaltung verwaltung;
+	private static PPFVersorger INSTANZ = null;
 	
 	/**
-	 * die Informationen der Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
+	 * die aktuellen Informationen der
+	 * Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
 	 */
-	private PPFDatenBeschreibungen plBeschreibungen = null;
-		
-	/**
-	 * Alle Datenidentifikationen, die z.Z. für eine formale Plausibilisierung vorgesehen sind.
-	 */
-	private List<DAVDatenAnmeldung> aktuelleAnmeldungen = new ArrayList<DAVDatenAnmeldung>();
+	private PPFPlausibilisierungsBeschreibungen plBeschreibungen = null;
 	
 	/**
 	 * Alle Listener dieses Objektes
 	 */
-	private Collection<IPPFHilfeListener> listenerListe = new HashSet<IPPFHilfeListener>();
+	private Collection<IPPFVersorgerListener> listenerListe =
+									new HashSet<IPPFVersorgerListener>();
+	
+	/**
+	 * Verbindung zum Verwaltungsmodul
+	 */
+	private IVerwaltung verwaltung = null;
 	
 	
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param verwaltung Verbindung zum Verwaltungsmodul
-	 * @param plausbibilisierungsObjekt das Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
-	 * @throws DUAInitialisierungsException falls die Datenanmeldung schief geht 
+	 * @param plausbibilisierungsObjekt das Objekt vom Typ
+	 * <code>typ.plausibilitätsPrüfungFormal</code>, auf dessen 
+	 * Daten sich angemeldet werden soll
+	 * @throws DUAInitialisierungsException falls die
+	 * Datenanmeldung fehl schlägt 
 	 */
-	private PPFHilfe(final IVerwaltung verwaltung,
-					 final SystemObject plausbibilisierungsObjekt)
+	private PPFVersorger(final IVerwaltung verwaltung,
+					 	 final SystemObject plausbibilisierungsObjekt)
 	throws DUAInitialisierungsException{
 		if(verwaltung == null){
-			throw new DUAInitialisierungsException("Keine Verbindung zur Verwaltung."); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Keine Verbindung" + //$NON-NLS-1$
+					" zum Verwaltungsmodul"); //$NON-NLS-1$
 		}
 		if(verwaltung.getVerbindung() == null){
-			throw new DUAInitialisierungsException("Keine Verbindung zum Datenverteiler."); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Keine Verbindung" + //$NON-NLS-1$
+					" zum Datenverteiler"); //$NON-NLS-1$
 		}
 		if(plausbibilisierungsObjekt == null){
-			throw new DUAInitialisierungsException("Ungültiges Plausibilisierungsobjekt."); //$NON-NLS-1$
+			throw new DUAInitialisierungsException("Ungültiges" + //$NON-NLS-1$
+					" Plausibilisierungsobjekt"); //$NON-NLS-1$
 		}
 		this.verwaltung = verwaltung;
-		final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
-									getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
-		final Aspect asp = verwaltung.getVerbindung().getDataModel().
-							getAspect(DUAKonstanten.ASP_PARA_SOLL);
-		final DataDescription dd = new DataDescription(atg, asp, (short)0);
-		verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd,
-					ReceiveOptions.normal(), ReceiverRole.receiver());
 		
-		LOGGER.info("Initialisierung erfolgreich."); //$NON-NLS-1$
+		try{
+			final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
+										getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
+			final Aspect asp = verwaltung.getVerbindung().getDataModel().
+								getAspect(DUAKonstanten.ASP_PARA_SOLL);
+			final DataDescription dd = new DataDescription(atg, asp, (short)0);
+			verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd,
+						ReceiveOptions.normal(), ReceiverRole.receiver());
+		}catch(Throwable t){
+			throw new DUAInitialisierungsException("Unerwarteter" + //$NON-NLS-1$
+					" Fehler beim Initialisieren der" + //$NON-NLS-1$
+					" formalen Plausibilisierung", t); //$NON-NLS-1$
+		}
+		
+		LOGGER.info("Initialisierung erfolgreich.\n" + //$NON-NLS-1$
+				"Für die formale Plausibilisierung" + //$NON-NLS-1$
+				" wird das Objekt " + plausbibilisierungsObjekt +//$NON-NLS-1$ 
+				" verwendet."); //$NON-NLS-1$
 	}
 	
 	/**
-	 * Erfragt die statische Instanz dieser Klasse
+	 * Erfragt die statische Instanz dieser Klasse.<br>
+	 * <b>Achtung:</b> Es wird erst innerhalb der dem Verwaltungsmodul
+	 * übergebenen Konfigurationsbereiche und dann im Standard-
+	 * Konfigurationsbereich nach einem Objekt vom Typ
+	 * <code>typ.plausibilitätsPrüfungFormal</code> gesucht.
 	 * 
 	 * @param verwaltung Verbindung zum Verwaltungsmodul
 	 * @return die statische Instanz dieser Klasse
-	 * @throws DUAInitialisierungsException falls die Datenanmeldung schief geht
+	 * @throws DUAInitialisierungsException falls die
+	 * Datenanmeldung fehl schlägt 
 	 */
-	public static final PPFHilfe getInstanz(final IVerwaltung verwaltung)
+	public static final PPFVersorger getInstanz(final IVerwaltung verwaltung)
 	throws DUAInitialisierungsException{
 		if(INSTANZ == null){
 			/**
 			 * Ermittlung des Objektes, das die formale Plausibilisierung beschreibt
 			 */
-			final SystemObjectType typPPF = (SystemObjectType)verwaltung.getVerbindung().getDataModel().getObject(DUAKonstanten.TYP_PL_FORMAL);
- 			SystemObject[] plausibilisierungsObjekte = DUAHilfe
-								.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
-									verwaltung.getKonfigurationsBereiche()).toArray(
-											new SystemObject[0]);
-			 			
+			final SystemObjectType typPPF = (SystemObjectType)verwaltung.
+						getVerbindung().getDataModel().getObject(DUAKonstanten.TYP_PL_FORMAL);
+			
+			SystemObject[] plausibilisierungsObjekte = new SystemObject[1];
+			for(SystemObject obj:typPPF.getElements()){
+				plausibilisierungsObjekte[0] = obj;
+				break;
+			}
+			
+// 			SystemObject[] plausibilisierungsObjekte = DUAHilfe
+//								.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
+//									verwaltung.getKonfigurationsBereiche()).toArray(
+//											new SystemObject[0]);
+//
+// 			if(plausibilisierungsObjekte.length == 0){
+// 				/**
+// 				 * nochmal suchen, ob im Standardkonfigurationsbereich ein
+// 				 * Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
+// 				 * vorhanden ist
+// 				 */
+//	 			plausibilisierungsObjekte = DUAHilfe
+//	 						.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
+//	 									null).toArray(new SystemObject[0]);
+// 			}
+//
 			if(plausibilisierungsObjekte.length > 0){
-				INSTANZ = new PPFHilfe(verwaltung, plausibilisierungsObjekte[0]);
+				if(plausibilisierungsObjekte.length > 1){
+					LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
+							DUAKonstanten.TYP_PL_FORMAL + " vor"); //$NON-NLS-1$
+				}
+				INSTANZ = new PPFVersorger(verwaltung, plausibilisierungsObjekte[0]);
 			}else{
 				throw new DUAInitialisierungsException("Es liegt kein Objekt vom Typ " + //$NON-NLS-1$
-						DUAKonstanten.TYP_PL_FORMAL + " vor.");  //$NON-NLS-1$
+						DUAKonstanten.TYP_PL_FORMAL + " vor");  //$NON-NLS-1$
 			}
 		}
 
@@ -130,10 +201,10 @@ implements IPPFHilfe, ClientReceiverInterface{
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
-		List<DAVDatenAnmeldung> neueAnmeldungen = new ArrayList<DAVDatenAnmeldung>();
-		PPFDatenBeschreibungen neuePlBeschreibungen = new PPFDatenBeschreibungen();
+		PPFPlausibilisierungsBeschreibungen neuePlBeschreibungen = 
+					new PPFPlausibilisierungsBeschreibungen(verwaltung);
 		boolean fehler = false;
-		LOGGER.info("Neue Parameter empfangen."); //$NON-NLS-1$
+		LOGGER.info("Neue Parameter empfangen"); //$NON-NLS-1$
 		
 		if(resultate != null && resultate.length > 0){
 			/**
@@ -146,34 +217,20 @@ implements IPPFHilfe, ClientReceiverInterface{
 					!resultat.isNoDataAvailable() && resultat.hasData() &&
 					 resultat.getData() != null){
 				
-				final Data.Array parameterSaetze = resultat.getData().getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ);
-				
-				for(int i = 0; i<parameterSaetze.getLength(); i++){
-					final Data parameterSatz = parameterSaetze.getItem(i);
-					try {
-						neuePlBeschreibungen.addParameterSatz(parameterSatz);
-						LOGGER.fine(parameterSatz.toString());
-					
-						final AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue
-														(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
-						final Aspect asp = (Aspect)parameterSatz.getReferenceValue
-												(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
-						final DataDescription dd = new DataDescription(atg, asp, (short)0);
-						final Collection<SystemObject> objListe = new HashSet<SystemObject>();
-						final Data.Array objArray = parameterSatz.getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ_OBJ);
-						for(int j = 0; j<objArray.getLength(); j++){
-							objListe.add(objArray.getItem(j).asReferenceValue().getSystemObject());
-						}
-						final DAVDatenAnmeldung neueAnmeldung = new DAVDatenAnmeldung(objListe.toArray(new SystemObject[0]), dd,
-																	verwaltung.getKonfigurationsBereiche(),
-																	verwaltung.getVerbindung());
-						neueAnmeldungen.add(neueAnmeldung);
-					} catch (Throwable e) {
-						LOGGER.error("Parameterdatensatz für die formale" + //$NON-NLS-1$
-								" Plausibilisierung konnte nicht ausgelesen werden.", e); //$NON-NLS-1$
-						fehler = true;
-						break;
+				try {
+					final Data.Array parameterSaetze = resultat.getData().
+									getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ);
+
+					for(int i = 0; i<parameterSaetze.getLength(); i++){
+						neuePlBeschreibungen.addParameterSatz(
+								parameterSaetze.getItem(i));
+						LOGGER.fine(parameterSaetze.getItem(i).toString());
 					}
+				} catch (Exception e) {
+					LOGGER.error("Parameterdatensatz für die formale" + //$NON-NLS-1$
+							" Plausibilisierung konnte nicht" + //$NON-NLS-1$
+							" ausgelesen werden", e); //$NON-NLS-1$
+					fehler = true;
 				}
 			}
 		}
@@ -184,8 +241,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 		if(!fehler){
 			synchronized (this) {
 				plBeschreibungen = neuePlBeschreibungen;
-				aktuelleAnmeldungen = neueAnmeldungen;
-				for(IPPFHilfeListener listener:listenerListe){
+				for(IPPFVersorgerListener listener:listenerListe){
 					listener.aktualisiereParameter(this);
 				}			
 			}
@@ -200,8 +256,11 @@ implements IPPFHilfe, ClientReceiverInterface{
 	public SystemObject[] getBetrachteteObjekte() {
 		Collection<SystemObject> objekte = new HashSet<SystemObject>();
 		
-		for(DAVDatenAnmeldung anmeldung:this.getDatenAnmeldungen()){
-			objekte.addAll(anmeldung.getObjekte());
+		if(this.plBeschreibungen != null){
+			for(DAVObjektAnmeldung anmeldung:
+						this.plBeschreibungen.getObjektAnmeldungen()){
+				objekte.add(anmeldung.getObjekt());
+			}
 		}
 		
 		return objekte.toArray(new SystemObject[0]);
@@ -210,70 +269,59 @@ implements IPPFHilfe, ClientReceiverInterface{
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isZurPausibilisierungVorgesehen(final ResultData resultat) {
-		boolean ergebnis = false;
-		
-		if(resultat != null && resultat.hasData() &&
-		   resultat.getData() != null && this.plBeschreibungen != null){
-			ergebnis = this.plBeschreibungen.getAttributSpezifikationenFuer(resultat) != null;
-		}
-		
-		return ergebnis;
+	public Collection<DAVObjektAnmeldung> getObjektAnmeldungen() {
+		return this.plBeschreibungen == null?new ArrayList<DAVObjektAnmeldung>()
+				:this.plBeschreibungen.getObjektAnmeldungen();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<DAVDatenAnmeldung> getDatenAnmeldungen() {
-		return this.aktuelleAnmeldungen;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Data plausibilisiere(ResultData resultat) {
+	public Data plausibilisiere(final ResultData resultat) {
 		Data ergebnis = null;
 		
-		if(resultat != null && resultat.hasData() && resultat.getData() != null &&			
-		   this.plBeschreibungen != null){
+		if(plBeschreibungen == null){
+			LOGGER.warning("Es wurden noch keine Parameter" + //$NON-NLS-1$
+					" für die formale Plausibilisierung empfangen"); //$NON-NLS-1$
+		}else
+		if(resultat != null && resultat.hasData() && resultat.getData() != null){
 			Collection<PPFAttributSpezifikation> attSpezifikationen = 
 					this.plBeschreibungen.getAttributSpezifikationenFuer(resultat);
 
-			if(attSpezifikationen != null){
-				Data data = resultat.getData();
-				boolean echtModifiziert = false;
-				
+			if(attSpezifikationen.size() > 0){
+				ergebnis = resultat.getData();
+								
 				for(PPFAttributSpezifikation attSpez:attSpezifikationen){
-					Data dummy = plausibilisiereAttribut(data, attSpez);
+					Data dummy = plausibilisiereAttribut(ergebnis, attSpez);
 					if(dummy != null){
-						data = dummy;
-						echtModifiziert = true;
+						ergebnis = dummy;
 					}
-				}
-				
-				if(echtModifiziert){
-					ergebnis = data;
-				}
+				}				
 			}else{
 				LOGGER.info("ResultData " + resultat + //$NON-NLS-1$
 				" ist nicht zur formalen Plausibilisierung vorgesehen."); //$NON-NLS-1$
 			}
-
+		}else{
+			LOGGER.info("Das formal zu prüfende Datum" + //$NON-NLS-1$
+					" enthält keine sinnvollen Daten: " +  //$NON-NLS-1$
+					(resultat==null?DUAKonstanten.NULL:resultat));
 		}
 		
 		return ergebnis;
 	}
 	
 	/**
-	 * Führt die formale Plausibilisierung für ein bestimmtes Attribut innerhalb
-	 * eines Datensatzes durch und gibt für dieses Attribut plausibilisierten
-	 * Datensatz zurück.
+	 * Führt die formale Plausibilisierung für ein bestimmtes Attribut
+	 * innerhalb eines Datensatzes durch und gibt für dieses Attribut
+	 * plausibilisierten Datensatz zurück.
 	 * 
 	 * @param datum der Datensatz
-	 * @param attSpez die Spezifikation des Attributs und die Parameter der formalen
-	 * Plausibilisierung desselben
-	 * @return für dieses Attribut plausibilisierten Datensatz, so er plausibilisiert
-	 * werden konnte, oder <code>null</code> sonst.
+	 * @param attSpez die Spezifikation des Attributs und die Parameter
+	 * der formalen Plausibilisierung desselben
+	 * @return für dieses Attribut plausibilisierten Datensatz (<b>so
+	 * dieser verändert werden musste</b>), oder <code>null</code> sonst
+	 * (damit nicht unnötigerweise Kopien von Datensätzen angelegt werden 
+	 * müssen)
 	 */
 	private final Data plausibilisiereAttribut(final Data datum,
 									  		   final PPFAttributSpezifikation attSpez){
@@ -288,7 +336,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 						" als Min-Wert (" + min + ")");   //$NON-NLS-1$//$NON-NLS-2$
 			}
 			
-			final int methode = (int)attSpez.getMethode();
+			final PlausibilisierungsMethode methode = attSpez.getMethode();
 			if(attPfad != null){
 				try{
 					Data dummy = datum.createModifiableCopy();
@@ -312,15 +360,14 @@ implements IPPFHilfe, ClientReceiverInterface{
 							/**
 							 * Plausibilisierung
 							 */
-							switch(methode){
-							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG:
+							if(methode.equals(PlausibilisierungsMethode.NUR_PRUEFUNG)){
 								if(implausibelMin || implausibelMax){
 									setStatusPlFormalWert(dummy, true, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
 								}else{
 									setStatusPlFormalWert(dummy, false, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
-								}								
-								break;
-							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX:
+								}
+							}else
+							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)){
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
@@ -334,8 +381,8 @@ implements IPPFHilfe, ClientReceiverInterface{
 									setStatusPlFormalWert(dummy, false, attPfad,
 											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}
-							break;
-							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN:
+							}else
+							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN)){
 								if(implausibelMin){
 									neuerWert = min;
 									setStatusPlFormalWert(dummy, true, attPfad,
@@ -343,8 +390,9 @@ implements IPPFHilfe, ClientReceiverInterface{
 									setStatusPlFormalWert(dummy, false, attPfad,
 											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}							
-							break;
-							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX:
+							}
+							else
+							if(methode.equals(PlausibilisierungsMethode.SETZE_MAX)){
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
@@ -352,9 +400,6 @@ implements IPPFHilfe, ClientReceiverInterface{
 									setStatusPlFormalWert(dummy, true, attPfad,
 											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
 								}
-							break;
-							case (int)DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG:
-								// mache nichts
 							}
 
 							if(neuerWert != alterWert){
@@ -388,7 +433,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 	 * 
 	 * @param listener der neue Listener
 	 */
-	public final void addListener(final IPPFHilfeListener listener){
+	public final void addListener(final IPPFVersorgerListener listener){
 		if(this.listenerListe.add(listener)){
 			synchronized (this) {
 				listener.aktualisiereParameter(this);
@@ -401,7 +446,7 @@ implements IPPFHilfe, ClientReceiverInterface{
 	 * 
 	 * @param listener der zu entfernende Listener
 	 */
-	public final void removeListener(final IPPFHilfeListener listener){
+	public final void removeListener(final IPPFVersorgerListener listener){
 		synchronized (this) {
 			this.listenerListe.remove(listener);	
 		}
@@ -412,15 +457,12 @@ implements IPPFHilfe, ClientReceiverInterface{
 	 */
 	@Override
 	public String toString() {
-		String s = DUAKonstanten.STR_UNDEFINIERT;
+		String s = DUAKonstanten.STR_UNDEFINIERT + "\n"; //$NON-NLS-1$
 		
 		synchronized (this) {
 			if(this.plBeschreibungen != null){
-				s = "Datenanmeldungen: \n"; //$NON-NLS-1$
-				for(DAVDatenAnmeldung da:this.aktuelleAnmeldungen){
-					s += da + "\n"; //$NON-NLS-1$
-				}
-				s += "Plausibilisierungsbeschreibung: \n" + this.plBeschreibungen; //$NON-NLS-1$
+				s += "Plausibilisierungsbeschreibung:\n" + //$NON-NLS-1$
+					this.plBeschreibungen;
 			}						
 		}
 		

@@ -1,3 +1,29 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
@@ -6,6 +32,7 @@ import java.util.Collection;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
+import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
@@ -14,6 +41,8 @@ import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 
 /**
  * Implementierung des Moduls PL-Prüfung formal.
@@ -23,12 +52,17 @@ import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
  */
 public class PlPruefungFormal
 extends AbstraktBearbeitungsKnotenAdapter
-implements IPPFHilfeListener{
+implements IPPFVersorgerListener{
+	
+	/**
+	 * Debug-Logger
+	 */
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * die Parameter der formalen Plausibilisierung
 	 */
-	private IPPFHilfe ppfParameter = null;
+	private IPPFVersorger ppfParameter = null;
 		
 	/**
 	 * Parameter zur Datenflusssteuerung für diese
@@ -47,7 +81,7 @@ implements IPPFHilfeListener{
 		super.initialisiere(dieVerwaltung);
 		this.standardAspekte = new PPFStandardAspekteVersorger(
 				verwaltung).getStandardPubInfos();
-		PPFHilfe.getInstanz(verwaltung).addListener(this);
+		PPFVersorger.getInstanz(verwaltung).addListener(this);
 		this.aktualisierePublikationIntern();
 	}
 	
@@ -65,6 +99,14 @@ implements IPPFHilfeListener{
 		this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(),
 													this.getModulTyp());
 		aktualisierePublikationIntern();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void aktualisiereParameter(IPPFVersorger parameter) {
+		ppfParameter = parameter;
+		this.aktualisierePublikationIntern();
 	}
 	
 	/**
@@ -105,58 +147,52 @@ implements IPPFHilfeListener{
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereParameter(IPPFHilfe parameter) {
-		ppfParameter = parameter;
-		this.aktualisierePublikationIntern();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisiereDaten(ResultData[] resultate) {
-		Collection<ResultData> weiterzuleitendeResultate = null;
-		
-		if(resultate != null && resultate.length > 0){		
-			weiterzuleitendeResultate = new ArrayList<ResultData>();
-			
+		if(this.ppfParameter == null){
+			LOGGER.info("Es wurden noch keine" + //$NON-NLS-1$
+						" Plausibilisierungsparameter empfangen"); //$NON-NLS-1$
+			if(this.knoten != null){
+				LOGGER.info("Die Datenwerden nur" + //$NON-NLS-1$
+						" weitergereicht an: " + this.knoten); //$NON-NLS-1$
+				this.knoten.aktualisiereDaten(resultate);
+			}
+		}else
+		if(resultate != null && resultate.length > 0){
+			Collection<ResultData> weiterzuleitendeResultate =
+				new ArrayList<ResultData>();
+
 			for(ResultData resultat:resultate){
-				boolean resultatErsetzt = false;
-				if(this.ppfParameter != null){
-					Data pData = this.ppfParameter.plausibilisiere(resultat);
-					
-					if(pData != null){
-						ResultData ersetztesResultat = new ResultData(
-								resultat.getObject(),
-								resultat.getDataDescription(),
-								resultat.getDataTime(),
-								pData);
-						resultatErsetzt = true;
-						weiterzuleitendeResultate.add(ersetztesResultat);
-						
-						if(this.publizieren){
-							ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat,
-																	pData, standardAspekte.getStandardAspekt(resultat));
-							this.publiziere(publikationsDatum);
-						}
+				Data pData = this.ppfParameter.plausibilisiere(resultat);
+
+				if(pData != null){
+					ResultData ersetztesResultat = new ResultData(
+							resultat.getObject(),
+							resultat.getDataDescription(),
+							resultat.getDataTime(),
+							pData);
+					weiterzuleitendeResultate.add(ersetztesResultat);
+
+					if(this.publizieren){
+						ResultData publikationsDatum = 
+							iDfsMod.getPublikationsDatum(resultat,
+								pData, standardAspekte.getStandardAspekt(resultat));
+						this.publiziere(publikationsDatum);
 					}
-				}
-				
-				if(!resultatErsetzt){
-					/**
-					 * Original weiterleiten
-					 */
-					weiterzuleitendeResultate.add(resultat);
+				}else{
+					weiterzuleitendeResultate.add(resultat);						
 				}
 			}
-		}
-		
-		/**
-		 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
-		 */
-		if(this.knoten != null){
-			this.knoten.aktualisiereDaten(weiterzuleitendeResultate != null?
-					weiterzuleitendeResultate.toArray(new ResultData[0]):null);
-		}
+
+			/**
+			 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
+			 */
+			if(this.knoten != null){
+				this.knoten.aktualisiereDaten(weiterzuleitendeResultate.
+						toArray(new ResultData[0]));
+			}
+		}else{
+			LOGGER.info("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
+		}				
 	}
 
 }

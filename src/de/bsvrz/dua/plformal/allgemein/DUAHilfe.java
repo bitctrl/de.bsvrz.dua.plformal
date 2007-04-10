@@ -55,6 +55,7 @@ public class DUAHilfe {
 			String[] s = kbString.split(","); //$NON-NLS-1$
 			for(String dummy:s){
 				if(dummy != null && dummy.length() > 0){
+					System.out.println(dummy);
 					resultListe.add(dummy);
 				}
 			}
@@ -101,9 +102,9 @@ public class DUAHilfe {
 				 * Es wurden keine Konfigurationsbereiche übergeben:
 				 * Standardkonfigurationsbereich wird verwendet
 				 */
-				benutzteBereiche.add(verwaltung.getVerbindung().
-						getDataModel().getConfigurationAuthority().
-						getConfigurationArea());
+//				benutzteBereiche.add(verwaltung.getVerbindung().
+//						getDataModel().getConfigurationAuthority().
+//						getConfigurationArea());
 			}
 			
 			String bereicheStr = DUAKonstanten.EMPTY_STR;
@@ -200,6 +201,7 @@ public class DUAHilfe {
 				if(teile != null && teile.length > 1){
 					if(teile[0].equals("-" + schluessel)){ //$NON-NLS-1$
 						ergebnis = teile[1];
+						System.out.println(ergebnis);
 						break;
 					}
 				}
@@ -269,7 +271,7 @@ public class DUAHilfe {
 	 * Erfragt, ob die übergebene Systemobjekt-Attributgruppen-Aspekt-
 	 * Kombination gültig bzw. kompatibel ist.
 	 * 
-	 * @param obj das Systemobjekt
+	 * @param obj das (finale) Systemobjekt
 	 * @param datenBeschreibung die Datenbeschreibung
 	 * @return <code>null</code>, wenn die übergebene Systemobjekt-
 	 * Attributgruppen-Aspekt-Kombination gültig ist, entweder.
@@ -352,10 +354,61 @@ public class DUAHilfe {
 			LOGGER.info("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
 					" ein Konfigurationsobjekt noch ein dynamisches Objekt"); //$NON-NLS-1$
 		}
-			
+		
 		return finaleObjekte;
 	}
-	
+
+	/**
+	 * Erfragt die Menge aller Konfigurationsobjekte bzw. Dynamischen
+	 * Objekte (finale Objekte), die unter Umständen im Argument
+	 * <code>obj</code> 'versteckt' sind <b>und außerdem innerhalb der
+	 * übergebenen Konfigurationsbereiche liegen</b>. 
+	 * 
+	 * @param obj ein Systemobjekt (finales Objekt oder Typ)
+	 * @param dav Verbindung zum Datenverteiler
+	 * @param kBereichsFilter eine Menge von Konfigurationsbereichen
+	 * @return eine Menge von finalen Systemobjekten, die innerhalb der 
+	 * übergebenen Konfigurationsbereiche (bzw. im Standardkonfigurationsbereich)
+	 * definiert sind.
+	 */
+	public static final Collection<SystemObject>
+				getFinaleObjekte(final SystemObject obj,
+								 final ClientDavInterface dav, 
+								 final Collection<ConfigurationArea> kBereichsFilter){
+		Collection<SystemObject> finaleObjekte =
+			getFinaleObjekte(obj, dav);
+		Collection<SystemObject> finaleObjekteMitCheck = new HashSet<SystemObject>();
+		
+		if(finaleObjekte.size() > 0){
+			Collection<ConfigurationArea> benutzteBereiche = 
+				new HashSet<ConfigurationArea>();	
+			
+			if(kBereichsFilter != null && kBereichsFilter.size() > 0){
+				benutzteBereiche = kBereichsFilter;				
+			}else{
+				/**
+				 * Es wurden keine Konfigurationsbereiche übergeben:
+				 * Standardkonfigurationsbereich wird verwendet
+				 */
+//				benutzteBereiche.add(dav.
+//						getDataModel().getConfigurationAuthority().
+//						getConfigurationArea());
+			}
+			
+			for(ConfigurationArea ca:benutzteBereiche){
+				System.out.println("Be: " + ca);
+			}
+			
+			for(SystemObject finObj:finaleObjekte){
+				System.out.println(finObj + ", " + finObj.getConfigurationArea());
+				if(benutzteBereiche.contains(finObj.getConfigurationArea())){
+					finaleObjekteMitCheck.add(finObj);
+				}
+			}
+		}
+		
+		return finaleObjekteMitCheck;
+	}
 	
 	/**
 	 * Erfragt die Menge von <code>DAVObjektAnmeldung</code>-Objekten,

@@ -18,8 +18,8 @@ extends Exception {
 		this.meldung = meldung;
 	}
 
-	public DUAInitialisierungsException(final String meldung, final Exception ex){
-		super(ex);
+	public DUAInitialisierungsException(final String meldung, final Throwable t){
+		super(t);
 		this.meldung = meldung;
 	}
 

@@ -86,17 +86,22 @@ implements IBearbeitungsKnoten, ClientSenderInterface {
 		DatenFlussSteuerungsHilfe.getInstanz(verwaltung).addListener(this);
 	}
 
+	
 	/**
-	 * Publiziert eine <code>ResultData</code>-Datum in den Datenverteiler
+	 * Publiziert ein <code>ResultData</code>-Datum
+	 * in den Datenverteiler
 	 * 
 	 * @param resultat das Datum
 	 */
-	protected void publiziere(ResultData resultat){
-		try {
-			this.verwaltung.getVerbindung().sendData(resultat);
-		} catch (Exception e) {
-			LOGGER.error("Fehler beim Publizieren von" + //$NON-NLS-1$
-					" Daten innerhalb von " + this.toString(), e); //$NON-NLS-1$
+	protected void publiziere(final ResultData resultat){
+		if(resultat != null){
+			try {
+				this.verwaltung.getVerbindung().sendData(resultat);
+			} catch (Exception e) {
+				LOGGER.error("Fehler beim Publizieren von" + //$NON-NLS-1$
+						" Daten innerhalb von " + //$NON-NLS-1$
+						this.toString() + "\nDatum: " + resultat, e); //$NON-NLS-1$
+			}
 		}
 	}
 

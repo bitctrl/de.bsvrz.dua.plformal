@@ -81,32 +81,15 @@ public class DAVDatenAnmeldung{
 		this.konfigurationsBereiche = kBereiche;
 		
 		if(objekte == null || objekte.length == 0){
-			for(SystemObject finObj:DUAHilfe.getFinaleObjekte(null, dav)){
-				if(kBereiche == null || kBereiche.size() == 0){
-					this.objektAnmeldungen.addAll(DUAHilfe.
-							getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
-				}else{
-					if(kBereiche.contains(finObj.getConfigurationArea())){
-						this.objektAnmeldungen.addAll(
-								DUAHilfe.
-								getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
-					}
-				}
+			for(SystemObject finObj:DUAHilfe.getFinaleObjekte(null, dav, kBereiche)){
+				this.objektAnmeldungen.addAll(DUAHilfe.
+					getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
 			}
 		}else{
 			for(SystemObject obj:objekte){
-				for(SystemObject finObj:DUAHilfe.getFinaleObjekte(obj, dav)){
-					if(kBereiche == null || kBereiche.size() == 0){
-						this.objektAnmeldungen.addAll(DUAHilfe.
-								getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
-					}else{
-						if(kBereiche.contains(finObj.getConfigurationArea())){
-							this.objektAnmeldungen.addAll(
-									DUAHilfe.
-									getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
-						}
-					}
-
+				for(SystemObject finObj:DUAHilfe.getFinaleObjekte(obj, dav, kBereiche)){
+					this.objektAnmeldungen.addAll(DUAHilfe.
+						getAlleObjektAnmeldungen(finObj, datenBeschreibung, dav));
 				}
 			}
 		}

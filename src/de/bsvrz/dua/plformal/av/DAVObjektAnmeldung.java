@@ -1,6 +1,7 @@
 package de.bsvrz.dua.plformal.av;
 
 import stauma.dav.clientside.DataDescription;
+import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 
@@ -70,6 +71,21 @@ implements Comparable<DAVObjektAnmeldung>{
 		
 		this.objekt = objekt;
 		this.datenBeschreibung = datenBeschreibung;
+	}
+	
+	/**
+	 * Macht aus einem <code>ResultData</code>-Objekt ein
+	 * <code>DAVObjektAnmeldung</code>-Objekt (über den Aufruf
+	 * des Standardkontruktors).
+	 * 
+	 * @param resultat ein <code>ResultData</code>-Objekt
+	 * @throws Exception wenn das <code>ResultData</code>-Objekt
+	 * <code>null</code> sien sollte, oder wenn der Standardkonstruktor
+	 * eine Exception wirft.
+	 */
+	public DAVObjektAnmeldung(final ResultData resultat)
+	throws Exception{
+		this(resultat.getObject(), resultat.getDataDescription());
 	}
 		
 	/**

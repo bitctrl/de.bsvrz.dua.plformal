@@ -56,9 +56,9 @@ extends IDatenFlussSteuerungsListener{
 	 * dem Objekt, das dieses Interface implementiert alle
 	 * zu bearbeitenden Daten zur Verfügung gestellt werden.  
 	 * 
-	 * @param arg0 aktuelle Daten vom Vorgängerknoten.
+	 * @param resultate aktuelle Daten vom Vorgängerknoten.
 	 */
-	public void aktualisiereDaten(ResultData[] arg0);
+	public void aktualisiereDaten(ResultData[] resultate);
 	
 	/**
 	 * Erfragt den Typen des Moduls, das dieses

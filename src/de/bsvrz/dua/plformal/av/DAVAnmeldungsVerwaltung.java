@@ -75,7 +75,7 @@ public abstract class DAVAnmeldungsVerwaltung {
 	 * Objektanmeldungen
 	 */
 	public final void modifiziereObjektAnmeldung(final
-			Collection<DAVObjektAnmeldung> neueObjektAnmeldungen){
+							Collection<DAVObjektAnmeldung> neueObjektAnmeldungen){
 
 //		Debug Anfang
 		String info = "Verlangte Anmeldungen: "; //$NON-NLS-1$

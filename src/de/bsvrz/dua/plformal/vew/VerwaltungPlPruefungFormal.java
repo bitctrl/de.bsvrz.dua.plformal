@@ -1,3 +1,29 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.dua.plformal.vew;
 
 import stauma.dav.clientside.ReceiveOptions;
@@ -7,13 +33,12 @@ import sys.funclib.application.StandardApplicationRunner;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.adapter.VerwaltungsAdapterEinfach;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.allgemein.StandardAspekteVersorger;
 import de.bsvrz.dua.plformal.av.DAVEmpfangsAnmeldungsVerwaltung;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
-import de.bsvrz.dua.plformal.plformal.IPPFHilfe;
-import de.bsvrz.dua.plformal.plformal.IPPFHilfeListener;
-import de.bsvrz.dua.plformal.plformal.PPFHilfe;
+import de.bsvrz.dua.plformal.plformal.PPFVersorger;
 import de.bsvrz.dua.plformal.plformal.PlPruefungFormal;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
+import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 
 /**
  * Implementierung des Moduls Verwaltung der SWE PL-Prüfung formal.
@@ -26,7 +51,7 @@ import de.bsvrz.dua.plformal.plformal.PlPruefungFormal;
  */
 public class VerwaltungPlPruefungFormal
 extends VerwaltungsAdapterEinfach
-implements IPPFHilfeListener{
+implements IPPFVersorgerListener{
 	
 	/**
 	 * der Logger
@@ -54,9 +79,10 @@ implements IPPFHilfeListener{
 	/**
 	 * {@inheritDoc}
 	 */
-	public void aktualisiereParameter(IPPFHilfe parameter) {
+	public void aktualisiereParameter(IPPFVersorger parameter) {
 		if(parameter != null){
-			this.empfangsVerwaltung.modifiziereDatenAnmeldung(parameter.getDatenAnmeldungen());
+			this.empfangsVerwaltung.modifiziereObjektAnmeldung(
+					parameter.getObjektAnmeldungen());
 		}
 	}
 
@@ -80,7 +106,7 @@ implements IPPFHilfeListener{
 		 * die Daten angemeldet werden muss, die innerhalb der Untermodule 
 		 * plausibilisiert werden sollen.
 		 */
-		PPFHilfe.getInstanz(this).addListener(this);			
+		PPFVersorger.getInstanz(this).addListener(this);			
 	}
 	
 	/**

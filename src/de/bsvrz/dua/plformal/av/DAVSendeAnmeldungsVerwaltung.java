@@ -1,11 +1,41 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.x 
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.dua.plformal.av;
 
 import java.util.Collection;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.ClientSenderInterface;
+import stauma.dav.clientside.DataDescription;
+import stauma.dav.clientside.ResultData;
 import stauma.dav.clientside.SenderRole;
+import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Verwaltungsklasse für Datenanmeldungen zum Senden von Daten.
@@ -16,7 +46,8 @@ import sys.funclib.debug.Debug;
  *  
  */
 public class DAVSendeAnmeldungsVerwaltung 
-extends DAVAnmeldungsVerwaltung{
+extends DAVAnmeldungsVerwaltung
+implements ClientSenderInterface{
 
 	/**
 	 * Debug-Logger
@@ -27,27 +58,38 @@ extends DAVAnmeldungsVerwaltung{
 	 * Rolle des Senders
 	 */
 	private SenderRole rolle = null;
-	
-	/**
-	 * Der Sender der Daten
-	 */
-	private ClientSenderInterface sender = null;
-	
+		
 	
 	/**
 	 * Standardkonstruktor
 	 * 
 	 * @param dav Datenverteilerverbindung
 	 * @param rolle Rolle
-	 * @param sender die Sender-Klasse der Datenverteiler-
-	 * Daten, für die diese Anmeldungs-Verwaltung arbeiten soll
 	 */
 	public DAVSendeAnmeldungsVerwaltung(final ClientDavInterface dav,
-									    final SenderRole rolle, 
-									    final ClientSenderInterface sender){
+									    final SenderRole rolle){
 		super(dav);
 		this.rolle = rolle;
-		this.sender = sender;
+	}
+	
+	/**
+	 * Sendet ein Datum in den Datenverteiler unter der 
+	 * Vorraussetzung, dass die Sendesteuerung für dieses
+	 * Datum einen Empfänger bzw. eine Senke festgestellt hat
+	 * 
+	 * @param resultat ein zu sendendes Datum
+	 */
+	public final void sende(final ResultData resultat){	
+		try {
+			DAVObjektAnmeldung anmeldung = new DAVObjektAnmeldung(resultat);
+			Byte status = this.aktuelleObjektAnmeldungen.get(anmeldung);
+			if(status == null || 
+					status == ClientSenderInterface.START_SENDING){
+				this.dav.sendData(resultat);
+			}			
+		} catch (Exception e) {
+			LOGGER.error(Konstante.LEERSTRING, e);
+		}
 	}
 
 	/**
@@ -61,15 +103,18 @@ extends DAVAnmeldungsVerwaltung{
 		} 
 		for(DAVObjektAnmeldung abmeldung:abmeldungen){
 			try{
-				this.dav.unsubscribeSender(this.sender, abmeldung.getObjekt(),
-						abmeldung.getDatenBeschreibung());
-				this.aktuelleObjektAnmeldungen.remove(abmeldung);
-				info += abmeldung;
+				synchronized (this.aktuelleObjektAnmeldungen) {
+					this.dav.unsubscribeSender(this, abmeldung.getObjekt(),
+							abmeldung.getDatenBeschreibung());
+					this.aktuelleObjektAnmeldungen.remove(abmeldung);
+					info += abmeldung;
+				}
 			}catch(Exception e){
-				LOGGER.error("Probleme beim Abmelden als Sender/Quelle", e); //$NON-NLS-1$
+				LOGGER.error("Probleme beim" + //$NON-NLS-1$
+						" Abmelden als Sender/Quelle", e); //$NON-NLS-1$
 			}
 		}
-		return info + "von [" + sender + "]\n";  //$NON-NLS-1$//$NON-NLS-2$
+		return info;
 	}
 
 	/**
@@ -83,15 +128,56 @@ extends DAVAnmeldungsVerwaltung{
 		} 
 		for(DAVObjektAnmeldung anmeldung:anmeldungen){
 			try {
-				this.dav.subscribeSender(this.sender, anmeldung.getObjekt(),
-						anmeldung.getDatenBeschreibung(), this.rolle);
-				this.aktuelleObjektAnmeldungen.add(anmeldung);
-				info += anmeldung;
+				synchronized (this.aktuelleObjektAnmeldungen) {
+					this.dav.subscribeSender(this, anmeldung.getObjekt(),
+							anmeldung.getDatenBeschreibung(), this.rolle);
+					this.aktuelleObjektAnmeldungen.put(anmeldung, null);
+					info += anmeldung;					
+				}
 			} catch (Exception e) {
-				LOGGER.error("Probleme beim Anmelden als Sender/Quelle", e); //$NON-NLS-1$
+				LOGGER.error("Probleme beim" + //$NON-NLS-1$
+						" Anmelden als Sender/Quelle", e); //$NON-NLS-1$
 			}		
 		}
-		return info + "für [" + sender + "]\n";  //$NON-NLS-1$//$NON-NLS-2$
+		return info;
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void dataRequest(SystemObject object, DataDescription
+			dataDescription, byte state) {
+		try {
+			synchronized (this.aktuelleObjektAnmeldungen) {
+				DAVObjektAnmeldung anmeldung = 
+						new DAVObjektAnmeldung(object, dataDescription);
+				this.aktuelleObjektAnmeldungen.put(anmeldung, state);
+			}
+		} catch (Exception e) {
+			LOGGER.error("Problem" + //$NON-NLS-1$
+					" innerhalb der Sendesteuerung", e); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isRequestSupported(final SystemObject object,
+									  final DataDescription dataDescription) {
+		boolean resultat = false;
+		
+		try {
+			DAVObjektAnmeldung anmeldung = 
+				new DAVObjektAnmeldung(object, dataDescription);
+			if(this.aktuelleObjektAnmeldungen.containsKey(anmeldung)){
+				resultat = true;	
+			}
+		} catch (Exception e) {
+			LOGGER.error("Problem" + //$NON-NLS-1$
+					" innerhalb der Sendesteuerung", e); //$NON-NLS-1$
+		}
+		
+		return resultat;
+	}
+
 }

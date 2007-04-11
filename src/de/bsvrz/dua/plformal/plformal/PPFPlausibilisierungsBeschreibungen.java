@@ -39,10 +39,11 @@ import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse stellt die Informationen der Attributgruppe
@@ -99,9 +100,9 @@ public class PPFPlausibilisierungsBeschreibungen {
 	throws Exception{
 		if(parameterSatz != null){
 			final AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(
-					DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATG).getSystemObject();
+					PPFKonstanten.ATT_PARA_SATZ_ATG).getSystemObject();
 			final Aspect asp = (Aspect)parameterSatz.getReferenceValue(
-					DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ASP).getSystemObject();
+					PPFKonstanten.ATT_PARA_SATZ_ASP).getSystemObject();
 			
 			if(atg == null){
 				throw new Exception("Übergebene Attributgruppe ist " //$NON-NLS-1$
@@ -113,17 +114,17 @@ public class PPFPlausibilisierungsBeschreibungen {
 			}
 			DataDescription dd = new DataDescription(atg, asp, (short)0);
 			
-			final ReferenceArray objekte = parameterSatz.getArray(DUAKonstanten.
-					ATL_PL_FORMAL_PARA_SATZ_OBJ).asReferenceArray();
+			final ReferenceArray objekte = parameterSatz.getArray(PPFKonstanten.
+					ATL_PARA_SATZ_OBJ).asReferenceArray();
 			
 			Collection<SystemObject> finObjekte = new HashSet<SystemObject>(); 
 			if(objekte == null || objekte.getLength() == 0){
-				finObjekte = DUAHilfe.getFinaleObjekte(null,
+				finObjekte = DUAUtensilien.getFinaleObjekte(null,
 						this.verwaltung.getVerbindung(),
 						this.verwaltung.getKonfigurationsBereiche());
 			}else{
 				for(int i = 0; i< objekte.getLength(); i++){
-					finObjekte.addAll(DUAHilfe.getFinaleObjekte(objekte.getSystemObject(i),
+					finObjekte.addAll(DUAUtensilien.getFinaleObjekte(objekte.getSystemObject(i),
 							this.verwaltung.getVerbindung(),
 							this.verwaltung.getKonfigurationsBereiche()));	
 				}				
@@ -140,7 +141,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
 				}catch(Exception ex){
-					LOGGER.warning(DUAKonstanten.EMPTY_STR, ex);
+					LOGGER.warning(Konstante.LEERSTRING, ex);
 				}						
 			}
 		}else{
@@ -201,10 +202,10 @@ public class PPFPlausibilisierungsBeschreibungen {
 	 */
 	@Override
 	public String toString() {
-		String s = DUAKonstanten.STR_UNDEFINIERT;
+		String s = Konstante.STRING_UNBEKANNT;
 
 		if(resDataInfos.keySet().size() > 0){
-			s = DUAKonstanten.EMPTY_STR;
+			s = Konstante.LEERSTRING;
 			for(DAVObjektAnmeldung objAnm:resDataInfos.keySet()){
 				s += "Datenbeschreibung: " + objAnm + "\n";  //$NON-NLS-1$//$NON-NLS-2$
 				s += this.resDataInfos.get(objAnm);
@@ -257,7 +258,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 		protected void addBeschreibung(final Data attSpezDatum)
 		throws Exception{
 			final Data.Array attribut = attSpezDatum.getArray(
-					DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ_ATT_SPEZ);
+					PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
 			
 			for(int i = 0; i<attribut.getLength(); i++){
 				final Data attributSpezifikation = attribut.getItem(i);
@@ -283,10 +284,10 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 */
 		@Override
 		public String toString() {
-			String s = DUAKonstanten.STR_UNDEFINIERT;
+			String s = Konstante.STRING_UNBEKANNT;
 			
 			if(attSpez.size() > 0){
-				s = DUAKonstanten.EMPTY_STR;
+				s = Konstante.LEERSTRING;
 				for(PPFAttributSpezifikation attBeschreibung:attSpez){
 					s += attBeschreibung;
 				}

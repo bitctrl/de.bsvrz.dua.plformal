@@ -51,8 +51,8 @@ public abstract class DAVAnmeldungsVerwaltung {
 	 * Baum der Datenanmeldungen, die im Moment aktuell sind
 	 * (ggf. mit ihrem Status der Sendesteuerung)
 	 */
-	protected Map<DAVObjektAnmeldung, Byte> 
-					aktuelleObjektAnmeldungen = new TreeMap<DAVObjektAnmeldung, Byte>();
+	protected Map<DAVObjektAnmeldung, Byte> aktuelleObjektAnmeldungen =
+								new TreeMap<DAVObjektAnmeldung, Byte>();
 
 	/**
 	 * Datenverteilerverbindung
@@ -70,29 +70,6 @@ public abstract class DAVAnmeldungsVerwaltung {
 	}
 	
 	/**
-	 * Modifiziert die hier verwalteten Datenanmeldungen
-	 * dergestalt, dass nur die innerhalb der übergebenen
-	 * Liste beschriebenen Anmeldungen bestehen bleiben.<br>
-	 * D.h. insbesondere, dass eine übergebene leere Liste
-	 * alle bereits durchgeführten Anmeldungen wieder 
-	 * rückgängig macht.
-	 * 
-	 * @param neueAnmeldungen die neue Liste mit Datenanmeldungen
-	 */
-	public final void modifiziereDatenAnmeldung(final
-							Collection<DAVDatenAnmeldung> neueAnmeldungen){
-		Collection<DAVObjektAnmeldung> neueObjektAnmeldungen =  
-			new TreeSet<DAVObjektAnmeldung>();
-
-		if(neueAnmeldungen != null){
-			for(DAVDatenAnmeldung neueAnmeldung:neueAnmeldungen){
-				neueObjektAnmeldungen.addAll(neueAnmeldung.getObjektAnmeldungen());
-			}
-		}
-		this.modifiziereObjektAnmeldung(neueObjektAnmeldungen);
-	}
-
-	/**
 	 * Modifiziert die hier verwalteten Objektanmeldungen
 	 * dergestalt, dass nur die innerhalb der übergebenen
 	 * Liste beschriebenen Anmeldungen bestehen bleiben.<br>
@@ -107,7 +84,7 @@ public abstract class DAVAnmeldungsVerwaltung {
 							Collection<DAVObjektAnmeldung> neueObjektAnmeldungen){
 
 //		Debug Anfang
-		String info = "Verlangte Anmeldungen: "; //$NON-NLS-1$
+		String info = "Verlangte Anmeldungen (" + this.getInfo() + "): "; //$NON-NLS-1$ //$NON-NLS-2$
 		if(neueObjektAnmeldungen.size() == 0){
 			info += "keine\n"; //$NON-NLS-1$
 		}else{
@@ -116,7 +93,7 @@ public abstract class DAVAnmeldungsVerwaltung {
 		for(DAVObjektAnmeldung neueObjektAnmeldung:neueObjektAnmeldungen){
 			info += neueObjektAnmeldung;
 		}
-		info += "Bisherige Anmeldungen: "; //$NON-NLS-1$
+		info += "Bisherige Anmeldungen (" + this.getInfo() + "): "; //$NON-NLS-1$ //$NON-NLS-2$
 		if(aktuelleObjektAnmeldungen.size() == 0){
 			info += "keine\n"; //$NON-NLS-1$
 		}else{
@@ -171,5 +148,12 @@ public abstract class DAVAnmeldungsVerwaltung {
 	 */
 	protected abstract String anmelden(final 
 								Collection<DAVObjektAnmeldung> anmeldungen);
+	
+	/**
+	 * Erfragt Informationen zum Anmeldungsverhalten
+	 * 
+	 * @return Informationen zum Anmeldungsverhalten
+	 */
+	protected abstract String getInfo();
 
 }

@@ -29,6 +29,7 @@ package de.bsvrz.dua.plformal.allgemein.adapter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.configuration.interfaces.ConfigurationArea;
@@ -39,11 +40,11 @@ import sys.funclib.operatingMessage.MessageGrade;
 import sys.funclib.operatingMessage.MessageSender;
 import sys.funclib.operatingMessage.MessageState;
 import sys.funclib.operatingMessage.MessageType;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsHilfe;
+import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsVersorger;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
@@ -88,7 +89,7 @@ implements IVerwaltung {
 	/**
 	 * Verbindung zur Datenflusssteuerung
 	 */
-	protected DatenFlussSteuerungsHilfe dfsHilfe = null;
+	protected DatenFlussSteuerungsVersorger dfsHilfe = null;
 	
 	
 	/**
@@ -145,10 +146,10 @@ implements IVerwaltung {
 			this.nachrichtenSender.setApplicationLabel(this.getSWETyp().toString());
 			
 			if(this.komArgumente != null){
-				this.kBereiche = DUAHilfe.getKonfigurationsBereicheAlsObjekte(
-						DUAHilfe.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
-								this.komArgumente), this.verbindung);				
-				this.dfsHilfe = DatenFlussSteuerungsHilfe.getInstanz(this);
+				this.kBereiche = getKonfigurationsBereicheAlsObjekte(
+						DUAUtensilien.getArgument(DUAKonstanten.ARG_KONFIGURATIONS_BEREICHS_PID,
+								this.komArgumente));				
+				this.dfsHilfe = DatenFlussSteuerungsVersorger.getInstanz(this);
 			}else{
 				throw new DUAInitialisierungsException("Es wurden keine" + //$NON-NLS-1$
 						" Kommandozeilenargumente übergeben"); //$NON-NLS-1$
@@ -189,6 +190,42 @@ implements IVerwaltung {
 		}
 		
 		argumente.fetchUnusedArguments();
+	}
+	
+	/**
+	 * Extrahiert aus einer Zeichenkette alle über Kommata getrennten 
+	 * Konfigurationsbereiche und gibt deren Systemobjekte zurück.
+	 * 
+	 * @param kbString Zeichenkette mit den Konfigurationsbereichen
+	 * @return (ggf. leere) <code>ConfigurationArea-Collection</code>
+	 * mit allen extrahierten Konfigurationsbereichen.
+	 */
+	private final Collection<ConfigurationArea> 
+				getKonfigurationsBereicheAlsObjekte(final String kbString){
+		List<String> resultListe = new ArrayList<String>();
+		
+		if(kbString != null){
+			String[] s = kbString.split(","); //$NON-NLS-1$
+			for(String dummy:s){
+				if(dummy != null && dummy.length() > 0){
+					resultListe.add(dummy);
+				}
+			}
+		}
+		Collection<ConfigurationArea> kbListe = new HashSet<ConfigurationArea>();
+		
+		for(String kb:resultListe){
+			try{
+				ConfigurationArea area = this.verbindung.getDataModel().
+											getConfigurationArea(kb);
+				if(area != null)kbListe.add(area);
+			}catch(UnsupportedOperationException ex){
+				LOGGER.error("Konfigurationsbereich " + kb +  //$NON-NLS-1$
+						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
+			}
+		}
+		
+		return kbListe;
 	}
 	
 	/**

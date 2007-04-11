@@ -35,11 +35,9 @@ import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
 
@@ -53,11 +51,6 @@ import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
  * 
  */
 public class PublikationsZuordung {
-	
-	/**
-	 * Debug-Logger
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Der Modul-Typ
@@ -110,29 +103,36 @@ public class PublikationsZuordung {
 	protected PublikationsZuordung(final Data data, final IVerwaltung verwaltung)
 	throws Exception{
 		this.aspekt = (Aspect)data.getReferenceValue(
-				DUAKonstanten.ATT_DFS_ASP).getSystemObject();
+				DFSKonstanten.ATT_ASP).getSystemObject();
 		this.modulTyp = ModulTyp.getZustand((int)data.getUnscaledValue(
-				DUAKonstanten.ATT_DFS_MODUL_TYP).getState().getValue());
+				DFSKonstanten.ATT_MODUL_TYP).getState().getValue());
 		this.publizieren = data.getTextValue(
-				DUAKonstanten.ATT_DFS_PUBLIZIEREN).getText()
+				DFSKonstanten.ATT_PUBLIZIEREN).getText()
 				.toLowerCase().equals("ja"); //$NON-NLS-1$
 
-		for (int iObj = 0; iObj < data.getArray(
-				DUAKonstanten.ATT_DFS_OBJ).getLength(); iObj++) {
-			SystemObject dummy = data.getArray(DUAKonstanten.ATT_DFS_OBJ)
-									.getReferenceValue(iObj).getSystemObject();
-			this.objekte.addAll(DUAHilfe.getFinaleObjekte(dummy,
-											verwaltung.getVerbindung(),
-											verwaltung.getKonfigurationsBereiche()));
+		if(data.getArray(DFSKonstanten.ATT_OBJ).getLength() == 0){
+			this.objekte.addAll(DUAUtensilien.getFinaleObjekte(null,
+					verwaltung.getVerbindung(),
+					verwaltung.getKonfigurationsBereiche()));			
+		}else{
+			for (int iObj = 0; iObj < data.getArray(
+					DFSKonstanten.ATT_OBJ).getLength(); iObj++) {
+				SystemObject dummy = data.getArray(DFSKonstanten.ATT_OBJ)
+										.getReferenceValue(iObj).getSystemObject();
+				
+				this.objekte.addAll(DUAUtensilien.getFinaleObjekte(dummy,
+												verwaltung.getVerbindung(),
+												verwaltung.getKonfigurationsBereiche()));
+			}
 		}
 		
-		if(data.getArray(DUAKonstanten.ATT_DFS_ATG).getLength() == 0){
+		if(data.getArray(DFSKonstanten.ATT_ATG).getLength() == 0){
 			this.atgs.add(null);
 		}else{
 			for (int iAtg = 0; iAtg < data.getArray(
-					DUAKonstanten.ATT_DFS_ATG).getLength(); iAtg++) {
+					DFSKonstanten.ATT_ATG).getLength(); iAtg++) {
 				this.atgs.add((AttributeGroup) data.getArray(
-						DUAKonstanten.ATT_DFS_ATG)
+						DFSKonstanten.ATT_ATG)
 						.getReferenceValue(iAtg)
 						.getSystemObject());
 			}
@@ -140,20 +140,10 @@ public class PublikationsZuordung {
 		
 		for(AttributeGroup atg:this.atgs){
 			DataDescription datenBeschreibung = new DataDescription(atg, this.aspekt, (short)0);
-			try{
-				DAVDatenAnmeldung neueDatenAnmeldung = new DAVDatenAnmeldung(objekte.toArray(
-							new SystemObject[0]), datenBeschreibung,
-							verwaltung.getVerbindung());
-				
-				for(DAVObjektAnmeldung neueObjektAnmeldung:neueDatenAnmeldung.getObjektAnmeldungen()){
-					if(!this.anmeldungen.add(neueObjektAnmeldung)){
-						LOGGER.warning("Objektanmeldung bereits vorhanden: " + //$NON-NLS-1$
-								neueObjektAnmeldung);
-					}
-				}
-			}catch(Exception ex){
-				LOGGER.warning("Vorgesehene Publikationsanmeldung" + //$NON-NLS-1$
-						" ist nicht gültig", ex); //$NON-NLS-1$
+						
+			for(SystemObject finObj:this.objekte){
+				this.anmeldungen.addAll(DUAUtensilien.
+						getAlleObjektAnmeldungen(finObj, datenBeschreibung, verwaltung.getVerbindung()));
 			}
 		}
 	}

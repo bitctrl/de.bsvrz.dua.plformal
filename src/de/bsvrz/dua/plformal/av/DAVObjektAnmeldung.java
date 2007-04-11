@@ -29,7 +29,7 @@ package de.bsvrz.dua.plformal.av;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 
 /**
  * Repräsentiert die Anmeldung eines <b>finalen</b> Systemobjekts
@@ -90,7 +90,7 @@ implements Comparable<DAVObjektAnmeldung>{
 	public DAVObjektAnmeldung(final SystemObject objekt,
 							  final DataDescription datenBeschreibung)
 	throws Exception{
-		String fehler = DUAHilfe.isKombinationOk(objekt, datenBeschreibung);
+		String fehler = DUAUtensilien.isKombinationOk(objekt, datenBeschreibung);
 		if(fehler != null){
 			throw new Exception(fehler);
 		}

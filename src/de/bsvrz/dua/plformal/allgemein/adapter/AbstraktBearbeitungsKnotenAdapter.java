@@ -32,7 +32,7 @@ import de.bsvrz.dua.plformal.allgemein.schnittstellen.IBearbeitungsKnoten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVSendeAnmeldungsVerwaltung;
-import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsHilfe;
+import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungsVersorger;
 
 /**
  * Adapterklasse für einen Bearbeitungsknoten.
@@ -100,7 +100,7 @@ implements IBearbeitungsKnoten {
 		this.publikationsAnmeldungen = new DAVSendeAnmeldungsVerwaltung(
 				this.verwaltung.getVerbindung(),
 				SenderRole.source());
-		DatenFlussSteuerungsHilfe.getInstanz(verwaltung).addListener(this);
+		DatenFlussSteuerungsVersorger.getInstanz(verwaltung).addListener(this);
 	}
 
 	/**

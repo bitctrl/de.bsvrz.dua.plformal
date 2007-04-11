@@ -41,7 +41,7 @@ import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
@@ -49,6 +49,7 @@ import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse meldet sich auf die Attributgruppe
@@ -136,9 +137,9 @@ implements IPPFVersorger, ClientReceiverInterface{
 
 		try{
 			final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
-										getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
+										getAttributeGroup(PPFKonstanten.ATG);
 			final Aspect asp = verwaltung.getVerbindung().getDataModel().
-								getAspect(DUAKonstanten.ASP_PARA_SOLL);
+								getAspect(Konstante.DAV_ASP_PARAMETER_SOLL);
 			final DataDescription dd = new DataDescription(atg, asp, (short)0);
 			verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd,
 						ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -173,39 +174,36 @@ implements IPPFVersorger, ClientReceiverInterface{
 			 * Ermittlung des Objektes, das die formale Plausibilisierung beschreibt
 			 */
 			final SystemObjectType typPPF = (SystemObjectType)verwaltung.
-						getVerbindung().getDataModel().getObject(DUAKonstanten.TYP_PL_FORMAL);
+						getVerbindung().getDataModel().getObject(PPFKonstanten.TYP);
 			
-			SystemObject[] plausibilisierungsObjekte = new SystemObject[1];
-			for(SystemObject obj:typPPF.getElements()){
-				plausibilisierungsObjekte[0] = obj;
-				break;
+			SystemObject[] plausibilisierungsObjekte = new SystemObject[0];
+			
+			if(typPPF != null){
+				plausibilisierungsObjekte = DUAUtensilien
+						.getFinaleObjekte(typPPF, verwaltung.getVerbindung(),
+								verwaltung.getKonfigurationsBereiche()).toArray(new SystemObject[0]);
 			}
-			
-// 			SystemObject[] plausibilisierungsObjekte = DUAHilfe
-//								.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
-//									verwaltung.getKonfigurationsBereiche()).toArray(
-//											new SystemObject[0]);
-//
-// 			if(plausibilisierungsObjekte.length == 0){
-// 				/**
-// 				 * nochmal suchen, ob im Standardkonfigurationsbereich ein
-// 				 * Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
-// 				 * vorhanden ist
-// 				 */
-//	 			plausibilisierungsObjekte = DUAHilfe
-//	 						.getAlleObjekteVomTypImKonfigBereich(verwaltung, typPPF,
-//	 									null).toArray(new SystemObject[0]);
-// 			}
-//
+				
+ 			if(plausibilisierungsObjekte.length == 0){
+ 				/**
+ 				 * nochmal suchen, ob im Standardkonfigurationsbereich ein
+ 				 * Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
+ 				 * vorhanden ist
+ 				 */
+				plausibilisierungsObjekte = DUAUtensilien
+					.getFinaleObjekte(typPPF, verwaltung.getVerbindung(), null)
+						.toArray(new SystemObject[0]);
+ 			}
+
 			if(plausibilisierungsObjekte.length > 0){
 				if(plausibilisierungsObjekte.length > 1){
 					LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
-							DUAKonstanten.TYP_PL_FORMAL + " vor"); //$NON-NLS-1$
+							PPFKonstanten.TYP + " vor"); //$NON-NLS-1$
 				}
 				INSTANZ = new PPFVersorger(verwaltung, plausibilisierungsObjekte[0]);
 			}else{
 				throw new DUAInitialisierungsException("Es liegt kein Objekt vom Typ " + //$NON-NLS-1$
-						DUAKonstanten.TYP_PL_FORMAL + " vor");  //$NON-NLS-1$
+						PPFKonstanten.TYP + " vor");  //$NON-NLS-1$
 			}
 		}
 
@@ -234,7 +232,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 				
 				try {
 					final Data.Array parameterSaetze = resultat.getData().
-									getArray(DUAKonstanten.ATL_PL_FORMAL_PARA_SATZ);
+									getArray(PPFKonstanten.ATL_PARA_SATZ);
 
 					for(int i = 0; i<parameterSaetze.getLength(); i++){
 						neuePlBeschreibungen.addParameterSatz(
@@ -355,7 +353,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 			if(attPfad != null){
 				try{
 					Data dummy = datum.createModifiableCopy();
-					Data plausDatum = DUAHilfe.getAttributDatum(attPfad, dummy);
+					Data plausDatum = DUAUtensilien.getAttributDatum(attPfad, dummy);
 					if(plausDatum != null && 
 						(plausDatum.getAttributeType().isOfType(TYP_GANZ_ZAHL) || 
 						 plausDatum.getAttributeType().isOfType(TYP_KOMMA_ZAHL))){
@@ -377,33 +375,33 @@ implements IPPFVersorger, ClientReceiverInterface{
 							 */
 							if(methode.equals(PlausibilisierungsMethode.NUR_PRUEFUNG)){
 								if(implausibelMin || implausibelMax){
-									setStatusPlFormalWert(dummy, true, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
+									setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
 								}else{
-									setStatusPlFormalWert(dummy, false, attPfad, DUAKonstanten.ATT_PL_FORMAL_STATUS_IMPLAUSIBEL);
+									setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
 								}
 							}else
 							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)){
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											PPFKonstanten.ATT_STATUS_MIN);
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											PPFKonstanten.ATT_STATUS_MAX);
 								}else if(implausibelMin){
 									neuerWert = min;
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											PPFKonstanten.ATT_STATUS_MIN);
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											PPFKonstanten.ATT_STATUS_MAX);
 								}
 							}else
 							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN)){
 								if(implausibelMin){
 									neuerWert = min;
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											PPFKonstanten.ATT_STATUS_MIN);
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											PPFKonstanten.ATT_STATUS_MAX);
 								}							
 							}
 							else
@@ -411,18 +409,14 @@ implements IPPFVersorger, ClientReceiverInterface{
 								if(implausibelMax){
 									neuerWert = max;
 									setStatusPlFormalWert(dummy, false, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MIN);
+											PPFKonstanten.ATT_STATUS_MIN);
 									setStatusPlFormalWert(dummy, true, attPfad,
-											DUAKonstanten.ATT_PL_FORMAL_STATUS_MAX);
+											PPFKonstanten.ATT_STATUS_MAX);
 								}
 							}
 
 							if(neuerWert != alterWert){
-								if(plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_GANZ_ZAHL)){
-									plausDatum.asUnscaledValue().set((long)neuerWert);	
-								}else{
-									plausDatum.asUnscaledValue().set(neuerWert);	
-								}
+								plausDatum.asUnscaledValue().set((long)neuerWert);	
 							}
 						}
 						
@@ -472,7 +466,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 	 */
 	@Override
 	public String toString() {
-		String s = DUAKonstanten.STR_UNDEFINIERT + "\n"; //$NON-NLS-1$
+		String s = Konstante.STRING_UNBEKANNT + "\n"; //$NON-NLS-1$
 		
 		synchronized (this) {
 			if(this.plBeschreibungen != null){
@@ -502,11 +496,11 @@ implements IPPFVersorger, ClientReceiverInterface{
 											 final String attPfad,
 											 final String attPfadErsetzung){
 		if(datum != null && attPfad != null && attPfadErsetzung != null){
-			final String neuerAttPfad = DUAHilfe.
+			final String neuerAttPfad = DUAUtensilien.
 				ersetzeLetztesElemInAttPfad(attPfad, attPfadErsetzung);
 			
 			if(neuerAttPfad != null){
-				Data status = DUAHilfe.getAttributDatum(neuerAttPfad, datum);
+				Data status = DUAUtensilien.getAttributDatum(neuerAttPfad, datum);
 				if(status != null){
 					try{
 						status.asUnscaledValue().set(wert?1:0);

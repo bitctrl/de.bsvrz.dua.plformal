@@ -43,7 +43,6 @@ import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.av.DAVDatenAnmeldung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
@@ -169,17 +168,15 @@ public abstract class StandardAspekteVersorger {
 		public StandardAspekteAdapter(final StandardPublikationsZuordnung[] zuordnungen)
 		throws DUAInitialisierungsException{
 			if(zuordnungen != null){
-				for (StandardPublikationsZuordnung zuordnung : zuordnungen) {
-					DAVDatenAnmeldung anmeldung = null;
-					
+				for (StandardPublikationsZuordnung zuordnung : zuordnungen) {					
 					try {
-						anmeldung = new DAVDatenAnmeldung(
-								new SystemObject[] { zuordnung.typ },
-								new DataDescription(zuordnung.atg, zuordnung.aspAusgang, (short)0),
-								StandardAspekteVersorger.this.verwaltung.getKonfigurationsBereiche(),
-								verwaltung.getVerbindung());
-					
-						anmeldungenGlobal.addAll(anmeldung.getObjektAnmeldungen());
+						for(SystemObject finObj:DUAUtensilien.getFinaleObjekte(
+								zuordnung.typ, verwaltung.getVerbindung(),
+								StandardAspekteVersorger.this.verwaltung.
+								getKonfigurationsBereiche())){
+							anmeldungenGlobal.add(new DAVObjektAnmeldung(finObj,
+								new DataDescription(zuordnung.atg, zuordnung.aspAusgang, (short)0)));
+						}
 						
 						DataDescription originalDesc = new DataDescription(zuordnung.atg,
 								zuordnung.aspEingang, (short)0);

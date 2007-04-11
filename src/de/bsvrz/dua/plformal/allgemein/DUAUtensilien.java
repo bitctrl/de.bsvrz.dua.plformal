@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.plformal.allgemein;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +40,8 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 
 /**
@@ -52,7 +51,7 @@ import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class DUAHilfe {
+public class DUAUtensilien {
 	
 	/**
 	 * Debug-Logger
@@ -64,119 +63,7 @@ public class DUAHilfe {
 	 */
 	private static final String NATUERLICHE_ZAHL = "\\d+"; //$NON-NLS-1$
 	
-	
-	/**
-	 * Extrahiert aus einer Zeichekette alle über Kommata getrennten 
-	 * Konfigurationsbereiche.
-	 * 
-	 * @param kbString Zeichenkette mit den Konfigurationsbereichen.
-	 * @return (ggf. leerer) <code>String</code>-Array mit allen
-	 * extrahierten Konfigurationsbereichen. 
-	 */
-	public static final String[] getKonfigurationsBereiche(
-			final String kbString){
-		List<String> resultListe = new ArrayList<String>();
-		
-		if(kbString != null){
-			String[] s = kbString.split(","); //$NON-NLS-1$
-			for(String dummy:s){
-				if(dummy != null && dummy.length() > 0){
-					resultListe.add(dummy);
-				}
-			}
-		}
-		
-		return resultListe.toArray(new String[0]);
-	}
-	
-	/**
-	 * Erfragt alle Objekte des Typs <code>typ</code>, die
-	 * innerhalb der übergebenen Konfigurationsbereiche
-	 * definiert sind.<br>
-	 * <b>Achtung:</b> Sollte die Menge der übergebenen
-	 * Konfigurationsbereiche leer oder <code>null</code>
-	 * sein, so werden die Objekte zurückgegeben, die im
-	 * Standardkonfigurationsbereich definiert sind (Der
-	 * Standardkonfigurationsbereich ist der Bereich, in
-	 * dem die aktuelle autarke Organisationseinheit
-	 * definiert ist).
-	 * 
-	 * @param verwaltung Verbindung zum Verwaltungsmodul
-	 * @param typ der Systemobjekt-Typ
-	 * @param konfigurationsBereiche eine Menge von 
-	 * Konfigurationsbereichen
-	 * @return Objekte des Typs <code>typ</code> oder eine leere
-	 * <code>Collection</code>, wenn keine Objekte vom übergebenen
-	 * Typ identifiziert werden konnten.
-	 */
-	public static final Collection<SystemObject> getAlleObjekteVomTypImKonfigBereich(
-			final IVerwaltung verwaltung,
-			final SystemObjectType typ,
-			final Collection<ConfigurationArea> konfigurationsBereiche){
-		Collection<SystemObject> objListe = new HashSet<SystemObject>();
-		
-		if(typ != null){
-			Collection<ConfigurationArea> benutzteBereiche = 
-				new HashSet<ConfigurationArea>();
 			
-			if(konfigurationsBereiche != null &&
-			   konfigurationsBereiche.size() > 0){
-				benutzteBereiche = konfigurationsBereiche;				
-			}else{
-				/**
-				 * Es wurden keine Konfigurationsbereiche übergeben:
-				 * Standardkonfigurationsbereich wird verwendet
-				 */
-//				benutzteBereiche.add(verwaltung.getVerbindung().
-//						getDataModel().getConfigurationAuthority().
-//						getConfigurationArea());
-			}
-			
-			String bereicheStr = DUAKonstanten.EMPTY_STR;
-			for(ConfigurationArea bereich:benutzteBereiche){
-				bereicheStr += bereich + "\n"; //$NON-NLS-1$
-			}
-			LOGGER.info("Es wird in folgenden Bereichen nach Objekten" + //$NON-NLS-1$
-					" vom Typ " + typ + " gesucht:\n" + bereicheStr);  //$NON-NLS-1$//$NON-NLS-2$
-			
-			for(SystemObject obj:typ.getObjects()){
-				if(benutzteBereiche.contains(obj.getConfigurationArea())){
-					objListe.add(obj);	
-				}
-			}
-		}
-		
-		return objListe;
-	}
-
-	/**
-	 * Extrahiert aus einer Zeichenkette alle über Kommata getrennten 
-	 * Konfigurationsbereiche und gibt deren Systemobjekte zurück.
-	 * 
-	 * @param kbString Zeichenkette mit den Konfigurationsbereichen
-	 * @param dav Verbindung zum Datenverteiler
-	 * @return (ggf. leere) <code>ConfigurationArea-Collection</code>
-	 * mit allen extrahierten Konfigurationsbereichen.
-	 */
-	public static final Collection<ConfigurationArea> 
-				getKonfigurationsBereicheAlsObjekte(final String kbString,
-													final ClientDavInterface dav){
-		final String[] kbStr = getKonfigurationsBereiche(kbString);
-		Collection<ConfigurationArea> kbListe = new HashSet<ConfigurationArea>();
-		
-		for(String kb:kbStr){
-			try{
-				ConfigurationArea area = dav.getDataModel().getConfigurationArea(kb);
-				if(area != null)kbListe.add(area);
-			}catch(UnsupportedOperationException ex){
-				LOGGER.error("Konfigurationsbereich " + kb +  //$NON-NLS-1$
-						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
-			}
-		}
-		
-		return kbListe;
-	}
-	
 	/**
 	 * Ersetzt den letzten Teil eines Attribuspfades durch eine bestimmte
 	 * Zeichenkette. Der Aufruf<br>
@@ -260,19 +147,22 @@ public class DUAHilfe {
 				for(String element:elemente){
 					if(ergebnis != null){
 						if(element.length() == 0){
-							LOGGER.warning("Syntaxfehler in Attributpfad: \"" + attributPfad + "\"");  //$NON-NLS-1$//$NON-NLS-2$
+							LOGGER.warning("Syntaxfehler in Attributpfad: \""//$NON-NLS-1$
+									+ attributPfad + "\"");  //$NON-NLS-1$
 							return null;
 						}
 
 						try{
 							if(element.matches(NATUERLICHE_ZAHL)){
-								ergebnis = ergebnis.asArray().getItem(Integer.parseInt(element));
+								ergebnis = ergebnis.asArray().getItem(
+										Integer.parseInt(element));
 							}else{
 								ergebnis = ergebnis.getItem(element);	
 							}
 						}catch(Exception ex){
-							LOGGER.error("Fehler bei Exploration von Datum " + datum + //$NON-NLS-1$
-									" mit \"" + attributPfad + "\"", ex);  //$NON-NLS-1$//$NON-NLS-2$
+							LOGGER.error("Fehler bei Exploration von Datum " +	//$NON-NLS-1$ 
+									datum + " mit \"" +	//$NON-NLS-1$
+									attributPfad + "\"", ex);  //$NON-NLS-1$
 							return null;
 						}
 
@@ -293,7 +183,7 @@ public class DUAHilfe {
 
 	/**
 	 * Erfragt, ob die übergebene Systemobjekt-Attributgruppen-Aspekt-
-	 * Kombination gültig bzw. kompatibel ist.
+	 * Kombination gültig bzw. kompatibel (bzw. so anmeldbar) ist.
 	 * 
 	 * @param obj das (finale) Systemobjekt
 	 * @param datenBeschreibung die Datenbeschreibung
@@ -342,7 +232,9 @@ public class DUAHilfe {
 	/**
 	 * Erfragt die Menge aller Konfigurationsobjekte bzw. Dynamischen
 	 * Objekte (finale Objekte), die unter Umständen im Parameter
-	 * <code>obj</code> 'versteckt' sind. 
+	 * <code>obj</code> 'versteckt' sind. Sollte als Objekte <code>
+	 * null</code> übergeben worden sein, so werden alle (finalen)
+	 * Objekte zurückgegeben.
 	 * 
 	 * @param obj ein Systemobjekt (finales Objekt oder Typ)
 	 * @param dav Verbindung zum Datenverteiler
@@ -354,8 +246,8 @@ public class DUAHilfe {
 		Collection<SystemObject> finaleObjekte =
 			new HashSet<SystemObject>();
 		
-		if(obj == null || obj.getPid().equals(DUAKonstanten.TYP_TYP)){
-			SystemObjectType typTyp = dav.getDataModel().getType(DUAKonstanten.TYP_TYP);
+		if(obj == null || obj.getPid().equals(Konstante.DAV_TYP_TYP)){
+			SystemObjectType typTyp = dav.getDataModel().getType(Konstante.DAV_TYP_TYP);
 			for(SystemObject typ:typTyp.getElements()){
 				for(SystemObject elem:((SystemObjectType)typ).getElements()){
 					if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
@@ -372,11 +264,12 @@ public class DUAHilfe {
 			}			
 		}else
 		if( obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
-			obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
+			obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+			obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
 			finaleObjekte.add(obj);
 		}else{
 			LOGGER.info("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
-					" ein Konfigurationsobjekt noch ein dynamisches Objekt"); //$NON-NLS-1$
+					" ein Konfigurationsobjekt noch ein dynamisches Objekt: " + obj); //$NON-NLS-1$
 		}
 		
 		return finaleObjekte;
@@ -386,7 +279,9 @@ public class DUAHilfe {
 	 * Erfragt die Menge aller Konfigurationsobjekte bzw. Dynamischen
 	 * Objekte (finale Objekte), die unter Umständen im Argument
 	 * <code>obj</code> 'versteckt' sind <b>und außerdem innerhalb der
-	 * übergebenen Konfigurationsbereiche liegen</b>. 
+	 * übergebenen Konfigurationsbereiche liegen</b>. Sollte als Objekte <code>
+	 * null</code> übergeben worden sein, so werden alle (finalen)
+	 * Objekte zurückgegeben.
 	 * 
 	 * @param obj ein Systemobjekt (finales Objekt oder Typ)
 	 * @param dav Verbindung zum Datenverteiler
@@ -401,7 +296,7 @@ public class DUAHilfe {
 								 final Collection<ConfigurationArea> kBereichsFilter){
 		Collection<SystemObject> finaleObjekte =
 			getFinaleObjekte(obj, dav);
-		Collection<SystemObject> finaleObjekteMitCheck = new HashSet<SystemObject>();
+		Collection<SystemObject> finaleObjekteMitKBCheck = new HashSet<SystemObject>();
 		
 		if(finaleObjekte.size() > 0){
 			Collection<ConfigurationArea> benutzteBereiche = 
@@ -414,24 +309,19 @@ public class DUAHilfe {
 				 * Es wurden keine Konfigurationsbereiche übergeben:
 				 * Standardkonfigurationsbereich wird verwendet
 				 */
-//				benutzteBereiche.add(dav.
-//						getDataModel().getConfigurationAuthority().
-//						getConfigurationArea());
+				benutzteBereiche.add(dav.
+						getDataModel().getConfigurationAuthority().
+						getConfigurationArea());
 			}
-			
-			for(ConfigurationArea ca:benutzteBereiche){
-//				System.out.println("Be: " + ca);
-			}
-			
+						
 			for(SystemObject finObj:finaleObjekte){
-//				System.out.println(finObj + ", " + finObj.getConfigurationArea());
 				if(benutzteBereiche.contains(finObj.getConfigurationArea())){
-					finaleObjekteMitCheck.add(finObj);
+					finaleObjekteMitKBCheck.add(finObj);
 				}
 			}
 		}
 		
-		return finaleObjekteMitCheck;
+		return finaleObjekteMitKBCheck;
 	}
 	
 	/**
@@ -476,7 +366,7 @@ public class DUAHilfe {
 								finObj, new DataDescription(atg, datenBeschreibung.
 										getAspect(), (short)0)));
 						}catch(Exception ex){
-							LOGGER.warning(DUAKonstanten.EMPTY_STR, ex);
+							LOGGER.warning(Konstante.LEERSTRING, ex);
 						}
 					}
 				}else
@@ -491,7 +381,7 @@ public class DUAHilfe {
 							datenBeschreibung));
 				}
 			}catch(Exception ex){
-				LOGGER.warning(DUAKonstanten.EMPTY_STR, ex);
+				LOGGER.warning(Konstante.LEERSTRING, ex);
 			}
 		}
 		

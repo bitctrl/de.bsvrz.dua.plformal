@@ -180,4 +180,11 @@ implements ClientSenderInterface{
 		return resultat;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getInfo() {
+		return this.rolle.toString();
+	}
 }

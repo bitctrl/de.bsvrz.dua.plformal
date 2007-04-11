@@ -134,4 +134,11 @@ extends DAVAnmeldungsVerwaltung{
 		return info + "für [" + empfaenger + "]\n";  //$NON-NLS-1$//$NON-NLS-2$		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getInfo() {
+		return this.rolle + ", " + this.optionen;  //$NON-NLS-1$
+	}
 }

@@ -27,8 +27,8 @@
 package de.bsvrz.dua.plformal.plformal;
 
 import stauma.dav.clientside.Data;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse repräsentiert alle Informationen, die innerhalb <b>eines</b>
@@ -48,12 +48,12 @@ public class PPFAttributSpezifikation {
 	/**
 	 * Min-Wert
 	 */
-	private long min = DUAKonstanten.LONG_UNDEFINIERT;
+	private long min = -1;
 
 	/**
 	 * Max-Wert
 	 */
-	private long max = DUAKonstanten.LONG_UNDEFINIERT;
+	private long max = -1;
 
 	/**
 	 * Vergleichs- bzw. Ersetzungsmethode
@@ -74,13 +74,13 @@ public class PPFAttributSpezifikation {
 	public PPFAttributSpezifikation(final Data attributSpezifikation)
 	throws Exception{
 		this.attributPfad = attributSpezifikation.getTextValue(
-				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
+				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
 		this.min = attributSpezifikation.getUnscaledValue(
-				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MIN).longValue();
+				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MIN).longValue();
 		this.max = attributSpezifikation.getUnscaledValue(
-				DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_MAX).longValue();
+				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MAX).longValue();
 		this.methode = PlausibilisierungsMethode.getZustand(attributSpezifikation
-				.getUnscaledValue(DUAKonstanten.ATT_PL_FORMAL_PARA_SATZ_ATT_SPEZ_OPT).
+				.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_OPT).
 						intValue());
 		if(min > max){
 			throw new Exception("MIN (" + this.min +  //$NON-NLS-1$
@@ -129,7 +129,7 @@ public class PPFAttributSpezifikation {
 	 */
 	@Override
 	public String toString() {
-		String s = DUAKonstanten.STR_UNDEFINIERT;
+		String s = Konstante.STRING_UNBEKANNT;
 
 		if(this.attributPfad != null){
 			s = "Attributpfad: " + this.attributPfad + "\n"; //$NON-NLS-1$ //$NON-NLS-2$

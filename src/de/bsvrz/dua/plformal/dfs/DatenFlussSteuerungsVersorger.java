@@ -39,12 +39,13 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAHilfe;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse liest die Parameter der Datenflusssteuerung aus 
@@ -54,7 +55,7 @@ import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  */
-public class DatenFlussSteuerungsHilfe
+public class DatenFlussSteuerungsVersorger
 implements ClientReceiverInterface {
 
 	/**
@@ -71,7 +72,7 @@ implements ClientReceiverInterface {
 	/**
 	 * die statische Instanz dieser Klasse
 	 */
-	protected static DatenFlussSteuerungsHilfe INSTANZ = null;
+	protected static DatenFlussSteuerungsVersorger INSTANZ = null;
 
 	/**
 	 * Menge aller Beobachter dieser Instanz
@@ -103,7 +104,7 @@ implements ClientReceiverInterface {
 	 *             (nicht die geforderten Informationen bereit hält), bzw. keine
 	 *             Datenanmeldungen durchgeführt werden konnten
 	 */
-	private DatenFlussSteuerungsHilfe(final IVerwaltung verwaltung,
+	private DatenFlussSteuerungsVersorger(final IVerwaltung verwaltung,
 			final SystemObject dfsObjekt)
 	throws DUAInitialisierungsException {
 		if (verwaltung == null) {
@@ -115,9 +116,9 @@ implements ClientReceiverInterface {
 		if(dfsObjekt != null){
 			try {
 				DataDescription dd = new DataDescription(verwaltung.getVerbindung()
-						.getDataModel().getAttributeGroup(DUAKonstanten.ATG_DFS),
+						.getDataModel().getAttributeGroup(DFSKonstanten.ATG),
 						verwaltung.getVerbindung().getDataModel().getAspect(
-								DUAKonstanten.ASP_PARA_SOLL), (short) 0);
+								Konstante.DAV_ASP_PARAMETER_SOLL), (short) 0);
 	
 				verwaltung.getVerbindung().subscribeReceiver(this, dfsObjekt, dd,
 						ReceiveOptions.normal(), ReceiverRole.receiver());
@@ -129,7 +130,7 @@ implements ClientReceiverInterface {
 			}
 		}else{
 			LOGGER.warning("Die Datenflusssteuerung ist nicht zur Laufzeit steuerbar.\n" + //$NON-NLS-1$
-					"Es wurde kein Objekt vom Typ " + DUAKonstanten.TYP_DFS + //$NON-NLS-1$
+					"Es wurde kein Objekt vom Typ " + DFSKonstanten.TYP + //$NON-NLS-1$
 					" identifiziert."); //$NON-NLS-1$
 		}
 	}
@@ -149,7 +150,7 @@ implements ClientReceiverInterface {
 	 *             (nicht die geforderten Informationen bereit hält), bzw. keine
 	 *             Datenanmeldungen durchgeführt werden konnten
 	 */
-	public static final DatenFlussSteuerungsHilfe getInstanz(
+	public static final DatenFlussSteuerungsVersorger getInstanz(
 			final IVerwaltung verwaltung)
 	throws DUAInitialisierungsException {
 		if (INSTANZ == null) {
@@ -159,25 +160,29 @@ implements ClientReceiverInterface {
 			 */
 			final SystemObjectType typDFS = (SystemObjectType) verwaltung
 					.getVerbindung().getDataModel().getObject(
-							DUAKonstanten.TYP_DFS);
+							DFSKonstanten.TYP);
 			
 			Collection<ConfigurationArea> kBereiche = 
 				verwaltung.getKonfigurationsBereiche(); 
-			SystemObject[] dfsObjekte = DUAHilfe.getAlleObjekteVomTypImKonfigBereich(
-											verwaltung, typDFS, kBereiche).
-											toArray(new SystemObject[0]);
-
+			
+			SystemObject[] dfsObjekte = new SystemObject[0];
+			if(typDFS != null){
+				dfsObjekte = DUAUtensilien.
+						getFinaleObjekte(typDFS, verwaltung.getVerbindung(),
+								kBereiche).toArray(new SystemObject[0]);
+			}
+			
 			SystemObject dfsObjekt = (dfsObjekte.length > 0?dfsObjekte[0]:null);
 			
 			if(dfsObjekte.length == 1){
 				LOGGER.info("Es wurde genau ein Objekt vom Typ " + //$NON-NLS-1$
-						DUAKonstanten.TYP_DFS + " identifiziert"); //$NON-NLS-1$		
+						DFSKonstanten.TYP + " identifiziert"); //$NON-NLS-1$		
 			}else if(dfsObjekte.length > 1){
 				LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
-						DUAKonstanten.TYP_DFS + " vor"); //$NON-NLS-1$
+						DFSKonstanten.TYP + " vor"); //$NON-NLS-1$
 			}
 			
-			INSTANZ = new DatenFlussSteuerungsHilfe(verwaltung, dfsObjekt);
+			INSTANZ = new DatenFlussSteuerungsVersorger(verwaltung, dfsObjekt);
 		}
 		return INSTANZ;
 	}
@@ -200,7 +205,7 @@ implements ClientReceiverInterface {
 					&& resultat.getData() != null) {
 
 				Data.Array ps = resultat.getData().getArray(
-						DUAKonstanten.ATL_DFS_PARA_SATZ);
+						DFSKonstanten.ATL_PARA_SATZ);
 
 				for (int i = 0; i < ps.getLength(); i++) {
 					Data satz = ps.getItem(i);
@@ -208,7 +213,7 @@ implements ClientReceiverInterface {
 						ParameterSatz dfParameterSatz = new ParameterSatz();
 						
 						final SWETyp swe = SWETyp.getZustand((int)satz.getUnscaledValue(
-								DUAKonstanten.ATT_DFS_SWE).getState().getValue());
+								DFSKonstanten.ATT_SWE).getState().getValue());
 						dfParameterSatz.setSwe(swe);
 
 						/**
@@ -216,9 +221,9 @@ implements ClientReceiverInterface {
 						 * innerhalb dieses Parametersatzes
 						 */
 						for (int j = 0; j < satz.getArray(
-								DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getLength(); j++) {
+								DFSKonstanten.ATT_PUB_ZUORDNUNG).getLength(); j++) {
 							Data paraZuordnung = satz.getArray(
-									DUAKonstanten.ATT_DFS_PUB_ZUORDNUNG).getItem(j);
+									DFSKonstanten.ATT_PUB_ZUORDNUNG).getItem(j);
 							PublikationsZuordung dfParaZuordnung;
 							try {
 								dfParaZuordnung = new PublikationsZuordung(

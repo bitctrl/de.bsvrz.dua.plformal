@@ -1,3 +1,29 @@
+/**
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.x 
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * Contact Information:<br>
+ * BitCtrl Systems GmbH<br>
+ * Weißenfelser Straße 67<br>
+ * 04229 Leipzig<br>
+ * Phone: +49 341-490670<br>
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.dua.plformal.allgemein;
 
 import java.util.ArrayList;
@@ -22,11 +48,11 @@ import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
- * Instanzen dieser Klasse stellen die Standard-Publikationsinformationen
- * für <b>eine</b> SWE und <b>einen</b> Modul-Typ innerhalb der DUA zur
- * Verfügung.<br> Diese Informationen können im Konstruktor dieser Klasse
- * für je eine SWE-Modultyp-Kombination als Instanz der Klasse <code>
- * StandardAspekteAdapter</code> angelegt
+ * Ableitungen dieser Klasse stellen die Standard-Publikationsinformationen
+ * für <b>einen</b> Modul-Typ innerhalb der DUA zur Verfügung.<br>
+ * Diese Informationen können im Konstruktor dieser Klasse für je eine
+ * SWE-Modultyp-Kombination als Instanz der Klasse 
+ * <code>StandardAspekteAdapter</code> angelegt
  * werden.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -47,6 +73,8 @@ public abstract class StandardAspekteVersorger {
 	/**
 	 * Die Informationen über die Standardaspekte für die
 	 * Publikation einer bestimmten SWE-Modultyp-Kombinationen
+	 * (hier mit leerem Objekt initialisiert, das zurückgegeben
+	 * wird, wenn die Standardaspekte nicht zur Verfügung stehen)
 	 */
 	protected IStandardAspekte standardAspekte = new IStandardAspekte(){
 
@@ -81,7 +109,7 @@ public abstract class StandardAspekteVersorger {
 	
 	/**
 	 * Initialisiert die Standard-Publikationsinformationen für einen
-	 * kompleten Modul-Typ unter der Vorraussetzung, dass das Modul 
+	 * kompletten Modul-Typ unter der Vorraussetzung, dass das Modul 
 	 * unter der übergebenen SWE läuft.
 	 *   
 	 * @param swe die SWE unter der das Modul läuft
@@ -103,12 +131,12 @@ public abstract class StandardAspekteVersorger {
 	
 	
 	/**
-	 * In diesen Objekten werden alle Informationen über das standardmäßige
-	 * Publikationsverhalten von SWE-Modultyp-Kombinationen festgehalten. Diese
-	 * Objekte werden innerhalb von <code>StandardAspekteVersorger</code>
-	 * statisch erstellt und können über die statische Methode <code>
-	 * getStandardPubInfos(..)</code>
-	 * ausgelesen werden.
+	 * In diesen Objekten werden alle Informationen über das
+	 * standardmäßige Publikationsverhalten von SWE-Modul-Typ-
+	 * Kombinationen festgehalten. Diese Objekte werden innerhalb
+	 * von <code>StandardAspekteVersorger</code> statisch erstellt
+	 * und können über die statische Methode
+	 * <code>getStandardPubInfos(..)</code> ausgelesen werden.
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
 	 * 
@@ -117,16 +145,18 @@ public abstract class StandardAspekteVersorger {
 	implements IStandardAspekte {
 
 		/**
-		 * Notwendige Datenanmeldungen ohne Filterung
+		 * Notwendige Datenanmeldungen
 		 */
 		private Collection<DAVObjektAnmeldung> anmeldungenGlobal = 
-					new ArrayList<DAVObjektAnmeldung>();
+					new TreeSet<DAVObjektAnmeldung>();
 		
 		/**
-		 * 
+		 * Mapping von Systemobjekt-Attributgruppe-Aspekt-Kombination
+		 * auf einen Standardpublikationsaspekt
 		 */
 		private Map<DAVObjektAnmeldung, Aspect> publikationsMap =
 			new TreeMap<DAVObjektAnmeldung, Aspect>();
+
 
 		/**
 		 * Standardkonstruktor
@@ -152,7 +182,7 @@ public abstract class StandardAspekteVersorger {
 						anmeldungenGlobal.addAll(anmeldung.getObjektAnmeldungen());
 						
 						DataDescription originalDesc = new DataDescription(zuordnung.atg,
-								zuordnung.aspEingang);
+								zuordnung.aspEingang, (short)0);
 						for(SystemObject obj:zuordnung.typ.getElements()){
 							DAVObjektAnmeldung objektAnmeldung =
 								new DAVObjektAnmeldung(obj, originalDesc);

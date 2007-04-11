@@ -44,7 +44,9 @@ import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import de.bsvrz.dua.plformal.DAVTest;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
+import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
+import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
@@ -180,9 +182,9 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		SystemObjectType typ = this.dav.getDataModel().getType(TYP);
 
 		AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(
-				DUAKonstanten.ATG_PL_FORMAL);
+				PPFKonstanten.ATG);
 		Aspect aspPara = this.dav.getDataModel().getAspect(
-				DUAKonstanten.ASP_PARA_VORGABE);
+				Konstante.DAV_ASP_PARAMETER_VORGABE);
 
 		ddAusgang = new DataDescription(atg, ausgang, (short) 0);
 		ddEingang = new DataDescription(atg, eingang, (short) 0);
@@ -191,7 +193,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		this.obj2 = this.dav.getDataModel().getObject(OBJ2_PID);
 
 		for (SystemObject elem : this.dav.getDataModel().getType(
-				DUAKonstanten.TYP_PL_FORMAL).getObjects()) {
+				PPFKonstanten.TYP).getObjects()) {
 			if (elem.getPid().equals("kv.bitctrl.thierfelder")) { //$NON-NLS-1$
 				this.ppfObjekt = elem;
 			}
@@ -236,16 +238,16 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		 * Durchläufe wie in Tabelle 5-4
 		 */
 		this.durchlaeufe = new Durchlauf[] {
-				new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG,
-						DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN),
-				new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX,
-						DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG),
-				new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX,
-						DUAKonstanten.ATT_PL_FORMAL_WERT_KEINE_PRUEFUNG),
-				new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MIN,
-						DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MINMAX),
-				new Durchlauf(DUAKonstanten.ATT_PL_FORMAL_WERT_NUR_PRUEFUNG,
-						DUAKonstanten.ATT_PL_FORMAL_WERT_SETZE_MAX) };
+				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(), 
+						PlausibilisierungsMethode.SETZE_MIN.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
+						PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
+						PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN.getCode(),
+						PlausibilisierungsMethode.SETZE_MIN_MAX.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.NUR_PRUEFUNG.getCode(),
+						PlausibilisierungsMethode.SETZE_MAX.getCode()) };
 
 		/**
 		 * Erwartete Ergebnisse
@@ -351,7 +353,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		 * Parameter setzen
 		 */
 		Data data = this.dav.createData(this.dav.getDataModel()
-				.getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL));
+				.getAttributeGroup(PPFKonstanten.ATG));
 		Data.Array ps = data
 				.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray(); //$NON-NLS-1$
 		ps.setLength(2);
@@ -405,9 +407,8 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]); //$NON-NLS-1$
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]); //$NON-NLS-1$
 		System.out
-				.println(DUAKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT
-						.get(dl.testAtt1)
-						+ ", " + DUAKonstanten.ATT_PL_PRUEFUNG_FORMAL_METHODEN_TEXT.get(dl.testAtt2)); //$NON-NLS-1$
+				.println(PlausibilisierungsMethode.getZustand((int)dl.testAtt1)
+						+ ", " + PlausibilisierungsMethode.getZustand((int)dl.testAtt2)); //$NON-NLS-1$
 
 		try {
 			this.dav.sendData(parameter1);

@@ -5,11 +5,10 @@ Bundle-SymbolicName: de.bsvrz.dua.plformal
 Bundle-Version: 1.0.0
 Bundle-Vendor: BitCtrl Systems GmbH
 Bundle-Localization: plugin
-Require-Bundle: bitctrl.dav.uz.common,
- de.bitctrl.sys.funclib
+Require-Bundle: de.bitctrl.sys.funclib,
+ de.bitctrl.dav.daf
 Eclipse-LazyStart: true
-Export-Package: de.bsvrz.dua.plformal.adapter,
- de.bsvrz.dua.plformal.allgemein,
+Export-Package: de.bsvrz.dua.plformal.allgemein,
  de.bsvrz.dua.plformal.av,
  de.bsvrz.dua.plformal.dfs,
  de.bsvrz.dua.plformal.plformal,

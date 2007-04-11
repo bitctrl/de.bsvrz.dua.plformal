@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -31,8 +31,8 @@ import stauma.dav.clientside.ReceiverRole;
 import stauma.dav.clientside.ResultData;
 import sys.funclib.application.StandardApplicationRunner;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.adapter.VerwaltungsAdapterEinfach;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.adapter.AbstraktVerwaltungsAdapter;
 import de.bsvrz.dua.plformal.av.DAVEmpfangsAnmeldungsVerwaltung;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 import de.bsvrz.dua.plformal.plformal.PPFVersorger;
@@ -46,15 +46,15 @@ import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
  * und initialisiert damit das Modul PL-Prüfung formal, das dann die 
  * eigentliche Prüfung durchführt.
  * 
- * @author Thierfelder
+ * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
 public class VerwaltungPlPruefungFormal
-extends VerwaltungsAdapterEinfach
+extends AbstraktVerwaltungsAdapter
 implements IPPFVersorgerListener{
 	
 	/**
-	 * der Logger
+	 * Debug-Logger
 	 */
 	protected static final Debug LOGGER = Debug.getLogger();
 
@@ -80,10 +80,8 @@ implements IPPFVersorgerListener{
 	 * {@inheritDoc}
 	 */
 	public void aktualisiereParameter(IPPFVersorger parameter) {
-		if(parameter != null){
-			this.empfangsVerwaltung.modifiziereObjektAnmeldung(
-					parameter.getObjektAnmeldungen());
-		}
+		this.empfangsVerwaltung.modifiziereObjektAnmeldung(
+				parameter.getObjektAnmeldungen());
 	}
 
 	/**
@@ -91,11 +89,11 @@ implements IPPFVersorgerListener{
 	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
-		super.initialisiere();
-		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(this.verbindung,
-																	  ReceiverRole.receiver(), 
-																	  ReceiveOptions.delayed(),
-																	  this);
+		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(
+										this.verbindung,
+										ReceiverRole.receiver(),
+										ReceiveOptions.delayed(),
+										this);
 		this.plPruefungFormal = new PlPruefungFormal();
 		this.plPruefungFormal.setPublikation(true);
 		this.plPruefungFormal.initialisiere(this);
@@ -122,14 +120,17 @@ implements IPPFVersorgerListener{
 	 * @param args Argumente der Kommandozeile
 	 */
 	public static void main(String argumente[]){
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler(){
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.
+        				UncaughtExceptionHandler(){
             public void uncaughtException(@SuppressWarnings("unused")
 			Thread t, Throwable e) {
-                LOGGER.error("Applikation wird wegen unerwartetem Fehler beendet", e);  //$NON-NLS-1$
+                LOGGER.error("Applikation wird wegen" +  //$NON-NLS-1$
+                		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
                 Runtime.getRuntime().exit(0);
             }
         });
-		StandardApplicationRunner.run(new VerwaltungPlPruefungFormal(), argumente);
+		StandardApplicationRunner.run(
+					new VerwaltungPlPruefungFormal(),argumente);
 	}
 	
 }

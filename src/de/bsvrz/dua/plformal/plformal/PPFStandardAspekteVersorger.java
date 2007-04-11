@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -61,26 +61,26 @@ extends StandardAspekteVersorger{
 		
 		if(SWETyp.PL_PRUEFUNG_FORMAL.equals(swe)){
 
-			/**
-			 * Test Standardaspekte
-			 */			
-			this.standardAspekte = new StandardAspekteAdapter(
-					new StandardPublikationsZuordnung[] {
-							new StandardPublikationsZuordnung("typ.testPlPrüfungFormal", //$NON-NLS-1$
-									"atg.testPlPrüfungFormal", //$NON-NLS-1$
-									"asp.testAusgang", //$NON-NLS-1$
-									"asp.testEingang") }); //$NON-NLS-1$
-			
+//			/**
+//			 * Test Standardaspekte
+//			 */			
 //			this.standardAspekte = new StandardAspekteAdapter(
 //					new StandardPublikationsZuordnung[] {
-//							new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
-//									"atg.verkehrsDatenKurzZeitIntervall", //$NON-NLS-1$
-//									"asp.externeErfassung", //$NON-NLS-1$
-//									"asp.plausibilitätsPrüfungFormal"), //$NON-NLS-1$
-//							new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
-//									"atg.verkehrsDatenLangZeitIntervall", //$NON-NLS-1$
-//									"asp.externeErfassung", //$NON-NLS-1$
-//									"asp.plausibilitätsPrüfungFormal") }); //$NON-NLS-1$
+//							new StandardPublikationsZuordnung("typ.testPlPrüfungFormal", //$NON-NLS-1$
+//									"atg.testPlPrüfungFormal", //$NON-NLS-1$
+//									"asp.testAusgang", //$NON-NLS-1$
+//									"asp.testEingang") }); //$NON-NLS-1$
+			
+			this.standardAspekte = new StandardAspekteAdapter(
+					new StandardPublikationsZuordnung[] {
+							new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
+									"atg.verkehrsDatenKurzZeitIntervall", //$NON-NLS-1$
+									"asp.externeErfassung", //$NON-NLS-1$
+									"asp.plausibilitätsPrüfungFormal"), //$NON-NLS-1$
+							new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
+									"atg.verkehrsDatenLangZeitIntervall", //$NON-NLS-1$
+									"asp.externeErfassung", //$NON-NLS-1$
+									"asp.plausibilitätsPrüfungFormal") }); //$NON-NLS-1$
 			
 		}else if(SWETyp.PL_PRUEFUNG_LOGISCH_LVE.equals(swe)){
 			// TODO

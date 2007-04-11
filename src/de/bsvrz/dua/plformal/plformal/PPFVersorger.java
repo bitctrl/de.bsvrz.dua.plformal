@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -75,6 +75,16 @@ implements IPPFVersorger, ClientReceiverInterface{
 	private static PPFVersorger INSTANZ = null;
 	
 	/**
+	 * Systemobjekt einer Ganzen Zahl
+	 */
+	private static SystemObjectType TYP_GANZ_ZAHL = null;
+	
+	/**
+	 * Systemobjekt einer Gleitkommazahl
+	 */
+	private static SystemObjectType TYP_KOMMA_ZAHL = null;
+
+	/**
 	 * die aktuellen Informationen der
 	 * Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
 	 */
@@ -118,7 +128,12 @@ implements IPPFVersorger, ClientReceiverInterface{
 					" Plausibilisierungsobjekt"); //$NON-NLS-1$
 		}
 		this.verwaltung = verwaltung;
-		
+
+		TYP_GANZ_ZAHL = verwaltung.getVerbindung().getDataModel()
+							.getType("typ.ganzzahlAttributTyp"); //$NON-NLS-1$
+		TYP_KOMMA_ZAHL = verwaltung.getVerbindung().getDataModel()
+							.getType("typ.kommazahlAttributTyp"); //$NON-NLS-1$
+
 		try{
 			final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
 										getAttributeGroup(DUAKonstanten.ATG_PL_FORMAL);
@@ -342,8 +357,8 @@ implements IPPFVersorger, ClientReceiverInterface{
 					Data dummy = datum.createModifiableCopy();
 					Data plausDatum = DUAHilfe.getAttributDatum(attPfad, dummy);
 					if(plausDatum != null && 
-						(plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_GANZ_ZAHL) || 
-						 plausDatum.getAttributeType().isOfType(DUAKonstanten.TYP_KOMMA_ZAHL))){
+						(plausDatum.getAttributeType().isOfType(TYP_GANZ_ZAHL) || 
+						 plausDatum.getAttributeType().isOfType(TYP_KOMMA_ZAHL))){
 						
 						/**
 						 * Eine Plausibilisierung wird nur durchgeführt, wenn das Attribut sich nicht in einem

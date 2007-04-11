@@ -45,6 +45,7 @@ public interface IPPFVersorgerListener {
 	 * 
 	 * @param parameter Zugriff auf alle aktuellen
 	 * Parameter der formalen Plausibilisierung
+	 * (niemals <code>null</code>)
 	 */
 	public void aktualisiereParameter(final IPPFVersorger parameter);
 	

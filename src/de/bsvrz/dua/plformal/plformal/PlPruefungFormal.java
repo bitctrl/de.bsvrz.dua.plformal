@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -33,8 +33,8 @@ import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
+import de.bsvrz.dua.plformal.allgemein.adapter.AbstraktBearbeitungsKnotenAdapter;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
@@ -176,7 +176,9 @@ implements IPPFVersorgerListener{
 						ResultData publikationsDatum = 
 							iDfsMod.getPublikationsDatum(resultat,
 								pData, standardAspekte.getStandardAspekt(resultat));
-						this.publiziere(publikationsDatum);
+						if(publikationsDatum != null){
+							this.publikationsAnmeldungen.sende(publikationsDatum);
+						}
 					}
 				}else{
 					weiterzuleitendeResultate.add(resultat);						

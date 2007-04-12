@@ -26,6 +26,8 @@
 
 package de.bsvrz.dua.plformal.dfs;
 
+import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
+
 /**
  * Konstanten, die für die Datenflusssteuerung benötigt werden
  * 
@@ -83,5 +85,11 @@ public class DFSKonstanten {
 	 * Attribut-Name <code>Publizieren</code>
 	 */
 	public static final String ATT_PUBLIZIEREN = "Publizieren"; //$NON-NLS-1$
+
+	/**
+	 * Standarddatenflusssteuerung
+	 */
+	public static final IDatenFlussSteuerungFuerModul STANDARD =
+						new DatenFlussSteuerungFuerModul();
 
 }

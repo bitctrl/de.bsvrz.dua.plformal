@@ -220,7 +220,7 @@ implements IVerwaltung {
 											getConfigurationArea(kb);
 				if(area != null)kbListe.add(area);
 			}catch(UnsupportedOperationException ex){
-				LOGGER.error("Konfigurationsbereich " + kb +  //$NON-NLS-1$
+				LOGGER.warning("Konfigurationsbereich " + kb +  //$NON-NLS-1$
 						" konnte nicht identifiziert werden.", ex); //$NON-NLS-1$
 			}
 		}

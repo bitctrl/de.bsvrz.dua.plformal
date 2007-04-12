@@ -125,7 +125,7 @@ public abstract class DAVAnmeldungsVerwaltung {
 			info += abmelden(diffObjekteAbmeldungen);
 			info += "ANmeldungen: "; //$NON-NLS-1$
 			info += anmelden(diffObjekteAnmeldungen);
-			LOGGER.info(info);			
+			LOGGER.config(info);			
 		}
 	}
 	

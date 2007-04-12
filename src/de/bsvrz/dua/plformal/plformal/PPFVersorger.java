@@ -58,6 +58,7 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
  * an. Es stellt die darin enthaltenen Informationen über
  * die Schnittstelle <code>IPPFVersorger</code> allen angemeldeten
  * Instanzen von <code>IPPFVersorgerListener</code> zur Verfügung.
+ * Sie führt die Plausibilisierung von Daten durch
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  *
@@ -149,7 +150,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 					" formalen Plausibilisierung", t); //$NON-NLS-1$
 		}
 		
-		LOGGER.info("Initialisierung erfolgreich.\n" + //$NON-NLS-1$
+		LOGGER.config("Initialisierung erfolgreich.\n" + //$NON-NLS-1$
 				"Für die formale Plausibilisierung" + //$NON-NLS-1$
 				" wird das Objekt " + plausbibilisierungsObjekt +//$NON-NLS-1$ 
 				" verwendet."); //$NON-NLS-1$
@@ -180,7 +181,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 			
 			if(typPPF != null){
 				plausibilisierungsObjekte = DUAUtensilien
-						.getFinaleObjekte(typPPF, verwaltung.getVerbindung(),
+						.getBasisInstanzen(typPPF, verwaltung.getVerbindung(),
 								verwaltung.getKonfigurationsBereiche()).toArray(new SystemObject[0]);
 			}
 				
@@ -191,7 +192,7 @@ implements IPPFVersorger, ClientReceiverInterface{
  				 * vorhanden ist
  				 */
 				plausibilisierungsObjekte = DUAUtensilien
-					.getFinaleObjekte(typPPF, verwaltung.getVerbindung(), null)
+					.getBasisInstanzen(typPPF, verwaltung.getVerbindung(), null)
 						.toArray(new SystemObject[0]);
  			}
 
@@ -240,7 +241,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 						LOGGER.fine(parameterSaetze.getItem(i).toString());
 					}
 				} catch (Exception e) {
-					LOGGER.error("Parameterdatensatz für die formale" + //$NON-NLS-1$
+					LOGGER.warning("Parameterdatensatz für die formale" + //$NON-NLS-1$
 							" Plausibilisierung konnte nicht" + //$NON-NLS-1$
 							" ausgelesen werden", e); //$NON-NLS-1$
 					fehler = true;
@@ -294,7 +295,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 		Data ergebnis = null;
 		
 		if(plBeschreibungen == null){
-			LOGGER.warning("Es wurden noch keine Parameter" + //$NON-NLS-1$
+			LOGGER.fine("Es wurden noch keine Parameter" + //$NON-NLS-1$
 					" für die formale Plausibilisierung empfangen"); //$NON-NLS-1$
 		}else
 		if(resultat != null && resultat.hasData() && resultat.getData() != null){
@@ -309,13 +310,13 @@ implements IPPFVersorger, ClientReceiverInterface{
 					if(dummy != null){
 						ergebnis = dummy;
 					}
-				}				
+				}
 			}else{
-				LOGGER.info("ResultData " + resultat + //$NON-NLS-1$
+				LOGGER.fine("ResultData " + resultat + //$NON-NLS-1$
 				" ist nicht zur formalen Plausibilisierung vorgesehen."); //$NON-NLS-1$
 			}
 		}else{
-			LOGGER.info("Das formal zu prüfende Datum" + //$NON-NLS-1$
+			LOGGER.fine("Das formal zu prüfende Datum" + //$NON-NLS-1$
 					" enthält keine sinnvollen Daten: " +  //$NON-NLS-1$
 					(resultat==null?DUAKonstanten.NULL:resultat));
 		}
@@ -333,8 +334,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 	 * der formalen Plausibilisierung desselben
 	 * @return für dieses Attribut plausibilisierten Datensatz (<b>so
 	 * dieser verändert werden musste</b>), oder <code>null</code> sonst
-	 * (damit nicht unnötigerweise Kopien von Datensätzen angelegt werden 
-	 * müssen)
+	 * 
 	 */
 	private final Data plausibilisiereAttribut(final Data datum,
 									  		   final PPFAttributSpezifikation attSpez){
@@ -344,80 +344,70 @@ implements IPPFVersorger, ClientReceiverInterface{
 			final String attPfad = attSpez.getAttributPfad();
 			final double min = attSpez.getMin();
 			final double max = attSpez.getMax();
-			if(max < min){
-				LOGGER.warning("Max-Wert (" + max + ") ist kleiner" +//$NON-NLS-1$ //$NON-NLS-2$
-						" als Min-Wert (" + min + ")");   //$NON-NLS-1$//$NON-NLS-2$
-			}
 			
 			final PlausibilisierungsMethode methode = attSpez.getMethode();
-			if(attPfad != null){
+			if(attPfad != null && methode != null){
 				try{
 					Data dummy = datum.createModifiableCopy();
+					
 					Data plausDatum = DUAUtensilien.getAttributDatum(attPfad, dummy);
 					if(plausDatum != null && 
 						(plausDatum.getAttributeType().isOfType(TYP_GANZ_ZAHL) || 
-						 plausDatum.getAttributeType().isOfType(TYP_KOMMA_ZAHL))){
+						 plausDatum.getAttributeType().isOfType(TYP_KOMMA_ZAHL)) && 
+						 !plausDatum.asUnscaledValue().isState()){
 						
+						double alterWert = plausDatum.asUnscaledValue().doubleValue();
+						double neuerWert = plausDatum.asUnscaledValue().doubleValue();
+						boolean implausibelMin = alterWert < min;
+						boolean implausibelMax = alterWert > max;
+
 						/**
-						 * Eine Plausibilisierung wird nur durchgeführt, wenn das Attribut sich nicht in einem
-						 * vordefinierten Zustand befindet. Sollte ein vordefinierter Zustand vorliegen, so wird
-						 * das Datum zwar nicht plausibilisiert, diese Methode gibt jedoch trotzdem einen
-						 * Wert zurück (damit nachgelagerte Funktionen z.B. dieses Datum publizieren können)
+						 * Plausibilisierung
 						 */
-						if(!plausDatum.asUnscaledValue().isState()){
-							double alterWert = plausDatum.asUnscaledValue().doubleValue();
-							double neuerWert = plausDatum.asUnscaledValue().doubleValue();
-							boolean implausibelMin = alterWert < min;
-							boolean implausibelMax = alterWert > max;
+						if(methode.equals(PlausibilisierungsMethode.NUR_PRUEFUNG)){
+							if(implausibelMin || implausibelMax){
+								setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
+							}else{
+								setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
+							}
+						}else
+						if(methode.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)){
+							if(implausibelMax){
+								neuerWert = max;
+								setStatusPlFormalWert(dummy, false, attPfad,
+										PPFKonstanten.ATT_STATUS_MIN);
+								setStatusPlFormalWert(dummy, true, attPfad,
+										PPFKonstanten.ATT_STATUS_MAX);
+							}else if(implausibelMin){
+								neuerWert = min;
+								setStatusPlFormalWert(dummy, true, attPfad,
+										PPFKonstanten.ATT_STATUS_MIN);
+								setStatusPlFormalWert(dummy, false, attPfad,
+										PPFKonstanten.ATT_STATUS_MAX);
+							}
+						}else
+						if(methode.equals(PlausibilisierungsMethode.SETZE_MIN)){
+							if(implausibelMin){
+								neuerWert = min;
+								setStatusPlFormalWert(dummy, true, attPfad,
+									PPFKonstanten.ATT_STATUS_MIN);
+								setStatusPlFormalWert(dummy, false, attPfad,
+									PPFKonstanten.ATT_STATUS_MAX);
+							}							
+						}
+						else
+						if(methode.equals(PlausibilisierungsMethode.SETZE_MAX)){
+							if(implausibelMax){
+								neuerWert = max;
+								setStatusPlFormalWert(dummy, false, attPfad,
+									PPFKonstanten.ATT_STATUS_MIN);
+								setStatusPlFormalWert(dummy, true, attPfad,
+									PPFKonstanten.ATT_STATUS_MAX);
+							}
+						}
 
-							/**
-							 * Plausibilisierung
-							 */
-							if(methode.equals(PlausibilisierungsMethode.NUR_PRUEFUNG)){
-								if(implausibelMin || implausibelMax){
-									setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
-								}else{
-									setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
-								}
-							}else
-							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)){
-								if(implausibelMax){
-									neuerWert = max;
-									setStatusPlFormalWert(dummy, false, attPfad,
-											PPFKonstanten.ATT_STATUS_MIN);
-									setStatusPlFormalWert(dummy, true, attPfad,
-											PPFKonstanten.ATT_STATUS_MAX);
-								}else if(implausibelMin){
-									neuerWert = min;
-									setStatusPlFormalWert(dummy, true, attPfad,
-											PPFKonstanten.ATT_STATUS_MIN);
-									setStatusPlFormalWert(dummy, false, attPfad,
-											PPFKonstanten.ATT_STATUS_MAX);
-								}
-							}else
-							if(methode.equals(PlausibilisierungsMethode.SETZE_MIN)){
-								if(implausibelMin){
-									neuerWert = min;
-									setStatusPlFormalWert(dummy, true, attPfad,
-											PPFKonstanten.ATT_STATUS_MIN);
-									setStatusPlFormalWert(dummy, false, attPfad,
-											PPFKonstanten.ATT_STATUS_MAX);
-								}							
-							}
-							else
-							if(methode.equals(PlausibilisierungsMethode.SETZE_MAX)){
-								if(implausibelMax){
-									neuerWert = max;
-									setStatusPlFormalWert(dummy, false, attPfad,
-											PPFKonstanten.ATT_STATUS_MIN);
-									setStatusPlFormalWert(dummy, true, attPfad,
-											PPFKonstanten.ATT_STATUS_MAX);
-								}
-							}
-
-							if(neuerWert != alterWert){
-								plausDatum.asUnscaledValue().set((long)neuerWert);	
-							}
+						if(neuerWert != alterWert){
+							plausDatum.asUnscaledValue().set((long)neuerWert);	
 						}
 						
 						/**
@@ -426,11 +416,12 @@ implements IPPFVersorger, ClientReceiverInterface{
 						ergebnis = dummy;
 					}
 				}catch(Exception ex){
-					LOGGER.error("Unerwarteter Fehler beim formalen Plausibilisieren von " + datum, ex); //$NON-NLS-1$
+					LOGGER.error("Unerwarteter Fehler beim " + //$NON-NLS-1$
+							"formalen Plausibilisieren von " + datum, ex); //$NON-NLS-1$
 				}
 			}else{
 				LOGGER.warning("Für Datum " + datum + " ist die Attributspezifikation "//$NON-NLS-1$ //$NON-NLS-2$
-						+ attSpez + " unvollständig.");  //$NON-NLS-1$
+						+ "unvollständig: " + attSpez);  //$NON-NLS-1$
 			}
 		}
 		
@@ -515,7 +506,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 							"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$					
 				}
 			}else{
-				LOGGER.warning("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
+				LOGGER.error("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
 						" erstellt werden:\n" + //$NON-NLS-1$
 						"Datum: " + datum + "\nAttr.-Pfad: " + attPfad + //$NON-NLS-1$ //$NON-NLS-2$
 						"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$

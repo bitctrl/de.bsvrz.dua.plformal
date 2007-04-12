@@ -32,10 +32,11 @@ import java.util.TreeSet;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.DataDescription;
+import stauma.dav.clientside.Data.ReferenceArray;
+import stauma.dav.clientside.Data.ReferenceValue;
 import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
 import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
@@ -110,31 +111,26 @@ public class PublikationsZuordung {
 				DFSKonstanten.ATT_PUBLIZIEREN).getText()
 				.toLowerCase().equals("ja"); //$NON-NLS-1$
 
-		if(data.getArray(DFSKonstanten.ATT_OBJ).getLength() == 0){
-			this.objekte.addAll(DUAUtensilien.getFinaleObjekte(null,
+		ReferenceArray objArray = data.getReferenceArray(DFSKonstanten.ATT_OBJ);
+		if(objArray.getLength() == 0){
+			this.objekte.addAll(DUAUtensilien.getBasisInstanzen(null,
 					verwaltung.getVerbindung(),
 					verwaltung.getKonfigurationsBereiche()));			
 		}else{
-			for (int iObj = 0; iObj < data.getArray(
-					DFSKonstanten.ATT_OBJ).getLength(); iObj++) {
-				SystemObject dummy = data.getArray(DFSKonstanten.ATT_OBJ)
-										.getReferenceValue(iObj).getSystemObject();
-				
-				this.objekte.addAll(DUAUtensilien.getFinaleObjekte(dummy,
-												verwaltung.getVerbindung(),
-												verwaltung.getKonfigurationsBereiche()));
-			}
+			for(ReferenceValue refVal:objArray.getReferenceValues()){
+				this.objekte.addAll(DUAUtensilien.getBasisInstanzen(
+						refVal.getSystemObject(),
+						verwaltung.getVerbindung(),
+						verwaltung.getKonfigurationsBereiche()));				
+			}				
 		}
 		
-		if(data.getArray(DFSKonstanten.ATT_ATG).getLength() == 0){
+		ReferenceArray atgArray = data.getReferenceArray(DFSKonstanten.ATT_ATG); 
+		if(atgArray.getLength() == 0){
 			this.atgs.add(null);
 		}else{
-			for (int iAtg = 0; iAtg < data.getArray(
-					DFSKonstanten.ATT_ATG).getLength(); iAtg++) {
-				this.atgs.add((AttributeGroup) data.getArray(
-						DFSKonstanten.ATT_ATG)
-						.getReferenceValue(iAtg)
-						.getSystemObject());
+			for(ReferenceValue refVal:atgArray.getReferenceValues()){
+				this.atgs.add((AttributeGroup) refVal.getSystemObject());
 			}
 		}
 		
@@ -143,7 +139,7 @@ public class PublikationsZuordung {
 						
 			for(SystemObject finObj:this.objekte){
 				this.anmeldungen.addAll(DUAUtensilien.
-						getAlleObjektAnmeldungen(finObj, datenBeschreibung, verwaltung.getVerbindung()));
+					getAlleObjektAnmeldungen(finObj, datenBeschreibung, verwaltung.getVerbindung()));
 			}
 		}
 	}

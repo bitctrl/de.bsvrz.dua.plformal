@@ -61,7 +61,7 @@ implements IPPFVersorgerListener{
 	/**
 	 * Instanz des Moduls PL-Prüfung formal
 	 */
-	private PlPruefungFormal plPruefungFormal = new PlPruefungFormal();
+	private PlPruefungFormal plPruefungFormal = null;
 		
 	/**
 	 * Verwaltung für alle Empfangsanmeldungen dieses Moduls
@@ -80,6 +80,12 @@ implements IPPFVersorgerListener{
 	 * {@inheritDoc}
 	 */
 	public void aktualisiereParameter(IPPFVersorger parameter) {
+		/**
+		 * Die Menge der für diese SWE betrachteten
+		 * Objekte ändert sich dynamisch 
+		 */
+		this.objekte = parameter.getBetrachteteObjekte();
+		
 		this.empfangsVerwaltung.modifiziereObjektAnmeldung(
 				parameter.getObjektAnmeldungen());
 	}
@@ -88,13 +94,16 @@ implements IPPFVersorgerListener{
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initialisiere() throws DUAInitialisierungsException {
+	protected void initialisiere()
+	throws DUAInitialisierungsException {
 		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(
 										this.verbindung,
 										ReceiverRole.receiver(),
 										ReceiveOptions.delayed(),
 										this);
-		this.plPruefungFormal = new PlPruefungFormal();
+		
+		this.plPruefungFormal = new PlPruefungFormal(
+				new PPFStandardAspekteVersorger(this).getStandardPubInfos());
 		this.plPruefungFormal.setPublikation(true);
 		this.plPruefungFormal.initialisiere(this);
 		

@@ -26,6 +26,7 @@
 
 package de.bsvrz.dua.plformal.allgemein;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +41,7 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
+import dav.daf.config.ObjectTimeSpecification;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
@@ -160,14 +162,14 @@ public class DUAUtensilien {
 								ergebnis = ergebnis.getItem(element);	
 							}
 						}catch(Exception ex){
-							LOGGER.error("Fehler bei Exploration von Datum " +	//$NON-NLS-1$ 
+							LOGGER.warning("Fehler bei Exploration von Datum " +	//$NON-NLS-1$ 
 									datum + " mit \"" +	//$NON-NLS-1$
 									attributPfad + "\"", ex);  //$NON-NLS-1$
 							return null;
 						}
 
 					}else{
-						LOGGER.info("Datensatz " + datum + " kann nicht bis \"" + //$NON-NLS-1$ //$NON-NLS-2$
+						LOGGER.warning("Datensatz " + datum + " kann nicht bis \"" + //$NON-NLS-1$ //$NON-NLS-2$
 								attributPfad + "\" exploriert werden."); //$NON-NLS-1$
 					}
 				}				
@@ -221,9 +223,10 @@ public class DUAUtensilien {
 					" nicht definiert";  //$NON-NLS-1$)
 		}else
 		if(! (obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
-			  obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class)) ){
-			result = "Es handelt sich weder um ein Konfigurationsobjekt " + //$NON-NLS-1$
-					"noch ein dynamisches Objekt: " + obj; //$NON-NLS-1$
+			  obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+			  obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)) ){
+			result = "Es handelt sich weder um ein Konfigurationsobjekt, " + //$NON-NLS-1$
+					"ein dynamisches Objekt noch eine Konfigurationsautorität: " + obj; //$NON-NLS-1$
 		}
 			
 		return result;
@@ -241,18 +244,21 @@ public class DUAUtensilien {
 	 * @return eine Menge von finalen Systemobjekten
 	 */
 	public static final Collection<SystemObject>
-				getFinaleObjekte(final SystemObject obj,
-								 final ClientDavInterface dav){
+				getBasisInstanzen(final SystemObject obj,
+								  final ClientDavInterface dav){
 		Collection<SystemObject> finaleObjekte =
 			new HashSet<SystemObject>();
 		
 		if(obj == null || obj.getPid().equals(Konstante.DAV_TYP_TYP)){
 			SystemObjectType typTyp = dav.getDataModel().getType(Konstante.DAV_TYP_TYP);
 			for(SystemObject typ:typTyp.getElements()){
-				for(SystemObject elem:((SystemObjectType)typ).getElements()){
-					if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
-						elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ){
-						finaleObjekte.add(elem);
+				if(typ instanceof SystemObjectType){
+					for(SystemObject elem:((SystemObjectType)typ).getElements()){
+						if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+							elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+							elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
+							finaleObjekte.add(elem);
+						}
 					}
 				}
 			}
@@ -260,7 +266,7 @@ public class DUAUtensilien {
 		if(obj instanceof SystemObjectType){
 			SystemObjectType typ = (SystemObjectType)obj;
 			for(SystemObject elem:typ.getElements()){
-				finaleObjekte.addAll(getFinaleObjekte(elem, dav));
+				finaleObjekte.addAll(getBasisInstanzen(elem, dav));
 			}			
 		}else
 		if( obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
@@ -268,8 +274,9 @@ public class DUAUtensilien {
 			obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
 			finaleObjekte.add(obj);
 		}else{
-			LOGGER.info("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
-					" ein Konfigurationsobjekt noch ein dynamisches Objekt: " + obj); //$NON-NLS-1$
+			LOGGER.fine("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
+					" ein Konfigurationsobjekt, ein dynamisches Objekt" + //$NON-NLS-1$
+					" noch eine Konfigurationsautorität: " + obj); //$NON-NLS-1$
 		}
 		
 		return finaleObjekte;
@@ -291,37 +298,69 @@ public class DUAUtensilien {
 	 * definiert sind.
 	 */
 	public static final Collection<SystemObject>
-				getFinaleObjekte(final SystemObject obj,
-								 final ClientDavInterface dav, 
-								 final Collection<ConfigurationArea> kBereichsFilter){
+				getBasisInstanzen(final SystemObject obj,
+								  final ClientDavInterface dav, 
+ 								  final Collection<ConfigurationArea> kBereichsFilter){
 		Collection<SystemObject> finaleObjekte =
-			getFinaleObjekte(obj, dav);
-		Collection<SystemObject> finaleObjekteMitKBCheck = new HashSet<SystemObject>();
-		
-		if(finaleObjekte.size() > 0){
-			Collection<ConfigurationArea> benutzteBereiche = 
-				new HashSet<ConfigurationArea>();	
-			
-			if(kBereichsFilter != null && kBereichsFilter.size() > 0){
-				benutzteBereiche = kBereichsFilter;				
-			}else{
-				/**
-				 * Es wurden keine Konfigurationsbereiche übergeben:
-				 * Standardkonfigurationsbereich wird verwendet
-				 */
-				benutzteBereiche.add(dav.
-						getDataModel().getConfigurationAuthority().
-						getConfigurationArea());
-			}
-						
-			for(SystemObject finObj:finaleObjekte){
-				if(benutzteBereiche.contains(finObj.getConfigurationArea())){
-					finaleObjekteMitKBCheck.add(finObj);
-				}
-			}
+			new HashSet<SystemObject>();
+		Collection<ConfigurationArea> benutzteBereiche = 
+			new HashSet<ConfigurationArea>();	
+
+		if(kBereichsFilter != null && kBereichsFilter.size() > 0){
+			benutzteBereiche = kBereichsFilter;				
+		}else{
+			/**
+			 * Es wurden keine Konfigurationsbereiche übergeben:
+			 * Standardkonfigurationsbereich wird verwendet
+			 */
+			benutzteBereiche.add(dav.
+					getDataModel().getConfigurationAuthority().
+					getConfigurationArea());
 		}
 		
-		return finaleObjekteMitKBCheck;
+		if(obj == null || obj.getPid().equals(Konstante.DAV_TYP_TYP)){
+			Collection<SystemObjectType> typColl = new TreeSet<SystemObjectType>();
+			for(SystemObject typ:dav.getDataModel().getType(Konstante.DAV_TYP_TYP).getElements()){
+				if(typ instanceof SystemObjectType){
+					typColl.add((SystemObjectType)typ);					
+				}
+			}			
+			for(ConfigurationArea kb:benutzteBereiche){				
+				for(SystemObject elem:kb.getObjects(typColl, ObjectTimeSpecification.valid())){
+					if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
+							finaleObjekte.add(elem);
+					}					
+				}
+			}
+		}else
+		if(obj instanceof SystemObjectType){
+			Collection<SystemObjectType> typColl = new ArrayList<SystemObjectType>();
+			typColl.add((SystemObjectType)obj);
+			for(ConfigurationArea kb:benutzteBereiche){
+				for(SystemObject elem:kb.getObjects(typColl, ObjectTimeSpecification.valid())){
+					if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+						elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
+							finaleObjekte.add(elem);
+					}					
+				}
+			}
+		}else
+		if( obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
+			obj.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) ||
+			obj.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
+			if(benutzteBereiche.contains(obj.getConfigurationArea())){
+				finaleObjekte.add(obj);
+			}
+		}else{
+			LOGGER.fine("Das übergebene Objekt ist weder ein Typ," + //$NON-NLS-1$
+					" ein Konfigurationsobjekt, ein dynamisches Objekt" + //$NON-NLS-1$
+					" noch eine Konfigurationsautorität: " + obj); //$NON-NLS-1$
+		}
+		
+		return finaleObjekte;
 	}
 	
 	/**
@@ -345,7 +384,7 @@ public class DUAUtensilien {
 		Collection<DAVObjektAnmeldung> anmeldungen =
 			new TreeSet<DAVObjektAnmeldung>();
 		
-		Collection<SystemObject> finObjekte = getFinaleObjekte(obj, dav);
+		Collection<SystemObject> finObjekte = getBasisInstanzen(obj, dav);
 		
 		for(SystemObject finObj:finObjekte){
 			try{
@@ -366,7 +405,7 @@ public class DUAUtensilien {
 								finObj, new DataDescription(atg, datenBeschreibung.
 										getAspect(), (short)0)));
 						}catch(Exception ex){
-							LOGGER.warning(Konstante.LEERSTRING, ex);
+							LOGGER.fine(Konstante.LEERSTRING, ex);
 						}
 					}
 				}else
@@ -381,7 +420,7 @@ public class DUAUtensilien {
 							datenBeschreibung));
 				}
 			}catch(Exception ex){
-				LOGGER.warning(Konstante.LEERSTRING, ex);
+				LOGGER.fine(Konstante.LEERSTRING, ex);
 			}
 		}
 		

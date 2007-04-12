@@ -52,13 +52,7 @@ import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
  **/
 public class DatenFlussSteuerungFuerModul
 implements IDatenFlussSteuerungFuerModul {
-	
-	/**
-	 * Standarddatenflusssteuerung
-	 */
-	public static final IDatenFlussSteuerungFuerModul STANDARD =
-						new DatenFlussSteuerungFuerModul();
-	
+		
 	/**
 	 * Liste aller Publikationszuordnungen innerhalb der Attributgruppe
 	 */
@@ -99,7 +93,7 @@ implements IDatenFlussSteuerungFuerModul {
 	public Collection<DAVObjektAnmeldung> getDatenAnmeldungen(
 			final SystemObject[] filterObjekte,
 			final Collection<DAVObjektAnmeldung> standardAnmeldungen) {
-		Collection<DAVObjektAnmeldung> alleAnmeldungen = new ArrayList<DAVObjektAnmeldung>();
+		Collection<DAVObjektAnmeldung> alleAnmeldungen = new TreeSet<DAVObjektAnmeldung>();
 		Collection<DAVObjektAnmeldung> stdAnmeldungen = new TreeSet<DAVObjektAnmeldung>();
 		stdAnmeldungen.addAll(standardAnmeldungen);
 
@@ -112,7 +106,8 @@ implements IDatenFlussSteuerungFuerModul {
 					for (SystemObject obj:pz.getObjekte()) {
 						for (SystemObject filterObj:filterObjekte) {
 							if (obj.equals(filterObj)){
-								pzAnzumeldendeObjekte.add(obj);								
+								pzAnzumeldendeObjekte.add(obj);
+								break;
 							}
 						}
 					}

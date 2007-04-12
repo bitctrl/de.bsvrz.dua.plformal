@@ -44,11 +44,11 @@ import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
-import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
 
 /**
  * Ableitungen dieser Klasse stellen die Standard-Publikationsinformationen
- * für <b>einen</b> Modul-Typ innerhalb der DUA zur Verfügung.<br>
+ * für <b>einen</b> Modul-Typ und <b>eine</b> SWE innerhalb der DUA zur
+ * Verfügung.<br>
  * Diese Informationen können im Konstruktor dieser Klasse für je eine
  * SWE-Modultyp-Kombination als Instanz der Klasse 
  * <code>StandardAspekteAdapter</code> angelegt
@@ -103,19 +103,17 @@ public abstract class StandardAspekteVersorger {
 	public StandardAspekteVersorger(final IVerwaltung verwaltung)
 	throws DUAInitialisierungsException{
 		this.verwaltung = verwaltung;
-		init(verwaltung.getSWETyp());
+		init();
 	}
 	
 	/**
 	 * Initialisiert die Standard-Publikationsinformationen für einen
-	 * kompletten Modul-Typ unter der Vorraussetzung, dass das Modul 
-	 * unter der übergebenen SWE läuft.
+	 * kompletten Modul-Typ und eine SWE.
 	 *   
-	 * @param swe die SWE unter der das Modul läuft
 	 * @throws DUAInitialisierungsException wenn es Probleme beim
 	 * Initialisieren der Standard-Publikationsinformationen gab
 	 */
-	protected abstract void init(final SWETyp swe)
+	protected abstract void init()
 	throws DUAInitialisierungsException;
 	
 	/**
@@ -170,7 +168,7 @@ public abstract class StandardAspekteVersorger {
 			if(zuordnungen != null){
 				for (StandardPublikationsZuordnung zuordnung : zuordnungen) {					
 					try {
-						for(SystemObject finObj:DUAUtensilien.getFinaleObjekte(
+						for(SystemObject finObj:DUAUtensilien.getBasisInstanzen(
 								zuordnung.typ, verwaltung.getVerbindung(),
 								StandardAspekteVersorger.this.verwaltung.
 								getKonfigurationsBereiche())){
@@ -207,7 +205,7 @@ public abstract class StandardAspekteVersorger {
 					
 					ergebnis = this.publikationsMap.get(objektAnmeldung);
 				}catch(Exception e){
-					LOGGER.error("Der Standard-Publikationsaspekt konnte" + //$NON-NLS-1$
+					LOGGER.fine("Der Standard-Publikationsaspekt konnte" + //$NON-NLS-1$
 							"nicht ermittelt werden: " + originalDatum, e); //$NON-NLS-1$
 				}
 			}

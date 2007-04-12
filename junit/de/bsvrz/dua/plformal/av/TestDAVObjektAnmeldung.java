@@ -36,7 +36,7 @@ import org.junit.Test;
 import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.DAVTest;
+import de.bsvrz.dua.plformal.extra.DAVTest;
 
 /**
  * Tests für die Klasse <code>DAVObjektAnmeldung</code>
@@ -44,7 +44,7 @@ import de.bsvrz.dua.plformal.DAVTest;
  * @author BitCtrl Systems GmbH, Thierfelder
  *
  */
-public class TestDAVObjektAnmeldung {
+public class TestDAVObjektAnmeldung{
 	
 	/**
 	 * Datenverteiler-Verbindung
@@ -64,7 +64,7 @@ public class TestDAVObjektAnmeldung {
 	public void setUp() throws Exception {
 		VERBINDUNG = DAVTest.getDav();
 	}
-	
+
 	/**
 	 * Testet das Verhalten von mehreren Objekten
 	 * der Klasse <code>DAVObjektAnmeldung</code>

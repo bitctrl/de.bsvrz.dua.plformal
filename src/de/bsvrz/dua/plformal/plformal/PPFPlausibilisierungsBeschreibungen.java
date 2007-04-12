@@ -119,12 +119,12 @@ public class PPFPlausibilisierungsBeschreibungen {
 			
 			Collection<SystemObject> finObjekte = new HashSet<SystemObject>(); 
 			if(objekte == null || objekte.getLength() == 0){
-				finObjekte = DUAUtensilien.getFinaleObjekte(null,
+				finObjekte = DUAUtensilien.getBasisInstanzen(null,
 						this.verwaltung.getVerbindung(),
 						this.verwaltung.getKonfigurationsBereiche());
 			}else{
 				for(int i = 0; i< objekte.getLength(); i++){
-					finObjekte.addAll(DUAUtensilien.getFinaleObjekte(objekte.getSystemObject(i),
+					finObjekte.addAll(DUAUtensilien.getBasisInstanzen(objekte.getSystemObject(i),
 							this.verwaltung.getVerbindung(),
 							this.verwaltung.getKonfigurationsBereiche()));	
 				}				
@@ -178,7 +178,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 						" nicht ausgelesen werden", ex); //$NON-NLS-1$
 			}
 		}else{
-			LOGGER.info("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
+			LOGGER.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 		
 		return ergebnis;

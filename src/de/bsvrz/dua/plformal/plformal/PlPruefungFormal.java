@@ -35,9 +35,10 @@ import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.adapter.AbstraktBearbeitungsKnotenAdapter;
+import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
-import de.bsvrz.dua.plformal.dfs.DatenFlussSteuerungFuerModul;
+import de.bsvrz.dua.plformal.dfs.DFSKonstanten;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
@@ -69,8 +70,21 @@ implements IPPFVersorgerListener{
 	 * SWE und dieses Modul
 	 */
 	private IDatenFlussSteuerungFuerModul iDfsMod
-						= DatenFlussSteuerungFuerModul.STANDARD;
+								= DFSKonstanten.STANDARD;
 	
+	
+	/**
+	 * Standardkonstruktor
+	 * 
+	 * @param stdAspekte Informationen zu den
+	 * Standardpublikationsaspekten für diese
+	 * Instanz des Moduls Pl-Prüfung formal
+	 */
+	public PlPruefungFormal(final IStandardAspekte stdAspekte){
+		if(stdAspekte != null){
+			this.standardAspekte = stdAspekte;
+		}
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -79,8 +93,6 @@ implements IPPFVersorgerListener{
 	public void initialisiere(IVerwaltung dieVerwaltung)
 	throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
-		this.standardAspekte = new PPFStandardAspekteVersorger(
-				verwaltung).getStandardPubInfos();
 		PPFVersorger.getInstanz(verwaltung).addListener(this);
 		this.aktualisierePublikationIntern();
 	}
@@ -149,10 +161,10 @@ implements IPPFVersorgerListener{
 	 */
 	public void aktualisiereDaten(ResultData[] resultate) {
 		if(this.ppfParameter == null){
-			LOGGER.info("Es wurden noch keine" + //$NON-NLS-1$
+			LOGGER.fine("Es wurden noch keine" + //$NON-NLS-1$
 						" Plausibilisierungsparameter empfangen"); //$NON-NLS-1$
 			if(this.knoten != null){
-				LOGGER.info("Die Datenwerden nur" + //$NON-NLS-1$
+				LOGGER.fine("Die Datenwerden nur" + //$NON-NLS-1$
 						" weitergereicht an: " + this.knoten); //$NON-NLS-1$
 				this.knoten.aktualisiereDaten(resultate);
 			}
@@ -193,8 +205,7 @@ implements IPPFVersorgerListener{
 						toArray(new ResultData[0]));
 			}
 		}else{
-			LOGGER.info("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
+			LOGGER.fine("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
 		}				
 	}
-
 }

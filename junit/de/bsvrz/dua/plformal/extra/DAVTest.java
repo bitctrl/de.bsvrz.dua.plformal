@@ -1,4 +1,4 @@
-package de.bsvrz.dua.plformal;
+package de.bsvrz.dua.plformal.extra;
 
 import java.util.Random;
 

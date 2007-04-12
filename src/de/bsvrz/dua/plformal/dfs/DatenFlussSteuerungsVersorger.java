@@ -39,9 +39,9 @@ import stauma.dav.configuration.interfaces.ConfigurationArea;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
 import de.bsvrz.dua.plformal.allgemein.DUAKonstanten;
+import de.bsvrz.dua.plformal.allgemein.DUAUtensilien;
 import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungsListener;
 import de.bsvrz.dua.plformal.dfs.typen.SWETyp;
@@ -168,14 +168,14 @@ implements ClientReceiverInterface {
 			SystemObject[] dfsObjekte = new SystemObject[0];
 			if(typDFS != null){
 				dfsObjekte = DUAUtensilien.
-						getFinaleObjekte(typDFS, verwaltung.getVerbindung(),
+						getBasisInstanzen(typDFS, verwaltung.getVerbindung(),
 								kBereiche).toArray(new SystemObject[0]);
 			}
 			
 			SystemObject dfsObjekt = (dfsObjekte.length > 0?dfsObjekte[0]:null);
 			
 			if(dfsObjekte.length == 1){
-				LOGGER.info("Es wurde genau ein Objekt vom Typ " + //$NON-NLS-1$
+				LOGGER.fine("Es wurde genau ein Objekt vom Typ " + //$NON-NLS-1$
 						DFSKonstanten.TYP + " identifiziert"); //$NON-NLS-1$		
 			}else if(dfsObjekte.length > 1){
 				LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
@@ -278,7 +278,7 @@ implements ClientReceiverInterface {
 				}
 			}
 		} else {
-			LOGGER.warning("Listener kann nicht eingefügt" + //$NON-NLS-1$
+			LOGGER.error("Listener kann nicht eingefügt" + //$NON-NLS-1$
 					" werden. Er ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 	}

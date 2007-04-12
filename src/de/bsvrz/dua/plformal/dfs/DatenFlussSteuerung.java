@@ -27,8 +27,6 @@
 package de.bsvrz.dua.plformal.dfs;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
@@ -77,7 +75,8 @@ implements IDatenFlussSteuerung {
 	 * @param swe
 	 *            die SWE
 	 * @return der Parametersatz der Datenflusssteuerung für
-	 * die übergebene SWE
+	 * die übergebene SWE oder <code>null</code>, wenn für die
+	 * SWE kein Parametersatz vorliegt
 	 */
 	protected final ParameterSatz getParameterSatzFuerSWE(final SWETyp swe) {
 		ParameterSatz ps = null;
@@ -93,43 +92,21 @@ implements IDatenFlussSteuerung {
 	}
 
 	/**
-	 * Erfragt die Publikationszuordnungen für ein bestimmtes Modul und eine
-	 * bestimmte SWE
-	 * 
-	 * @param swe
-	 *            die SWE
-	 * @param modulId
-	 *            das Modul, für die die PublikationsZuordnung
-	 *            erfragt werden soll
-	 * @return die Publikationszuordnung für die SWE <code>swe</code>
-	 * 		   und das Modul <code>modulId</code> (ggf. leere Menge)
-	 */
-	private final Collection<PublikationsZuordung> getPublikationsZuordnungenFuerModul(
-			final SWETyp swe, final ModulTyp modulId) {
-		ParameterSatz ps = getParameterSatzFuerSWE(swe);
-		Collection<PublikationsZuordung> ergebnis = new HashSet<PublikationsZuordung>();
-
-		if (ps != null) {
-			for (PublikationsZuordung pzFuerModul : ps.getPubZuordnung()) {
-				if (pzFuerModul.getModulTyp().equals(modulId)) {
-					ergebnis.add(pzFuerModul);
-				}
-			}
-		}
-
-		return ergebnis;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public IDatenFlussSteuerungFuerModul getDFSFuerModul(SWETyp swe,
 			ModulTyp modulTyp) {
 		DatenFlussSteuerungFuerModul dfsModul = new DatenFlussSteuerungFuerModul();
-		for (PublikationsZuordung pz : this
-				.getPublikationsZuordnungenFuerModul(swe, modulTyp)) {
-			dfsModul.add(pz);
+		ParameterSatz ps = getParameterSatzFuerSWE(swe);
+
+		if (ps != null) {
+			for (PublikationsZuordung pzFuerModul : ps.getPubZuordnung()) {
+				if (pzFuerModul.getModulTyp().equals(modulTyp)) {
+					dfsModul.add(pzFuerModul);
+				}
+			}
 		}
+
 		return dfsModul;
 	}
 

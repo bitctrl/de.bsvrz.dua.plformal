@@ -50,32 +50,32 @@ import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
- * der Prüfspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0)
- * 
+ * der Prüfspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0) bzw. Änderungsantrag
+ * (PID: AeA_SWE4.1_VRZ3_Nr001) 
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
  */
-public class PlPruefungFormalTest implements ClientSenderInterface,
+public class PlPruefungFormalTest
+implements ClientSenderInterface,
 		ClientReceiverInterface {
-
+	
 	/**
 	 * Kumulation der verschiedenen Kennungen in einen Wert. Da die Kennungen
 	 * nach der Plausibilisierung nicht als ein Wert sondern als drei (boolsche)
 	 * Werte zur Verfügung stehen muss hier eine Übersetzung dieser Werte
 	 * vorgenommen werden. Dabei gilt:
 	 * 
-	 * kennung[0] = Attribut --> Status.PlFormal.WertMin kennung[1] = Attribut
-	 * --> Status.PlFormal.WertMax kennung[2] = Attribut -->
-	 * Status.MessWertErsetzung.Implausibel
+	 * kennung[0] = Attribut --> Status.PlFormal.WertMin
+	 * kennung[1] = Attribut --> Status.PlFormal.WertMax
+	 * kennung[2] = Attribut --> Status.MessWertErsetzung.Implausibel
 	 * 
 	 */
 	private static final boolean[] WertMin = new boolean[] { true, false, false };
 
 	private static final boolean[] WertMax = new boolean[] { false, true, false };
 
-	private static final boolean[] Implausibel = new boolean[] { false, false,
-			true };
+	private static final boolean[] Implausibel = new boolean[] { false, false, true };
 
 	private static final boolean[] Nichts = new boolean[] { false, false, false };
 
@@ -135,9 +135,14 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 	DataDescription ddEingang = null;
 
 	/**
-	 * Parameter der Pl-Prüfung
+	 * Parameter der Pl-Prüfung (Vorgabe)
 	 */
-	DataDescription ddParam = null;
+	DataDescription ddParamVor = null;
+
+	/**
+	 * Parameter der Pl-Prüfung (Soll)
+	 */
+	DataDescription ddParamSoll = null;
 
 	/**
 	 * Testdatensätze
@@ -158,6 +163,16 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 	 * das aktuelle Ergebnis eines Tests
 	 */
 	private TestErgebnis aktuellesErgebnis = null;
+	
+	/**
+	 * zu dieser Zeit wurde das letzte Testergebnis empfangen
+	 */
+	private long ergebnisZeit = 0;
+
+	/**
+	 * zu dieser Zeit wurde der letzte Parameter empfangen
+	 */
+	private long paraZeit = 0;
 
 	/**
 	 * aktuelle Testparameter
@@ -167,7 +182,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 	/**
 	 * Das Objekt der PL-Prüfung formal
 	 */
-	private SystemObject ppfObjekt = null;
+	private SystemObject ppfObjekt = null;	
 
 	/**
 	 * {@inheritDoc}
@@ -183,12 +198,15 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 
 		AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(
 				PPFKonstanten.ATG);
-		Aspect aspPara = this.dav.getDataModel().getAspect(
+		Aspect aspParaVor = this.dav.getDataModel().getAspect(
 				Konstante.DAV_ASP_PARAMETER_VORGABE);
+		Aspect aspParaSoll = this.dav.getDataModel().getAspect(
+				Konstante.DAV_ASP_PARAMETER_SOLL);
 
 		ddAusgang = new DataDescription(atg, ausgang, (short) 0);
 		ddEingang = new DataDescription(atg, eingang, (short) 0);
-		ddParam = new DataDescription(atgPara, aspPara, (short) 0);
+		ddParamVor = new DataDescription(atgPara, aspParaVor, (short) 0);
+		ddParamSoll = new DataDescription(atgPara, aspParaSoll, (short) 0);
 		this.obj1 = this.dav.getDataModel().getObject(OBJ1_PID);
 		this.obj2 = this.dav.getDataModel().getObject(OBJ2_PID);
 
@@ -202,14 +220,16 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		/**
 		 * Daten zum Senden anmelden
 		 */
-		dav.subscribeSender(this, this.ppfObjekt, ddParam, SenderRole.sender());
+		dav.subscribeSender(this, this.ppfObjekt, ddParamVor, SenderRole.sender());
 		dav.subscribeSender(this, typ.getObjects(), ddAusgang, SenderRole
 				.source());
 
 		/**
-		 * Auf Empfang von Daten anmelden
+		 * Auf Empfang von Daten/Parametern anmelden
 		 */
 		dav.subscribeReceiver(this, typ.getObjects(), ddEingang, ReceiveOptions
+				.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll, ReceiveOptions
 				.normal(), ReceiverRole.receiver());
 
 		/**
@@ -324,16 +344,19 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		for (int iDurchlauf = 0; iDurchlauf < 5; iDurchlauf++) {
 			for (int iDatensatz = 0; iDatensatz < 8; iDatensatz++) {
 				TestErgebnis soll = this.ergebnisse[iDurchlauf][iDatensatz];
+
 				TestErgebnis ist = this.testLauf(this.durchlaeufe[iDurchlauf],
 						this.testDatenSaetze[iDatensatz]);
+
 				System.out
-						.println("Test " + (iDurchlauf + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
-								+ (iDatensatz + 1) + ":"); //$NON-NLS-1$
+				.println("Test " + (iDurchlauf + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
+						+ (iDatensatz + 1) + ":"); //$NON-NLS-1$
 				System.out.println("Soll: " + soll); //$NON-NLS-1$
 				System.out.println("Ist : " + ist); //$NON-NLS-1$
 				System.out.println("Ergebnis: ---" + (soll.equals(ist) ? //$NON-NLS-1$
-				"erfolgreich" //$NON-NLS-1$
+						"erfolgreich" //$NON-NLS-1$
 						: "nicht erfolgreich") + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				
 				Assert.assertEquals(soll, ist);
 			}
 		}
@@ -348,7 +371,6 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 	 * @return das Ergebnis der Prüfung
 	 */
 	private TestErgebnis testLauf(Durchlauf dl, RohdatenSatz ds) {
-
 		/**
 		 * Parameter setzen
 		 */
@@ -401,32 +423,38 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		attSpez4.getUnscaledValue("Min").set(this.parameter[1].min2); //$NON-NLS-1$
 		attSpez4.getUnscaledValue("Max").set(this.parameter[1].max2); //$NON-NLS-1$
 		attSpez4.getUnscaledValue("Optionen").set(dl.testAtt2); //$NON-NLS-1$
-		ResultData parameter1 = new ResultData(this.ppfObjekt, this.ddParam,
+		ResultData parameter1 = new ResultData(this.ppfObjekt, this.ddParamVor,
 				System.currentTimeMillis(), data);
 
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]); //$NON-NLS-1$
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]); //$NON-NLS-1$
 		System.out
-				.println(PlausibilisierungsMethode.getZustand((int)dl.testAtt1)
-						+ ", " + PlausibilisierungsMethode.getZustand((int)dl.testAtt2)); //$NON-NLS-1$
+				.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int)dl.testAtt1) //$NON-NLS-1$
+						+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int)dl.testAtt2)); //$NON-NLS-1$
 
+		long letzteZeit = paraZeit;
 		try {
 			this.dav.sendData(parameter1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		try {
-			Thread.sleep(500L);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+		/**
+		 * Warten bis die Parameter über den Datenverteiler
+		 * angekommen ist
+		 */
+		int timeout = 100;
+		while(this.paraZeit <= letzteZeit){
+			if(timeout-- == 0)break;
+			try {
+				Thread.sleep(50L);
+			} catch (InterruptedException ex) {
+				// wird vernachlässigt
+			}
 		}
 
-		/**
-		 * Jetzt sollten die Parameter angekommen sein.
-		 * Es können Daten gesendet werden
-		 */
 		aktuellesErgebnis = null;
+		letzteZeit = ergebnisZeit;
 		System.out.println("Sende: " + ds); //$NON-NLS-1$
 		sendeDatum(ds.obj, ds.att1, ds.att2);
 		
@@ -434,10 +462,14 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		 * Warten bis das Ergebnis über den Datenverteiler
 		 * angekommen ist
 		 */
-		try {
-			Thread.sleep(500L);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+		timeout = 100;
+		while(this.ergebnisZeit <= letzteZeit){
+			if(timeout-- == 0)break;
+			try {
+				Thread.sleep(50L);
+			} catch (InterruptedException ex) {
+				// wird vernachlässigt
+			}
 		}
 				
 		return aktuellesErgebnis;
@@ -491,30 +523,35 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
 				if (resultat != null && resultat.getData() != null) {
-					Data data = resultat.getData();
+					if(resultat.getDataDescription().equals(ddParamSoll)){
+						this.paraZeit = resultat.getDataTime();
+					}else{
+						Data data = resultat.getData();
 
-					long wert1 = data
-							.getItem("Attribut1").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
-					boolean[] kennung1 = new boolean[3];
-					kennung1[0] = data
-							.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					kennung1[1] = data
-							.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					kennung1[2] = data
-							.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						long wert1 = data
+						.getItem("Attribut1").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+						boolean[] kennung1 = new boolean[3];
+						kennung1[0] = data
+						.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						kennung1[1] = data
+						.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						kennung1[2] = data
+						.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-					double wert2 = data
-							.getItem("Attribut2").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$ 
-					boolean[] kennung2 = new boolean[3];
-					kennung2[0] = data
-							.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					kennung2[1] = data
-							.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					kennung2[2] = data
-							.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						double wert2 = data
+						.getItem("Attribut2").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$ 
+						boolean[] kennung2 = new boolean[3];
+						kennung2[0] = data
+						.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						kennung2[1] = data
+						.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						kennung2[2] = data
+						.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-					this.aktuellesErgebnis = new TestErgebnis(wert1, kennung1,
-							wert2, kennung2);
+						this.ergebnisZeit = resultat.getDataTime();
+						this.aktuellesErgebnis = new TestErgebnis(wert1, kennung1,
+								wert2, kennung2);
+					}
 				}
 			}
 		}

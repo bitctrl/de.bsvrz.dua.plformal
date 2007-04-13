@@ -29,6 +29,8 @@ package de.bsvrz.dua.plformal.test;
 import stauma.dav.configuration.interfaces.SystemObject;
 
 /**
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * 
  * Klasse für die Parametersätze, die zur formalen Prüfung der Testobjekte
  * herangezogen werden.
  * 

@@ -461,7 +461,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 		
 		synchronized (this) {
 			if(this.plBeschreibungen != null){
-				s += "Plausibilisierungsbeschreibung:\n" + //$NON-NLS-1$
+				s = "Plausibilisierungsbeschreibung:\n" + //$NON-NLS-1$
 					this.plBeschreibungen;
 			}						
 		}

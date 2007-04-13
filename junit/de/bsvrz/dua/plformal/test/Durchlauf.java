@@ -27,6 +27,8 @@
 package de.bsvrz.dua.plformal.test;
 
 /**
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * 
  * Wie Durchlauf in Tabelle 5-4
  * 
  * @author BitCtrl Systems GmbH, Thierfelder

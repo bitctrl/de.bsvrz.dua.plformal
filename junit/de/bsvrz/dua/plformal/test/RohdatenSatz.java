@@ -29,6 +29,8 @@ package de.bsvrz.dua.plformal.test;
 import stauma.dav.configuration.interfaces.SystemObject;
 
 /**
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * 
  * Wie Rohdatensatz in Tabelle 5-3 (S.15)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder

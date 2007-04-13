@@ -25,7 +25,7 @@ Versionsgeschichte
 
 Bemerkungen
 ===========
-Logging-Hierarchie (Wann wird welche Art von Logging-Meldung produziert):
+Logging-Hierarchie (Wann wird welche Art von Logging-Meldung produziert?):
 
 ERROR:
 - DUAInitialisierungsException --> Beendigung der Applikation

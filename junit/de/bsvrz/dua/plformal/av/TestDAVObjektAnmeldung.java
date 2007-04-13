@@ -69,7 +69,7 @@ public class TestDAVObjektAnmeldung{
 	/**
 	 * Testet das Verhalten von mehreren Objekten
 	 * der Klasse <code>DAVObjektAnmeldung</code>
-	 * in einer <code>TreeMap</code> bzw einem
+	 * in einer <code>TreeMap</code> bzw. einem
 	 * <code>TreeSet</code>
 	 */
 	@Test

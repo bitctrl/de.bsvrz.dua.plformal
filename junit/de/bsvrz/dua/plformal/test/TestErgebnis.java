@@ -27,6 +27,8 @@
 package de.bsvrz.dua.plformal.test;
 
 /**
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * 
  * Klasse zur Repräsentation eines Ergebnisses wie in Tabelle 5-5 (S.16)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder

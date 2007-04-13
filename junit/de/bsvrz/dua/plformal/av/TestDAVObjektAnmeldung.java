@@ -37,6 +37,7 @@ import stauma.dav.clientside.ClientDavInterface;
 import stauma.dav.clientside.DataDescription;
 import stauma.dav.configuration.interfaces.SystemObject;
 import de.bsvrz.dua.plformal.extra.DAVTest;
+import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**
  * Tests für die Klasse <code>DAVObjektAnmeldung</code>

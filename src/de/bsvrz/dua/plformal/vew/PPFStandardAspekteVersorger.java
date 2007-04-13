@@ -26,9 +26,9 @@
 
 package de.bsvrz.dua.plformal.vew;
 
-import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.allgemein.StandardAspekteVersorger;
-import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
+import de.bsvrz.sys.funclib.bitctrl.dua.StandardAspekteVersorger;
+import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 
 /**
  * Diese Klasse repräsentiert die Versorgung des Moduls

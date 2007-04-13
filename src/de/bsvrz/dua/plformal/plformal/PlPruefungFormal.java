@@ -33,17 +33,17 @@ import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
 import sys.funclib.debug.Debug;
-import de.bsvrz.dua.plformal.allgemein.DUAInitialisierungsException;
-import de.bsvrz.dua.plformal.allgemein.adapter.AbstraktBearbeitungsKnotenAdapter;
-import de.bsvrz.dua.plformal.allgemein.schnittstellen.IStandardAspekte;
-import de.bsvrz.dua.plformal.allgemein.schnittstellen.IVerwaltung;
-import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
-import de.bsvrz.dua.plformal.dfs.DFSKonstanten;
-import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerung;
-import de.bsvrz.dua.plformal.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
-import de.bsvrz.dua.plformal.dfs.typen.ModulTyp;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
+import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktBearbeitungsKnotenAdapter;
+import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
+import de.bsvrz.sys.funclib.bitctrl.dua.dfs.DFSKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
+import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
+import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
+import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IStandardAspekte;
+import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 
 /**
  * Implementierung des Moduls PL-Prüfung formal.

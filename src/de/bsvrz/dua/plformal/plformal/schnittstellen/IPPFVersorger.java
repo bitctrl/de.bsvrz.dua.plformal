@@ -31,7 +31,7 @@ import java.util.Collection;
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
 import stauma.dav.configuration.interfaces.SystemObject;
-import de.bsvrz.dua.plformal.av.DAVObjektAnmeldung;
+import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**
  * Dieses Interface stellt alle Informationen der Attributgruppe

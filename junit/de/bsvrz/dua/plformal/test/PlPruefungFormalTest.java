@@ -43,7 +43,7 @@ import stauma.dav.configuration.interfaces.Aspect;
 import stauma.dav.configuration.interfaces.AttributeGroup;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import de.bsvrz.dua.plformal.extra.DAVTest;
+import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;

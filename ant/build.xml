@@ -97,6 +97,12 @@
 		      todir="${out.dir}/${swe.id}"
 		      filtering="true"
 		/>
+		
+		<zip basedir="${extra.dir}"
+		     compress="yes"
+		     destfile="${out.dir}/${swe.id}/${swe.id}-test-extra.zip"
+		>
+		</zip>
 
 		<copy file="${lib.dir}/gpl.txt"
 		      tofile="${out.dir}/${swe.id}/${swe.id}-GPL-Lizenz.txt"

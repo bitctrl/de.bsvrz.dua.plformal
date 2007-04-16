@@ -43,7 +43,7 @@ import stauma.dav.configuration.interfaces.IntegerAttributeType;
 import stauma.dav.configuration.interfaces.ReferenceAttributeType;
 import stauma.dav.configuration.interfaces.SystemObject;
 import stauma.dav.configuration.interfaces.SystemObjectType;
-import de.bsvrz.dua.plformal.extra.DAVTest;
+import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 

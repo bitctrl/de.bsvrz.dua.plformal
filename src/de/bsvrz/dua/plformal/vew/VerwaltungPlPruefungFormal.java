@@ -66,7 +66,7 @@ implements IPPFVersorgerListener{
 	/**
 	 * Verwaltung für alle Empfangsanmeldungen dieses Moduls
 	 */
-	private DAVEmpfangsAnmeldungsVerwaltung empfangsVerwaltung = null; 
+	private DAVEmpfangsAnmeldungsVerwaltung empfangsVerwaltung = null;
 	
 	
 	/**

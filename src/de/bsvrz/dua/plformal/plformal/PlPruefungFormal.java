@@ -28,6 +28,8 @@ package de.bsvrz.dua.plformal.plformal;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import stauma.dav.clientside.Data;
 import stauma.dav.clientside.ResultData;
@@ -72,6 +74,12 @@ implements IPPFVersorgerListener{
 	private IDatenFlussSteuerungFuerModul iDfsMod
 								= DFSKonstanten.STANDARD;
 	
+	/**
+	 * Mapt jedes hier betrachtete Objekt auf seinen aktuellen
+	 * Zustanz <code>keine Daten</code>
+	 */
+	private Map<SystemObject, Boolean> keineDaten = new HashMap<SystemObject, Boolean>();
+	
 	
 	/**
 	 * Standardkonstruktor
@@ -86,6 +94,7 @@ implements IPPFVersorgerListener{
 		}
 	}
 	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,6 +106,7 @@ implements IPPFVersorgerListener{
 		this.aktualisierePublikationIntern();
 	}
 	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -104,6 +114,7 @@ implements IPPFVersorgerListener{
 		return ModulTyp.PL_PRUEFUNG_FORMAL;
 	}
 
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -113,6 +124,7 @@ implements IPPFVersorgerListener{
 		aktualisierePublikationIntern();
 	}
 	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -120,6 +132,7 @@ implements IPPFVersorgerListener{
 		ppfParameter = parameter;
 		this.aktualisierePublikationIntern();
 	}
+	
 	
 	/**
 	 * Diese Methode verändert die Anmeldungen für die Publikation
@@ -156,6 +169,7 @@ implements IPPFVersorgerListener{
 		}
 	}
 
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -174,26 +188,39 @@ implements IPPFVersorgerListener{
 				new ArrayList<ResultData>();
 
 			for(ResultData resultat:resultate){
-				Data pData = this.ppfParameter.plausibilisiere(resultat);
 
-				if(pData != null){
-					ResultData ersetztesResultat = new ResultData(
-							resultat.getObject(),
-							resultat.getDataDescription(),
-							resultat.getDataTime(),
-							pData);
-					weiterzuleitendeResultate.add(ersetztesResultat);
-
+				if(resultat.getData() != null){
+					Data pData = this.ppfParameter.plausibilisiere(resultat);
+					if(pData != null){
+						ResultData ersetztesResultat = new ResultData(
+								resultat.getObject(),
+								resultat.getDataDescription(),
+								resultat.getDataTime(),
+								pData);
+						weiterzuleitendeResultate.add(ersetztesResultat);
+	
+						if(this.publizieren){
+							ResultData publikationsDatum = 
+								iDfsMod.getPublikationsDatum(resultat,
+									pData, standardAspekte.getStandardAspekt(resultat));
+							if(publikationsDatum != null){
+								this.sendeSinnvoll(publikationsDatum);
+							}
+						}
+					}else{
+						weiterzuleitendeResultate.add(resultat);						
+					}
+				}else{
+					weiterzuleitendeResultate.add(resultat);
+	
 					if(this.publizieren){
 						ResultData publikationsDatum = 
 							iDfsMod.getPublikationsDatum(resultat,
-								pData, standardAspekte.getStandardAspekt(resultat));
+								null, standardAspekte.getStandardAspekt(resultat));
 						if(publikationsDatum != null){
-							this.publikationsAnmeldungen.sende(publikationsDatum);
+							this.sendeSinnvoll(publikationsDatum);
 						}
-					}
-				}else{
-					weiterzuleitendeResultate.add(resultat);						
+					}					
 				}
 			}
 
@@ -208,4 +235,23 @@ implements IPPFVersorgerListener{
 			LOGGER.fine("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
 		}				
 	}
+	
+	
+	/**
+	 * Sendet das übergebene Datum (wenn nötig)
+	 * 
+	 * @param resultat ein zu publizierendes DAV-Datum
+	 */
+	private final void sendeSinnvoll(ResultData resultat){
+		if(resultat.getData() == null){
+			Boolean keineDaten = this.keineDaten.get(resultat.getObject());
+			if(keineDaten != null && !keineDaten){
+				this.publikationsAnmeldungen.sende(resultat);		
+			}			
+		}else{
+			this.publikationsAnmeldungen.sende(resultat);
+		}
+		this.keineDaten.put(resultat.getObject(), resultat.getData() == null);
+	}
+	
 }

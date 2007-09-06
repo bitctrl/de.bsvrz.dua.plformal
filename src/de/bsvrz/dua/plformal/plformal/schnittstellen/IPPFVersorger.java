@@ -28,9 +28,9 @@ package de.bsvrz.dua.plformal.plformal.schnittstellen;
 
 import java.util.Collection;
 
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.ResultData;
-import stauma.dav.configuration.interfaces.SystemObject;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**

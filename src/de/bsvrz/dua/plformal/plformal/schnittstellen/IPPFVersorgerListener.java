@@ -26,7 +26,6 @@
 
 package de.bsvrz.dua.plformal.plformal.schnittstellen;
 
-import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
 
 /**
  * Dieses Interface muss von allen Klassen implementiert

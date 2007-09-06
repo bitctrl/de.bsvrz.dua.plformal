@@ -35,14 +35,17 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import stauma.dav.clientside.ClientDavInterface;
-import stauma.dav.clientside.Data;
-import stauma.dav.clientside.DataDescription;
-import stauma.dav.configuration.interfaces.ConfigurationArea;
-import stauma.dav.configuration.interfaces.IntegerAttributeType;
-import stauma.dav.configuration.interfaces.ReferenceAttributeType;
-import stauma.dav.configuration.interfaces.SystemObject;
-import stauma.dav.configuration.interfaces.SystemObjectType;
+import de.bsvrz.dav.daf.main.ClientDavInterface;
+import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.config.ConfigurationArea;
+import de.bsvrz.dav.daf.main.config.IntegerAttributeType;
+import de.bsvrz.dav.daf.main.config.ReferenceAttributeType;
+import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.dav.daf.main.config.SystemObjectType;
+import de.bsvrz.dav.daf.main.impl.config.DafConfigurationAuthority;
+import de.bsvrz.dav.daf.main.impl.config.DafConfigurationObject;
+import de.bsvrz.dav.daf.main.impl.config.DafDynamicObject;
 import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -383,9 +386,9 @@ public class DUAUtensilienTest{
 				getObject("typ.typ")).getElements()){ //$NON-NLS-1$
 			for(SystemObject elem:((SystemObjectType)obj).getElements()){
 				
-				if( elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationObject.class) ||
-					elem.getClass().equals(stauma.dav.configuration.meta.DynamicObject.class) || 
-					elem.getClass().equals(stauma.dav.configuration.meta.ConfigurationAuthority.class)){
+				if( elem.getClass().equals(DafConfigurationObject.class) ||
+					elem.getClass().equals(DafDynamicObject.class) || 
+					elem.getClass().equals(DafConfigurationAuthority.class)){
 						soll4.add(elem);
 						
 				}

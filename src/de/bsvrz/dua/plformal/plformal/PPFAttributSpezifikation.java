@@ -26,7 +26,7 @@
 
 package de.bsvrz.dua.plformal.plformal;
 
-import stauma.dav.clientside.Data;
+import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
 import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 

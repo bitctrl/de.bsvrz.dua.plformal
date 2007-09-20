@@ -8,5 +8,11 @@ Bundle-Localization: plugin
 Require-Bundle: de.bitctrl.sys.funclib,
  de.bitctrl.dav.daf
 Eclipse-LazyStart: true
-Export-Package: de.bsvrz.dua.plformal.plformal,
+Export-Package: de.bsvrz.dua.plformal,
+ de.bsvrz.dua.plformal.allgemein,
+ de.bsvrz.dua.plformal.av,
+ de.bsvrz.dua.plformal.plformal,
+ de.bsvrz.dua.plformal.plformal.schnittstellen,
+ de.bsvrz.dua.plformal.plformal.typen,
+ de.bsvrz.dua.plformal.test,
  de.bsvrz.dua.plformal.vew

@@ -43,6 +43,7 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
@@ -140,7 +141,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 			final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().
 										getAttributeGroup(PPFKonstanten.ATG);
 			final Aspect asp = verwaltung.getVerbindung().getDataModel().
-								getAspect(Konstante.DAV_ASP_PARAMETER_SOLL);
+								getAspect(DaVKonstanten.ASP_PARAMETER_SOLL);
 			final DataDescription dd = new DataDescription(atg, asp, (short)0);
 			verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd,
 						ReceiveOptions.normal(), ReceiverRole.receiver());

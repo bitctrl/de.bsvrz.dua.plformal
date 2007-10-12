@@ -46,7 +46,7 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
+import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
@@ -199,9 +199,9 @@ implements ClientSenderInterface,
 		AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(
 				PPFKonstanten.ATG);
 		Aspect aspParaVor = this.dav.getDataModel().getAspect(
-				Konstante.DAV_ASP_PARAMETER_VORGABE);
+				DaVKonstanten.ASP_PARAMETER_VORGABE);
 		Aspect aspParaSoll = this.dav.getDataModel().getAspect(
-				Konstante.DAV_ASP_PARAMETER_SOLL);
+				DaVKonstanten.ASP_PARAMETER_SOLL);
 
 		ddAusgang = new DataDescription(atg, ausgang, (short) 0);
 		ddEingang = new DataDescription(atg, eingang, (short) 0);

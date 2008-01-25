@@ -46,6 +46,7 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
+import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
@@ -211,8 +212,9 @@ implements ClientSenderInterface,
 		this.obj2 = this.dav.getDataModel().getObject(OBJ2_PID);
 
 		for (SystemObject elem : this.dav.getDataModel().getType(
-				PPFKonstanten.TYP).getObjects()) {
-			if (elem.getPid().equals("kv.bitctrl.thierfelder")) { //$NON-NLS-1$
+				PPFKonstanten.TYP).getElements()) {
+			System.out.println(elem);
+			if (elem.getPid().equals("ppfTest")) { //$NON-NLS-1$
 				this.ppfObjekt = elem;
 			}
 		}
@@ -231,6 +233,8 @@ implements ClientSenderInterface,
 				.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll, ReceiveOptions
 				.normal(), ReceiverRole.receiver());
+		
+		Pause.warte(1000L);
 
 		/**
 		 * Testdatensätze wie in Tabelle 5-3 (bzw. Änderungsantrag

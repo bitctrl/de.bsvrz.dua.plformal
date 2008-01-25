@@ -26,6 +26,9 @@ Versionsgeschichte
 
   - Umpacketierung
 
+1.2.0
+
+  - Anpassung an neue Kernsoftware
 
 Bemerkungen
 ===========
@@ -35,8 +38,7 @@ Bemerkungen
 	Die automatischen Tests, die in Zusammenhang mit der Prüfspezifikation durchgeführt
 	werden, befinden sich innerhalb des Packages de.bsvrz.dua.plformal.test und
 	sind als JUnit-Tests ausführbar. Alle anderen Tests sind analog der Package-Struktur
-	der SWE selbst definiert. Die genaue Durchführung der Tests dieser SWE ist im
-	Dokument PrDok_SWE4.1_LosC1C2_VRZ3.doc (innerhalb von ...extra-src.zip) beschrieben.
+	der SWE selbst definiert. 
 	
 
 - Logging-Hierarchie (Wann wird welche Art von Logging-Meldung produziert?):

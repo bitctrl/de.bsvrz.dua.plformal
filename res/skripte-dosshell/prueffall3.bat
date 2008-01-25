@@ -23,7 +23,7 @@ pause
 echo ========================================================
 echo #  Pruefungen SE4 - DUA, SWE 4.1
 echo #
-echo #  Im Folgenden werden Funktionen allgemeine Funktionen getestet
+echo #  Im Folgenden werden allgemeine Funktionen getestet
 echo ========================================================
 echo.
 
@@ -33,7 +33,8 @@ pause
 echo ========================================================
 echo #  Pruefungen SE4 - DUA, SWE 4.1
 echo #
-echo #  Im Folgenden werden Funktionen der Anmeldungsverwaltung ueberprueft
+echo #  Im Folgenden werden Funktionen der
+echo #  Anmeldungsverwaltung ueberprueft
 echo ========================================================
 echo.
 %java% -cp %cp% org.junit.runner.JUnitCore de.bsvrz.dua.plformal.av.TestDAVObjektAnmeldung

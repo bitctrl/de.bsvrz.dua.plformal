@@ -42,7 +42,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -141,7 +140,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
 				}catch(Exception ex){
-					LOGGER.warning(Konstante.LEERSTRING, ex);
+					LOGGER.warning("", ex); //$NON-NLS-1$
 				}						
 			}
 		}else{
@@ -202,10 +201,10 @@ public class PPFPlausibilisierungsBeschreibungen {
 	 */
 	@Override
 	public String toString() {
-		String s = Konstante.STRING_UNBEKANNT;
+		String s = "unbekannt"; //$NON-NLS-1$
 
 		if(resDataInfos.keySet().size() > 0){
-			s = Konstante.LEERSTRING;
+			s = ""; //$NON-NLS-1$
 			for(DAVObjektAnmeldung objAnm:resDataInfos.keySet()){
 				s += "Datenbeschreibung: " + objAnm + "\n";  //$NON-NLS-1$//$NON-NLS-2$
 				s += this.resDataInfos.get(objAnm);
@@ -284,10 +283,10 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 */
 		@Override
 		public String toString() {
-			String s = Konstante.STRING_UNBEKANNT;
+			String s = "unbekannt"; //$NON-NLS-1$
 			
 			if(attSpez.size() > 0){
-				s = Konstante.LEERSTRING;
+				s = ""; //$NON-NLS-1$
 				for(PPFAttributSpezifikation attBeschreibung:attSpez){
 					s += attBeschreibung;
 				}

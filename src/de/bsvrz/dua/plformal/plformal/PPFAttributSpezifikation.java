@@ -28,7 +28,6 @@ package de.bsvrz.dua.plformal.plformal;
 
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 
 /**
  * Diese Klasse repräsentiert alle Informationen, die innerhalb <b>eines</b>
@@ -129,7 +128,7 @@ public class PPFAttributSpezifikation {
 	 */
 	@Override
 	public String toString() {
-		String s = Konstante.STRING_UNBEKANNT;
+		String s = "unbekannt"; //$NON-NLS-1$
 
 		if(this.attributPfad != null){
 			s = "Attributpfad: " + this.attributPfad + "\n"; //$NON-NLS-1$ //$NON-NLS-2$

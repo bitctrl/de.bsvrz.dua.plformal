@@ -49,7 +49,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.konstante.Konstante;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -458,7 +457,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 	 */
 	@Override
 	public String toString() {
-		String s = Konstante.STRING_UNBEKANNT + "\n"; //$NON-NLS-1$
+		String s = "unbekannt\n"; //$NON-NLS-1$
 		
 		synchronized (this) {
 			if(this.plBeschreibungen != null){

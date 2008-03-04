@@ -301,7 +301,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 		if(resultat != null && resultat.hasData() && resultat.getData() != null){
 			Collection<PPFAttributSpezifikation> attSpezifikationen = 
 					this.plBeschreibungen.getAttributSpezifikationenFuer(resultat);
-
+			
 			if(attSpezifikationen.size() > 0){
 				ergebnis = resultat.getData();
 								
@@ -436,8 +436,8 @@ implements IPPFVersorger, ClientReceiverInterface{
 	public final void addListener(final IPPFVersorgerListener listener){
 		if(this.listenerListe.add(listener)){
 			synchronized (this) {
-				listener.aktualisiereParameter(this);
-			}	
+				listener.aktualisiereParameter(this);				
+			}
 		}
 	}
 	

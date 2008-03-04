@@ -92,11 +92,11 @@ public class PPFPlausibilisierungsBeschreibungen {
 	 * 
 	 * @param parameterSatz ein Parametersatz der Attributgruppe
 	 * <code>atg.plausibilitätsPrüfungFormal</code>
-	 * @throws Exception falls Fehler beim Auslesen des DAV-Datensatzes
+	 * @throws PlFormalException falls Fehler beim Auslesen des DAV-Datensatzes
 	 * auftreten
 	 */
 	protected final void addParameterSatz(final Data parameterSatz)
-	throws Exception{
+	throws PlFormalException{
 		if(parameterSatz != null){
 			final AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(
 					PPFKonstanten.ATT_PARA_SATZ_ATG).getSystemObject();
@@ -104,11 +104,11 @@ public class PPFPlausibilisierungsBeschreibungen {
 					PPFKonstanten.ATT_PARA_SATZ_ASP).getSystemObject();
 			
 			if(atg == null){
-				throw new Exception("Übergebene Attributgruppe ist " //$NON-NLS-1$
+				throw new PlFormalException("Uebergebene Attributgruppe ist " //$NON-NLS-1$
 						+ DUAKonstanten.NULL + ": " + parameterSatz); //$NON-NLS-1$
 			}
 			if(asp == null){
-				throw new Exception("Übergebener Aspekt ist " //$NON-NLS-1$
+				throw new PlFormalException("Uebergebener Aspekt ist " //$NON-NLS-1$
 						+ DUAKonstanten.NULL + ": " + parameterSatz); //$NON-NLS-1$
 			}
 			DataDescription dd = new DataDescription(atg, asp, (short)0);
@@ -144,7 +144,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 				}						
 			}
 		}else{
-			throw new Exception("Übergebener Parametersatz ist " //$NON-NLS-1$
+			throw new PlFormalException("Uebergebener Parametersatz ist " //$NON-NLS-1$
 								+ DUAKonstanten.NULL);
 		}
 		
@@ -238,11 +238,11 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 * Standardkonstruktor
 		 * 
 		 * @param attSpez eine neue <code>AttributSpezifikation</code>
-		 * @throws Exception wenn das Auslesen der Daten nicht vollständig
+		 * @throws PlFormalException wenn das Auslesen der Daten nicht vollständig
 		 * erfolgreich war
 		 */
 		protected BeschreibungFuerObjekt(final Data attSpezDatum)
-		throws Exception{
+		throws PlFormalException{
 			addBeschreibung(attSpezDatum);
 		}
 		
@@ -251,11 +251,11 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 * hinzu
 		 * 
 		 * @param attSpez eine neue <code>AttributSpezifikation</code>
-		 * @throws Exception wenn das Auslesen der Daten nicht vollständig
+		 * @throws PlFormalException wenn das Auslesen der Daten nicht vollständig
 		 * erfolgreich war
 		 */
 		protected void addBeschreibung(final Data attSpezDatum)
-		throws Exception{
+		throws PlFormalException{
 			final Data.Array attribut = attSpezDatum.getArray(
 					PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
 			

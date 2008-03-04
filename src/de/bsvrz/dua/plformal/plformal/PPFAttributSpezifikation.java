@@ -67,11 +67,10 @@ public class PPFAttributSpezifikation {
 	 * @param attributSpezifikation <b>ein</b> DAV-Datensatz der Liste
 	 * <code>AttributSpezifikation</code> der Attributgruppe
 	 * <code>atg.plausibilitätsPrüfungFormal</code>
-	 * @throws Exception falls Fehler beim Auslesen des
-	 * DAV-Datensatzes auftreten
+	 * @throws PlFormalException falls die Parameter fehlerhaft sind
 	 */
 	public PPFAttributSpezifikation(final Data attributSpezifikation)
-	throws Exception{
+	throws PlFormalException{
 		this.attributPfad = attributSpezifikation.getTextValue(
 				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_PFAD).getText().toString();
 		this.min = attributSpezifikation.getUnscaledValue(
@@ -82,7 +81,7 @@ public class PPFAttributSpezifikation {
 				.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_OPT).
 						intValue());
 		if(min > max){
-			throw new Exception("MIN (" + this.min +  //$NON-NLS-1$
+			throw new PlFormalException("MIN (" + this.min +  //$NON-NLS-1$
 					") ist größer als MAX (" + max + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

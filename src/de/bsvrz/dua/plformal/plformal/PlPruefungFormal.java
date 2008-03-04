@@ -163,8 +163,8 @@ implements IPPFVersorgerListener{
 					this.iDfsMod.getDatenAnmeldungen(objektFilter, 
 							anmeldungenStd);
 			
-			synchronized(this){
-				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
+			synchronized (this) {
+				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);			
 			}
 		}
 	}

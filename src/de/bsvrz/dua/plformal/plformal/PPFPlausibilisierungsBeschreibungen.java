@@ -139,7 +139,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 					}else{
 						this.resDataInfos.put(dummy, objBeschr);
 					}
-				}catch(Exception ex){
+				}catch(IllegalArgumentException ex){
 					LOGGER.warning("", ex); //$NON-NLS-1$
 				}						
 			}
@@ -172,7 +172,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 					LOGGER.fine("Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
 							" gefunden für: " +	resultat); //$NON-NLS-1$
 				}
-			}catch(Exception ex){
+			}catch(IllegalArgumentException ex){
 				LOGGER.error("Attributspezifikationen konnten" + //$NON-NLS-1$
 						" nicht ausgelesen werden", ex); //$NON-NLS-1$
 			}

@@ -240,7 +240,7 @@ implements IPPFVersorger, ClientReceiverInterface{
 								parameterSaetze.getItem(i));
 						LOGGER.fine(parameterSaetze.getItem(i).toString());
 					}
-				} catch (Exception e) {
+				} catch (PlFormalException e) {
 					LOGGER.warning("Parameterdatensatz für die formale" + //$NON-NLS-1$
 							" Plausibilisierung konnte nicht" + //$NON-NLS-1$
 							" ausgelesen werden", e); //$NON-NLS-1$

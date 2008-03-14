@@ -30,6 +30,11 @@ Versionsgeschichte
 
   - Anpassung an neue Kernsoftware
 
+
+1.2.1
+
+  - Bash-Startfile hinzu
+  
 Bemerkungen
 ===========
 

@@ -6,7 +6,8 @@ source ../../../skripte-bash/einstellungen.sh
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #
 ################################################################################
 
-kb="KonfigurationsBereichsPid="
+kb="-KonfigurationsBereichsPid=kb.aoe.bitctrl.tester,kb.duaTestModellUndObjekte"
+dfs="-dfs=bitctrl.dfs"
 
 ################################################################################
 # Folgende Parameter müssen überprüft und evtl. angepasst werden               #
@@ -26,6 +27,7 @@ kb="KonfigurationsBereichsPid="
 java $jvmArgs -jar ../de.bsvrz.dua.plformal-runtime.jar \
 	$dav1 \
 	$kb \
+	$dfs \
 	-debugLevelFileText=all \
 	-debugLevelStdErrText=:error \
 	-debugSetLoggerAndLevel=:none \

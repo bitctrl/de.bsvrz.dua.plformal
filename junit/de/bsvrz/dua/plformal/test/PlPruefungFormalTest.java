@@ -234,7 +234,7 @@ implements ClientSenderInterface,
 		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll, ReceiveOptions
 				.normal(), ReceiverRole.receiver());
 		
-		Pause.warte(1000L);
+		try{ Thread.sleep(1000L); }catch (InterruptedException e) {}
 
 		/**
 		 * Testdatensätze wie in Tabelle 5-3 (bzw. Änderungsantrag

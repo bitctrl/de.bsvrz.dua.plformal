@@ -46,252 +46,258 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Diese Klasse stellt die Informationen der Attributgruppe
- * <code>atg.plausibilitätsPrüfungFormal</code> für einen
- * möglichst schnellen Zugriff zur Verfügung. Mittels der
- * Methode <code>getAttributSpezifikationenFuer(..)</code>
- * kann für ein ResultData-Objekt erfragt werden, wie dieses
- * formal zu plausibilisieren ist.
+ * <code>atg.plausibilitätsPrüfungFormal</code> für einen möglichst schnellen
+ * Zugriff zur Verfügung. Mittels der Methode
+ * <code>getAttributSpezifikationenFuer(..)</code> kann für ein
+ * ResultData-Objekt erfragt werden, wie dieses formal zu plausibilisieren ist.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public class PPFPlausibilisierungsBeschreibungen {
-	
+
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	private static final Debug LOGGER = Debug.getLogger();
-	
+
 	/**
 	 * Alle Informationen, die zur Plausibilisierung einer
-	 * Systemobjekt-Attributgruppen-Aspekt-Kombination
-	 * notwendig sind
+	 * Systemobjekt-Attributgruppen-Aspekt-Kombination notwendig sind.
 	 */
-	private TreeMap<DAVObjektAnmeldung, BeschreibungFuerObjekt> resDataInfos =
-				new TreeMap<DAVObjektAnmeldung, BeschreibungFuerObjekt>(); 
-	
+	private TreeMap<DAVObjektAnmeldung, BeschreibungFuerObjekt> resDataInfos = new TreeMap<DAVObjektAnmeldung, BeschreibungFuerObjekt>();
+
 	/**
-	 * Verbindung zum Verwaltungsmodul
+	 * Verbindung zum Verwaltungsmodul.
 	 */
 	private IVerwaltung verwaltung = null;
-	
-	
+
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param verwaltung Verbindung zum Verwaltungsmodul
+	 * @param verwaltung
+	 *            Verbindung zum Verwaltungsmodul
 	 */
-	protected PPFPlausibilisierungsBeschreibungen(final 
-			IVerwaltung verwaltung){
+	protected PPFPlausibilisierungsBeschreibungen(final IVerwaltung verwaltung) {
 		this.verwaltung = verwaltung;
 	}
-	
+
 	/**
 	 * Fügt diesem Objekt einen neuen Parametersatz der Attributgruppe
 	 * <code>atg.plausibilitätsPrüfungFormal</code> hinzu.
 	 * 
-	 * @param parameterSatz ein Parametersatz der Attributgruppe
-	 * <code>atg.plausibilitätsPrüfungFormal</code>
-	 * @throws PlFormalException falls Fehler beim Auslesen des DAV-Datensatzes
-	 * auftreten
+	 * @param parameterSatz
+	 *            ein Parametersatz der Attributgruppe
+	 *            <code>atg.plausibilitätsPrüfungFormal</code>
+	 * @throws PlFormalException
+	 *             falls Fehler beim Auslesen des DAV-Datensatzes auftreten
 	 */
 	protected final void addParameterSatz(final Data parameterSatz)
-	throws PlFormalException{
-		if(parameterSatz != null){
-			final AttributeGroup atg = (AttributeGroup)parameterSatz.getReferenceValue(
-					PPFKonstanten.ATT_PARA_SATZ_ATG).getSystemObject();
-			final Aspect asp = (Aspect)parameterSatz.getReferenceValue(
+			throws PlFormalException {
+		if (parameterSatz != null) {
+			final AttributeGroup atg = (AttributeGroup) parameterSatz
+					.getReferenceValue(PPFKonstanten.ATT_PARA_SATZ_ATG)
+					.getSystemObject();
+			final Aspect asp = (Aspect) parameterSatz.getReferenceValue(
 					PPFKonstanten.ATT_PARA_SATZ_ASP).getSystemObject();
-			
-			if(atg == null){
+
+			if (atg == null) {
 				throw new PlFormalException("Uebergebene Attributgruppe ist " //$NON-NLS-1$
 						+ DUAKonstanten.NULL + ": " + parameterSatz); //$NON-NLS-1$
 			}
-			if(asp == null){
+			if (asp == null) {
 				throw new PlFormalException("Uebergebener Aspekt ist " //$NON-NLS-1$
 						+ DUAKonstanten.NULL + ": " + parameterSatz); //$NON-NLS-1$
 			}
-			DataDescription dd = new DataDescription(atg, asp, (short)0);
-			
-			final ReferenceArray objekte = parameterSatz.getArray(PPFKonstanten.
-					ATL_PARA_SATZ_OBJ).asReferenceArray();
-			
-			Collection<SystemObject> finObjekte = new HashSet<SystemObject>(); 
-			if(objekte == null || objekte.getLength() == 0){
+			DataDescription dd = new DataDescription(atg, asp, (short) 0);
+
+			final ReferenceArray objekte = parameterSatz.getArray(
+					PPFKonstanten.ATL_PARA_SATZ_OBJ).asReferenceArray();
+
+			Collection<SystemObject> finObjekte = new HashSet<SystemObject>();
+			if (objekte == null || objekte.getLength() == 0) {
 				finObjekte = DUAUtensilien.getBasisInstanzen(null,
-						this.verwaltung.getVerbindung(),
-						this.verwaltung.getKonfigurationsBereiche());
-			}else{
-				for(int i = 0; i< objekte.getLength(); i++){
-					finObjekte.addAll(DUAUtensilien.getBasisInstanzen(objekte.getSystemObject(i),
-							this.verwaltung.getVerbindung(),
-							this.verwaltung.getKonfigurationsBereiche()));	
-				}				
+						this.verwaltung.getVerbindung(), this.verwaltung
+								.getKonfigurationsBereiche());
+			} else {
+				for (int i = 0; i < objekte.getLength(); i++) {
+					finObjekte.addAll(DUAUtensilien.getBasisInstanzen(objekte
+							.getSystemObject(i), this.verwaltung
+							.getVerbindung(), this.verwaltung
+							.getKonfigurationsBereiche()));
+				}
 			}
-			
-			final BeschreibungFuerObjekt objBeschr = new BeschreibungFuerObjekt(parameterSatz);
-			
-			for(SystemObject finObj:finObjekte){
-				try{
-					DAVObjektAnmeldung dummy = new DAVObjektAnmeldung(finObj, dd);
-					if(this.resDataInfos.containsKey(dummy)){
-						this.resDataInfos.get(dummy).addBeschreibung(parameterSatz);
-					}else{
+
+			final BeschreibungFuerObjekt objBeschr = new BeschreibungFuerObjekt(
+					parameterSatz);
+
+			for (SystemObject finObj : finObjekte) {
+				try {
+					DAVObjektAnmeldung dummy = new DAVObjektAnmeldung(finObj,
+							dd);
+					if (this.resDataInfos.containsKey(dummy)) {
+						this.resDataInfos.get(dummy).addBeschreibung(
+								parameterSatz);
+					} else {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
-				}catch(IllegalArgumentException ex){
+				} catch (IllegalArgumentException ex) {
 					LOGGER.warning("", ex); //$NON-NLS-1$
-				}						
+				}
 			}
-		}else{
+		} else {
 			throw new PlFormalException("Uebergebener Parametersatz ist " //$NON-NLS-1$
-								+ DUAKonstanten.NULL);
+					+ DUAKonstanten.NULL);
 		}
-		
+
 		LOGGER.info(this.toString());
 	}
-	
+
 	/**
 	 * Erfragt die Menge von Attributspezifikationen für ein übergebenes
-	 * <code>ResultData</code>-Objekt
+	 * <code>ResultData</code>-Objekt.
 	 * 
-	 * @param resultat ein <code>ResultData</code>-Objekt
+	 * @param resultat
+	 *            ein <code>ResultData</code>-Objekt
 	 * @return eine (ggf. leere) Menge von Attributspezifikationen
 	 */
-	protected final Collection<PPFAttributSpezifikation> 
-						getAttributSpezifikationenFuer(ResultData resultat){
+	protected final Collection<PPFAttributSpezifikation> getAttributSpezifikationenFuer(
+			ResultData resultat) {
 		Collection<PPFAttributSpezifikation> ergebnis = new HashSet<PPFAttributSpezifikation>();
-		
-		if(resultat != null){
-			try{
-				DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(resultat);
-				BeschreibungFuerObjekt objBeschr = this.resDataInfos.get(objektAnmeldung);
-				if(objBeschr != null){
+
+		if (resultat != null) {
+			try {
+				DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(
+						resultat);
+				BeschreibungFuerObjekt objBeschr = this.resDataInfos
+						.get(objektAnmeldung);
+				if (objBeschr != null) {
 					ergebnis.addAll(objBeschr.getAttributSpezifikationen());
-				}else{
+				} else {
 					LOGGER.fine("Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
-							" gefunden für: " +	resultat); //$NON-NLS-1$
+							" gefunden für: " + resultat); //$NON-NLS-1$
 				}
-			}catch(IllegalArgumentException ex){
+			} catch (IllegalArgumentException ex) {
 				LOGGER.error("Attributspezifikationen konnten" + //$NON-NLS-1$
 						" nicht ausgelesen werden", ex); //$NON-NLS-1$
 			}
-		}else{
-			LOGGER.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
+		} else {
+			LOGGER
+					.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
-		
+
 		return ergebnis;
 	}
-	
+
 	/**
-	 * Erfragt die Objektanmeldungen, die notwendig sind,
-	 * um die Daten, die für die formale Plausibilitätsprüfung
-	 * vorgesehen sind empfangen zu können
+	 * Erfragt die Objektanmeldungen, die notwendig sind, um die Daten, die für
+	 * die formale Plausibilitätsprüfung vorgesehen sind empfangen zu können.
 	 * 
 	 * @return eine (ggf. leere) Menge von Objektanmeldungen
 	 */
-	public final Collection<DAVObjektAnmeldung> getObjektAnmeldungen(){
+	public final Collection<DAVObjektAnmeldung> getObjektAnmeldungen() {
 		Collection<DAVObjektAnmeldung> anmeldungen = new TreeSet<DAVObjektAnmeldung>();
 		anmeldungen.addAll(this.resDataInfos.keySet());
 		return anmeldungen;
 	}
-	
+
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}.
 	 */
 	@Override
 	public String toString() {
 		String s = "unbekannt"; //$NON-NLS-1$
 
-		if(resDataInfos.keySet().size() > 0){
+		if (resDataInfos.keySet().size() > 0) {
 			s = ""; //$NON-NLS-1$
-			for(DAVObjektAnmeldung objAnm:resDataInfos.keySet()){
-				s += "Datenbeschreibung: " + objAnm + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+			for (DAVObjektAnmeldung objAnm : resDataInfos.keySet()) {
+				s += "Datenbeschreibung: " + objAnm + "\n"; //$NON-NLS-1$//$NON-NLS-2$
 				s += this.resDataInfos.get(objAnm);
 			}
 		}
-		
+
 		return s;
-	}			
-	
-	
+	}
+
 	/**
-	 * Speichert alle Informationen, die für die Plausibilisierung
-	 * <b>eines</b> Systemobjektes unter <b>einer</b> Datenbeschreibung
-	 * notwendig sind (bzw. alle Informationen, die innerhalb eines Datensatzes
-	 * der Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code> 
-	 * in der Attributliste <code>AttributSpezifikation</code> stehen).
+	 * Speichert alle Informationen, die für die Plausibilisierung <b>eines</b>
+	 * Systemobjektes unter <b>einer</b> Datenbeschreibung notwendig sind (bzw.
+	 * alle Informationen, die innerhalb eines Datensatzes der Attributgruppe
+	 * <code>atg.plausibilitätsPrüfungFormal</code> in der Attributliste
+	 * <code>AttributSpezifikation</code> stehen).
 	 * 
 	 * @author BitCtrl Systems GmbH, Thierfelder
-	 *
+	 * 
 	 */
-	protected class BeschreibungFuerObjekt{
+	protected class BeschreibungFuerObjekt {
 
 		/**
 		 * Menge von Plausibilisierungsspezifikationen (Attributspezifikationen)
-		 * für ein Objekt unter einer Datenbeschreibung
+		 * für ein Objekt unter einer Datenbeschreibung.
 		 */
-		private Collection<PPFAttributSpezifikation> attSpez =
-					new HashSet<PPFAttributSpezifikation>();
-		
-		/**
-		 * Standardkonstruktor
-		 * 
-		 * @param attSpez eine neue <code>AttributSpezifikation</code>
-		 * @throws PlFormalException wenn das Auslesen der Daten nicht vollständig
-		 * erfolgreich war
-		 */
-		protected BeschreibungFuerObjekt(final Data attSpezDatum)
-		throws PlFormalException{
-			addBeschreibung(attSpezDatum);
-		}
-		
-		/**
-		 * Fügt diesem Objekt eine neue <code>AttributSpezifikation</code>
-		 * hinzu
-		 * 
-		 * @param attSpez eine neue <code>AttributSpezifikation</code>
-		 * @throws PlFormalException wenn das Auslesen der Daten nicht vollständig
-		 * erfolgreich war
-		 */
-		protected void addBeschreibung(final Data attSpezDatum)
-		throws PlFormalException{
-			final Data.Array attribut = attSpezDatum.getArray(
-					PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
-			
-			for(int i = 0; i<attribut.getLength(); i++){
-				final Data attributSpezifikation = attribut.getItem(i);
-				PPFAttributSpezifikation dummy = 
-							new PPFAttributSpezifikation(attributSpezifikation);
-				attSpez.add(dummy);
-			}
-		}		
+		private Collection<PPFAttributSpezifikation> attSpez = new HashSet<PPFAttributSpezifikation>();
 
 		/**
-		 * Erfragt die für dieses Objekt gespeicherten
-		 * Attributspezifikationen
+		 * Standardkonstruktor.
+		 * 
+		 * @param attSpezDatum
+		 *            eine neue <code>AttributSpezifikation</code>
+		 * @throws PlFormalException
+		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
+		 *             war
+		 */
+		protected BeschreibungFuerObjekt(final Data attSpezDatum)
+				throws PlFormalException {
+			addBeschreibung(attSpezDatum);
+		}
+
+		/**
+		 * Fügt diesem Objekt eine neue <code>AttributSpezifikation</code>
+		 * hinzu.
+		 * 
+		 * @param attSpezDatum
+		 *            eine neue <code>AttributSpezifikation</code>
+		 * @throws PlFormalException
+		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
+		 *             war
+		 */
+		protected void addBeschreibung(final Data attSpezDatum)
+				throws PlFormalException {
+			final Data.Array attribut = attSpezDatum
+					.getArray(PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
+
+			for (int i = 0; i < attribut.getLength(); i++) {
+				final Data attributSpezifikation = attribut.getItem(i);
+				PPFAttributSpezifikation dummy = new PPFAttributSpezifikation(
+						attributSpezifikation);
+				attSpez.add(dummy);
+			}
+		}
+
+		/**
+		 * Erfragt die für dieses Objekt gespeicherten Attributspezifikationen.
 		 * 
 		 * @return die Attributspezifikationen (ggf. leere Menge)
 		 */
-		protected final Collection<PPFAttributSpezifikation> 
-											getAttributSpezifikationen(){
+		protected final Collection<PPFAttributSpezifikation> getAttributSpezifikationen() {
 			return this.attSpez;
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * {@inheritDoc}.
 		 */
 		@Override
 		public String toString() {
 			String s = "unbekannt"; //$NON-NLS-1$
-			
-			if(attSpez.size() > 0){
+
+			if (attSpez.size() > 0) {
 				s = ""; //$NON-NLS-1$
-				for(PPFAttributSpezifikation attBeschreibung:attSpez){
+				for (PPFAttributSpezifikation attBeschreibung : attSpez) {
 					s += attBeschreibung;
 				}
 			}
-			
+
 			return s;
 		}
 	}

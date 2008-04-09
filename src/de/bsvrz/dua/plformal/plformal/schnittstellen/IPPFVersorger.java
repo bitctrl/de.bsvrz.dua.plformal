@@ -35,46 +35,47 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**
  * Dieses Interface stellt alle Informationen der Attributgruppe
- * <code>atg.plausibilitätsPrüfungFormal</code> eines Objekts vom
- * Typ <code>typ.plausibilitätsPrüfungFormal</code> zur Verfügung.
+ * <code>atg.plausibilitätsPrüfungFormal</code> eines Objekts vom Typ
+ * <code>typ.plausibilitätsPrüfungFormal</code> zur Verfügung.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IPPFVersorger {
-	
+
 	/**
 	 * Führt die formale Plausibilisierung für ein bestimmtes Datum durch,
 	 * welches innerhalb des übergebenen <code>ResultData</code>-Objektes
-	 * enthalten ist. 
+	 * enthalten ist.
 	 * 
-	 * @param resultat das Datum
-	 * @return wenn die formale Plausibilisierung dieses Datum
-	 * bearbeiten konnte, so wird das ggf. veränderte Datum
-	 * zurückgegeben. Sonst <code>null</code>.
+	 * @param resultat
+	 *            das Datum
+	 * @return wenn die formale Plausibilisierung dieses Datum bearbeiten
+	 *         konnte, so wird das ggf. veränderte Datum zurückgegeben. Sonst
+	 *         <code>null</code>.
 	 */
-	public Data plausibilisiere(final ResultData resultat);
+	Data plausibilisiere(final ResultData resultat);
 
 	/**
-	 * Erfragt alle Anmeldungen für alle (finalen) Objekte
-	 * (also Instanzen von <code>DAVObjektAnmeldung</code>),
-	 * die durchgeführt werden müssen, um alle Plausibilitätsprüfungen
-	 * so wie in <code>atg.plausibilitätsPrüfungFormal</code>
-	 * beschrieben, durchführen zu können.
+	 * Erfragt alle Anmeldungen für alle (finalen) Objekte (also Instanzen von
+	 * <code>DAVObjektAnmeldung</code>), die durchgeführt werden müssen, um
+	 * alle Plausibilitätsprüfungen so wie in
+	 * <code>atg.plausibilitätsPrüfungFormal</code> beschrieben, durchführen
+	 * zu können.
 	 * 
 	 * @return eine (ggf. leere) Menge von Objektanmeldungen
 	 */
-	public Collection<DAVObjektAnmeldung> getObjektAnmeldungen();
-	
+	Collection<DAVObjektAnmeldung> getObjektAnmeldungen();
+
 	/**
-	 * Erfragt alle zur formalen Plausibilisierung vorgesehenen
-	 * (finalen) Objekte. Diese Objekte werden von den Parametern der
-	 * Attributgruppe <code>atg.plausibilitätsPrüfungFormal</code>
-	 * bereitgestellt.
+	 * Erfragt alle zur formalen Plausibilisierung vorgesehenen (finalen)
+	 * Objekte. Diese Objekte werden von den Parametern der Attributgruppe
+	 * <code>atg.plausibilitätsPrüfungFormal</code> bereitgestellt.
 	 * 
-	 * @return alle zur formalen Plausibilisierung vorgesehenen
-	 * (finalen) Objekte in einem Array oder ein leeres Array.
+	 * @return alle zur formalen Plausibilisierung vorgesehenen (finalen)
+	 *         Objekte in einem Array oder ein leeres Array.
 	 */
-	public SystemObject[] getBetrachteteObjekte();
-	
+	SystemObject[] getBetrachteteObjekte();
+
 }

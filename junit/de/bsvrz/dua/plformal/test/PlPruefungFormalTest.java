@@ -46,144 +46,155 @@ import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
-import de.bsvrz.sys.funclib.bitctrl.app.Pause;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
- * der Prüfspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0) bzw. Änderungsantrag
- * (PID: AeA_SWE4.1_VRZ3_Nr001) 
+ * der Prüfspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0) bzw.
+ * Änderungsantrag (PID: AeA_SWE4.1_VRZ3_Nr001)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
-public class PlPruefungFormalTest
-implements ClientSenderInterface,
+public class PlPruefungFormalTest implements ClientSenderInterface,
 		ClientReceiverInterface {
-	
+
 	/**
 	 * Kumulation der verschiedenen Kennungen in einen Wert. Da die Kennungen
 	 * nach der Plausibilisierung nicht als ein Wert sondern als drei (boolsche)
 	 * Werte zur Verfügung stehen muss hier eine Übersetzung dieser Werte
 	 * vorgenommen werden. Dabei gilt:
 	 * 
-	 * kennung[0] = Attribut --> Status.PlFormal.WertMin
-	 * kennung[1] = Attribut --> Status.PlFormal.WertMax
-	 * kennung[2] = Attribut --> Status.MessWertErsetzung.Implausibel
+	 * kennung[0] = Attribut --> Status.PlFormal.WertMin kennung[1] = Attribut
+	 * --> Status.PlFormal.WertMax kennung[2] = Attribut -->
+	 * Status.MessWertErsetzung.Implausibel
 	 * 
 	 */
-	private static final boolean[] WertMin = new boolean[] { true, false, false };
-
-	private static final boolean[] WertMax = new boolean[] { false, true, false };
-
-	private static final boolean[] Implausibel = new boolean[] { false, false, true };
-
-	private static final boolean[] Nichts = new boolean[] { false, false, false };
+	private static final boolean[] WERT_MIN = new boolean[] { true, false,
+			false };
 
 	/**
-	 * Pid von TestObj1
+	 * siehe WERT_MIN.
+	 */
+	private static final boolean[] WERT_MAX = new boolean[] { false, true,
+			false };
+
+	/**
+	 * siehe WERT_MIN.
+	 */
+	private static final boolean[] IMPLAUSIBEL = new boolean[] { false, false,
+			true };
+
+	/**
+	 * siehe WERT_MIN.
+	 */
+	private static final boolean[] NICHTS = new boolean[] { false, false, false };
+
+	/**
+	 * Pid von TestObj1.
 	 */
 	private static final String OBJ1_PID = "objekt1.testPlPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Pid von TestObj2
+	 * Pid von TestObj2.
 	 */
 	private static final String OBJ2_PID = "objekt2.testPlPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Pid von Test-Atg
+	 * Pid von Test-Atg.
 	 */
 	private static final String ATG_PID = "atg.testPlPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Pid von Test-Empfangs-Aspekt
+	 * Pid von Test-Empfangs-Aspekt.
 	 */
 	private static final String ASP_EINGANG_PID = "asp.testEingang"; //$NON-NLS-1$
 
 	/**
-	 * Pid von Test-Sende-Aspekt
+	 * Pid von Test-Sende-Aspekt.
 	 */
 	private static final String ASP_AUSGANG_PID = "asp.testAusgang"; //$NON-NLS-1$
 
 	/**
-	 * Pid von Test-Objekt-Typ
+	 * Pid von Test-Objekt-Typ.
 	 */
 	private static final String TYP = "typ.testPlPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Verbindung zum Datenverteiler
+	 * Verbindung zum Datenverteiler.
 	 */
 	private ClientDavInterface dav;
 
 	/**
-	 * Instanz von TestObj1
+	 * Instanz von TestObj1.
 	 */
 	private SystemObject obj1 = null;
 
 	/**
-	 * Instanz von TestObj1
+	 * Instanz von TestObj1.
 	 */
 	private SystemObject obj2 = null;
 
 	/**
-	 * Datenbeschreibung für zu sendende Daten
+	 * Datenbeschreibung für zu sendende Daten.
 	 */
 	DataDescription ddAusgang = null;
 
 	/**
-	 * Datenbeschreibung für zu empfangene Daten
+	 * Datenbeschreibung für zu empfangene Daten.
 	 */
 	DataDescription ddEingang = null;
 
 	/**
-	 * Parameter der Pl-Prüfung (Vorgabe)
+	 * Parameter der Pl-Prüfung (Vorgabe).
 	 */
 	DataDescription ddParamVor = null;
 
 	/**
-	 * Parameter der Pl-Prüfung (Soll)
+	 * Parameter der Pl-Prüfung (Soll).
 	 */
 	DataDescription ddParamSoll = null;
 
 	/**
-	 * Testdatensätze
+	 * Testdatensätze.
 	 */
 	private RohdatenSatz[] testDatenSaetze = null;
 
 	/**
-	 * Durchläufe
+	 * Durchläufe.
 	 */
 	private Durchlauf[] durchlaeufe = null;
 
 	/**
-	 * Erwartete Ergebnisse
+	 * Erwartete Ergebnisse.
 	 */
 	private TestErgebnis[][] ergebnisse = null;
 
 	/**
-	 * das aktuelle Ergebnis eines Tests
+	 * das aktuelle Ergebnis eines Tests.
 	 */
 	private TestErgebnis aktuellesErgebnis = null;
-	
+
 	/**
-	 * zu dieser Zeit wurde das letzte Testergebnis empfangen
+	 * zu dieser Zeit wurde das letzte Testergebnis empfangen.
 	 */
 	private long ergebnisZeit = 0;
 
 	/**
-	 * zu dieser Zeit wurde der letzte Parameter empfangen
+	 * zu dieser Zeit wurde der letzte Parameter empfangen.
 	 */
 	private long paraZeit = 0;
 
 	/**
-	 * aktuelle Testparameter
+	 * aktuelle Testparameter.
 	 */
 	private ParameterSatz[] parameter = null;
 
 	/**
-	 * Das Objekt der PL-Prüfung formal
+	 * Das Objekt der PL-Prüfung formal.
 	 */
-	private SystemObject ppfObjekt = null;	
+	private SystemObject ppfObjekt = null;
 
 	/**
 	 * {@inheritDoc}
@@ -222,7 +233,8 @@ implements ClientSenderInterface,
 		/**
 		 * Daten zum Senden anmelden
 		 */
-		dav.subscribeSender(this, this.ppfObjekt, ddParamVor, SenderRole.sender());
+		dav.subscribeSender(this, this.ppfObjekt, ddParamVor, SenderRole
+				.sender());
 		dav.subscribeSender(this, typ.getObjects(), ddAusgang, SenderRole
 				.source());
 
@@ -233,8 +245,12 @@ implements ClientSenderInterface,
 				.normal(), ReceiverRole.receiver());
 		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll, ReceiveOptions
 				.normal(), ReceiverRole.receiver());
-		
-		try{ Thread.sleep(1000L); }catch (InterruptedException e) {}
+
+		try {
+			Thread.sleep(1000L);
+		} catch (InterruptedException e) { //
+			
+		}
 
 		/**
 		 * Testdatensätze wie in Tabelle 5-3 (bzw. Änderungsantrag
@@ -245,10 +261,8 @@ implements ClientSenderInterface,
 				new RohdatenSatz(obj1, -3, -2.0),
 				new RohdatenSatz(obj1, 17, 73.1087001),
 				new RohdatenSatz(obj1, 18, 73.0),
-				new RohdatenSatz(obj1, -2, 13),
-				new RohdatenSatz(obj2, -2, 13),
-				new RohdatenSatz(obj1, 5, 67),
-				new RohdatenSatz(obj2, 5, 67), };
+				new RohdatenSatz(obj1, -2, 13), new RohdatenSatz(obj2, -2, 13),
+				new RohdatenSatz(obj1, 5, 67), new RohdatenSatz(obj2, 5, 67), };
 
 		/**
 		 * Testparameter wie in Tabelle 5-2 (bzw. Änderungsantrag
@@ -262,9 +276,11 @@ implements ClientSenderInterface,
 		 * Durchläufe wie in Tabelle 5-4
 		 */
 		this.durchlaeufe = new Durchlauf[] {
-				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(), 
-						PlausibilisierungsMethode.SETZE_MIN.getCode()),
-				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
+				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG
+						.getCode(), PlausibilisierungsMethode.SETZE_MIN
+						.getCode()),
+				new Durchlauf(
+						PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
 						PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
 				new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
 						PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
@@ -278,50 +294,50 @@ implements ClientSenderInterface,
 		 */
 		this.ergebnisse = new TestErgebnis[][] {
 				new TestErgebnis[] {
-						new TestErgebnis(-4, Nichts, -2.0, WertMin),
-						new TestErgebnis(-3, Nichts, -2.0, Nichts),
-						new TestErgebnis(17, Nichts, 73.1087001, Nichts),
-						new TestErgebnis(18, Nichts, 73.0, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts) },
+						new TestErgebnis(-4, NICHTS, -2.0, WERT_MIN),
+						new TestErgebnis(-3, NICHTS, -2.0, NICHTS),
+						new TestErgebnis(17, NICHTS, 73.1087001, NICHTS),
+						new TestErgebnis(18, NICHTS, 73.0, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS) },
 				new TestErgebnis[] {
-						new TestErgebnis(-3, WertMin, -2.00000901, Implausibel),
-						new TestErgebnis(-3, Nichts, -2.0, Nichts),
-						new TestErgebnis(17, Nichts, 73.1087001, Implausibel),
-						new TestErgebnis(17, WertMax, 73.0, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts),
-						new TestErgebnis(-2, WertMax, 67, Implausibel) },
+						new TestErgebnis(-3, WERT_MIN, -2.00000901, IMPLAUSIBEL),
+						new TestErgebnis(-3, NICHTS, -2.0, NICHTS),
+						new TestErgebnis(17, NICHTS, 73.1087001, IMPLAUSIBEL),
+						new TestErgebnis(17, WERT_MAX, 73.0, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS),
+						new TestErgebnis(-2, WERT_MAX, 67, IMPLAUSIBEL) },
 				new TestErgebnis[] {
-						new TestErgebnis(-4, Nichts, -2.00000901, Nichts),
-						new TestErgebnis(-3, Nichts, -2.0, Nichts),
-						new TestErgebnis(17, Nichts, 73.1087001, Nichts),
-						new TestErgebnis(17, WertMax, 73.0, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts),
-						new TestErgebnis(-2, WertMax, 67, Nichts) },
+						new TestErgebnis(-4, NICHTS, -2.00000901, NICHTS),
+						new TestErgebnis(-3, NICHTS, -2.0, NICHTS),
+						new TestErgebnis(17, NICHTS, 73.1087001, NICHTS),
+						new TestErgebnis(17, WERT_MAX, 73.0, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS),
+						new TestErgebnis(-2, WERT_MAX, 67, NICHTS) },
 				new TestErgebnis[] {
-						new TestErgebnis(-3, WertMin, -2.0, WertMin),
-						new TestErgebnis(-3, Nichts, -2.0, Nichts),
-						new TestErgebnis(17, Nichts, 73.0, WertMax),
-						new TestErgebnis(18, Nichts, 73.0, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts),
-						new TestErgebnis(5, Nichts, 63, WertMax) },
+						new TestErgebnis(-3, WERT_MIN, -2.0, WERT_MIN),
+						new TestErgebnis(-3, NICHTS, -2.0, NICHTS),
+						new TestErgebnis(17, NICHTS, 73.0, WERT_MAX),
+						new TestErgebnis(18, NICHTS, 73.0, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS),
+						new TestErgebnis(5, NICHTS, 63, WERT_MAX) },
 				new TestErgebnis[] {
-						new TestErgebnis(-4, Implausibel, -2.00000901, Nichts),
-						new TestErgebnis(-3, Nichts, -2.0, Nichts),
-						new TestErgebnis(17, Nichts, 73.0, WertMax),
-						new TestErgebnis(18, Implausibel, 73.0, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(-2, Nichts, 13, Nichts),
-						new TestErgebnis(5, Nichts, 67, Nichts),
-						new TestErgebnis(5, Implausibel, 63, WertMax) } };
+						new TestErgebnis(-4, IMPLAUSIBEL, -2.00000901, NICHTS),
+						new TestErgebnis(-3, NICHTS, -2.0, NICHTS),
+						new TestErgebnis(17, NICHTS, 73.0, WERT_MAX),
+						new TestErgebnis(18, IMPLAUSIBEL, 73.0, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(-2, NICHTS, 13, NICHTS),
+						new TestErgebnis(5, NICHTS, 67, NICHTS),
+						new TestErgebnis(5, IMPLAUSIBEL, 63, WERT_MAX) } };
 	}
 
 	/**
@@ -341,7 +357,7 @@ implements ClientSenderInterface,
 	}
 
 	/**
-	 * Alle Testfälle durchführen und Auswertung anzeigen
+	 * Alle Testfälle durchführen und Auswertung anzeigen.
 	 */
 	@Test
 	public void testeAlles() {
@@ -352,26 +368,27 @@ implements ClientSenderInterface,
 				TestErgebnis ist = this.testLauf(this.durchlaeufe[iDurchlauf],
 						this.testDatenSaetze[iDatensatz]);
 
-				System.out
-				.println("Test " + (iDurchlauf + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.println("Test " + (iDurchlauf + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
 						+ (iDatensatz + 1) + ":"); //$NON-NLS-1$
 				System.out.println("Soll: " + soll); //$NON-NLS-1$
 				System.out.println("Ist : " + ist); //$NON-NLS-1$
 				System.out.println("Ergebnis: ---" + (soll.equals(ist) ? //$NON-NLS-1$
-						"erfolgreich" //$NON-NLS-1$
+				"erfolgreich" //$NON-NLS-1$
 						: "nicht erfolgreich") + "---\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				
+
 				Assert.assertEquals(soll, ist);
 			}
 		}
 	}
 
 	/**
-	 * Führt einen Testlauf durch und produziert eine Ergebniszeile
-	 * analog der Tabelle 5-5
+	 * Führt einen Testlauf durch und produziert eine Ergebniszeile analog der
+	 * Tabelle 5-5.
 	 * 
-	 * @param dl ein Durchlauf
-	 * @param ds ein Rohdatensatz
+	 * @param dl
+	 *            ein Durchlauf
+	 * @param ds
+	 *            ein Rohdatensatz
 	 * @return das Ergebnis der Prüfung
 	 */
 	private TestErgebnis testLauf(Durchlauf dl, RohdatenSatz ds) {
@@ -433,8 +450,8 @@ implements ClientSenderInterface,
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]); //$NON-NLS-1$
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]); //$NON-NLS-1$
 		System.out
-				.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int)dl.testAtt1) //$NON-NLS-1$
-						+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int)dl.testAtt2)); //$NON-NLS-1$
+				.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt1) //$NON-NLS-1$
+						+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2)); //$NON-NLS-1$
 
 		long letzteZeit = paraZeit;
 		try {
@@ -444,12 +461,13 @@ implements ClientSenderInterface,
 		}
 
 		/**
-		 * Warten bis die Parameter über den Datenverteiler
-		 * angekommen ist
+		 * Warten bis die Parameter über den Datenverteiler angekommen ist
 		 */
 		int timeout = 100;
-		while(this.paraZeit <= letzteZeit){
-			if(timeout-- == 0)break;
+		while (this.paraZeit <= letzteZeit) {
+			if (timeout-- == 0) {
+				break;
+			}
 			try {
 				Thread.sleep(50L);
 			} catch (InterruptedException ex) {
@@ -461,26 +479,27 @@ implements ClientSenderInterface,
 		letzteZeit = ergebnisZeit;
 		System.out.println("Sende: " + ds); //$NON-NLS-1$
 		sendeDatum(ds.obj, ds.att1, ds.att2);
-		
+
 		/**
-		 * Warten bis das Ergebnis über den Datenverteiler
-		 * angekommen ist
+		 * Warten bis das Ergebnis über den Datenverteiler angekommen ist
 		 */
 		timeout = 100;
-		while(this.ergebnisZeit <= letzteZeit){
-			if(timeout-- == 0)break;
+		while (this.ergebnisZeit <= letzteZeit) {
+			if (timeout-- == 0) {
+				break;
+			}
 			try {
 				Thread.sleep(50L);
 			} catch (InterruptedException ex) {
 				// wird vernachlässigt
 			}
 		}
-				
+
 		return aktuellesErgebnis;
 	}
 
 	/**
-	 * Sendet ein Datum für ein bestimmtes Objekt an den Datenverteiler
+	 * Sendet ein Datum für ein bestimmtes Objekt an den Datenverteiler.
 	 * 
 	 * @param obj
 	 *            Das Objekt
@@ -493,23 +512,27 @@ implements ClientSenderInterface,
 		Data data = this.dav.createData(this.dav.getDataModel()
 				.getAttributeGroup(ATG_PID));
 		data.getItem("Attribut1").getUnscaledValue("Wert").set(att1); //$NON-NLS-1$ //$NON-NLS-2$
-		data.getItem("Attribut1").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-			getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
-		data.getItem("Attribut1").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-			getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
-		data.getItem("Attribut1").getItem("Status"). //$NON-NLS-1$ //$NON-NLS-2$
-			getItem("MessWertErsetzung").getItem("Implausibel").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
-		data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			getItem("Interpoliert").asUnscaledValue().set(0); //$NON-NLS-1$
+		data.getItem("Attribut1").getItem("Status").//$NON-NLS-1$ //$NON-NLS-2$
+				getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
+		data.getItem("Attribut1").getItem("Status").//$NON-NLS-1$ //$NON-NLS-2$
+				getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
+		data
+				.getItem("Attribut1").getItem("Status").//$NON-NLS-1$ //$NON-NLS-2$
+				getItem("MessWertErsetzung").getItem("Implausibel").asUnscaledValue().set(0); //$NON-NLS-1$ //$NON-NLS-2$
+		data
+				.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getItem("Interpoliert").asUnscaledValue().set(0); //$NON-NLS-1$
 		data.getItem("Attribut2").getUnscaledValue("Wert").set(att2); //$NON-NLS-1$ //$NON-NLS-2$
-		data.getItem("Attribut2").getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			getItem("WertMin").asUnscaledValue().set(0); //$NON-NLS-1$
-		data.getItem("Attribut2").getItem("Status").getItem("PlFormal"). //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			getItem("WertMax").asUnscaledValue().set(0); //$NON-NLS-1$
-		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			getItem("Implausibel").asUnscaledValue().set(0); //$NON-NLS-1$
-		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung"). //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			getItem("Interpoliert").asUnscaledValue().set(0); //$NON-NLS-1$
+		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getItem("WertMin").asUnscaledValue().set(0); //$NON-NLS-1$
+		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getItem("WertMax").asUnscaledValue().set(0); //$NON-NLS-1$
+		data
+				.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getItem("Implausibel").asUnscaledValue().set(0); //$NON-NLS-1$
+		data
+				.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				getItem("Interpoliert").asUnscaledValue().set(0); //$NON-NLS-1$
 
 		final ResultData resultat = new ResultData(obj, ddAusgang, System
 				.currentTimeMillis(), data);
@@ -527,34 +550,34 @@ implements ClientSenderInterface,
 		if (resultate != null) {
 			for (ResultData resultat : resultate) {
 				if (resultat != null && resultat.getData() != null) {
-					if(resultat.getDataDescription().equals(ddParamSoll)){
+					if (resultat.getDataDescription().equals(ddParamSoll)) {
 						this.paraZeit = resultat.getDataTime();
-					}else{
+					} else {
 						Data data = resultat.getData();
 
 						long wert1 = data
-						.getItem("Attribut1").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
+								.getItem("Attribut1").getUnscaledValue("Wert").longValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						boolean[] kennung1 = new boolean[3];
 						kennung1[0] = data
-						.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						kennung1[1] = data
-						.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut1").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						kennung1[2] = data
-						.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 						double wert2 = data
-						.getItem("Attribut2").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$ 
+								.getItem("Attribut2").getUnscaledValue("Wert").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$ 
 						boolean[] kennung2 = new boolean[3];
 						kennung2[0] = data
-						.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMin").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						kennung2[1] = data
-						.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut2").getItem("Status").getItem("PlFormal").getUnscaledValue("WertMax").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						kennung2[2] = data
-						.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getUnscaledValue("Implausibel").longValue() == 1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 						this.ergebnisZeit = resultat.getDataTime();
-						this.aktuellesErgebnis = new TestErgebnis(wert1, kennung1,
-								wert2, kennung2);
+						this.aktuellesErgebnis = new TestErgebnis(wert1,
+								kennung1, wert2, kennung2);
 					}
 				}
 			}

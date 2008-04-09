@@ -29,32 +29,33 @@ package de.bsvrz.dua.plformal.test;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>.
  * 
  * Wie Rohdatensatz in Tabelle 5-3 (S.15)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
 public class RohdatenSatz {
 
 	/**
-	 * Das Testobjekt
+	 * Das Testobjekt.
 	 */
 	public SystemObject obj;
 
 	/**
-	 * Der Wert, der in das 'AttributTest1' geschrieben werden soll
+	 * Der Wert, der in das 'AttributTest1' geschrieben werden soll.
 	 */
 	public long att1;
 
 	/**
-	 * Der Wert, der in das 'AttributTest2' geschrieben werden soll
+	 * Der Wert, der in das 'AttributTest2' geschrieben werden soll.
 	 */
 	public double att2;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param obj
 	 *            das Testobjekt
@@ -78,5 +79,3 @@ public class RohdatenSatz {
 				att1 + ", Wert2: " + att2 + "\n"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 }
-
-

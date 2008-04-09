@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -27,81 +27,89 @@
 package de.bsvrz.dua.plformal.plformal;
 
 /**
- * Konstanten, die für die Pl-Prüfung formal benötigt werden
+ * Konstanten, die für die Pl-Prüfung formal benötigt werden.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class PPFKonstanten {
+public final class PPFKonstanten {
 
 	/**
-	 * Pid <code>typ.plausibilitätsPrüfungFormal</code>
+	 * Pid <code>typ.plausibilitätsPrüfungFormal</code>.
 	 */
 	public static final String TYP = "typ.plausibilitätsPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Pid <code>atg.plausibilitätsPrüfungFormal</code>
+	 * Pid <code>atg.plausibilitätsPrüfungFormal</code>.
 	 */
 	public static final String ATG = "atg.plausibilitätsPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>ParameterSatzPlausibilitätsPrüfungFormal</code>
+	 * Name <code>ParameterSatzPlausibilitätsPrüfungFormal</code>.
 	 */
 	public static final String ATL_PARA_SATZ = "ParameterSatzPlausibilitätsPrüfungFormal"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Attributgruppe</code>
+	 * Name <code>Attributgruppe</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ATG = "Attributgruppe"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Aspekt</code>
+	 * Name <code>Aspekt</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ASP = "Aspekt"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Objekt</code>
+	 * Name <code>Objekt</code>.
 	 */
 	public static final String ATL_PARA_SATZ_OBJ = "Objekt"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>AttributSpezifikation</code>
+	 * Name <code>AttributSpezifikation</code>.
 	 */
 	public static final String ATL_PARA_SATZ_ATT_SPEZ = "AttributSpezifikation"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>AttributPfad</code>
+	 * Name <code>AttributPfad</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ATT_SPEZ_PFAD = "AttributPfad"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Min</code>
+	 * Name <code>Min</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ATT_SPEZ_MIN = "Min"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Max</code>
+	 * Name <code>Max</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ATT_SPEZ_MAX = "Max"; //$NON-NLS-1$
 
 	/**
-	 * Name <code>Optionen</code>
+	 * Name <code>Optionen</code>.
 	 */
 	public static final String ATT_PARA_SATZ_ATT_SPEZ_OPT = "Optionen"; //$NON-NLS-1$
 
 	/**
-	 * Attribut-Pfad <code>Status.PlFormal.WertMin</code>
+	 * Attribut-Pfad <code>Status.PlFormal.WertMin</code>.
 	 */
 	public static final String ATT_STATUS_MIN = "Status.PlFormal.WertMin"; //$NON-NLS-1$
 
 	/**
-	 * Attribut-Pfad <code>Status.PlFormal.WertMax</code>
+	 * Attribut-Pfad <code>Status.PlFormal.WertMax</code>.
 	 */
 	public static final String ATT_STATUS_MAX = "Status.PlFormal.WertMax"; //$NON-NLS-1$
 
 	/**
-	 * Attribut-Pfad <code>Status.MessWertErsetzung.Implausibel</code>
+	 * Attribut-Pfad <code>Status.MessWertErsetzung.Implausibel</code>.
 	 */
 	public static final String ATT_STATUS_IMPLAUSIBEL = "Status.MessWertErsetzung.Implausibel"; //$NON-NLS-1$
 
+	/**
+	 * Standardkonstruktor.
+	 */
+	private PPFKonstanten() {
+		
+	}
+	
 }

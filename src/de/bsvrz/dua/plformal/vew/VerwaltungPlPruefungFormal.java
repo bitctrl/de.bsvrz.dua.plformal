@@ -41,105 +41,102 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Implementierung des Moduls Verwaltung der SWE PL-Prüfung formal.
- * Dieses Modul erfragt die zu überprüfenden Daten aus der Parametrierung
- * und initialisiert damit das Modul PL-Prüfung formal, das dann die 
- * eigentliche Prüfung durchführt.
+ * Implementierung des Moduls Verwaltung der SWE PL-Prüfung formal. Dieses Modul
+ * erfragt die zu überprüfenden Daten aus der Parametrierung und initialisiert
+ * damit das Modul PL-Prüfung formal, das dann die eigentliche Prüfung
+ * durchführt.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class VerwaltungPlPruefungFormal
-extends AbstraktVerwaltungsAdapter
-implements IPPFVersorgerListener{
-	
+public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
+		implements IPPFVersorgerListener {
+
 	/**
-	 * Debug-Logger
+	 * Debug-Logger.
 	 */
 	protected static final Debug LOGGER = Debug.getLogger();
 
 	/**
-	 * Instanz des Moduls PL-Prüfung formal
+	 * Instanz des Moduls PL-Prüfung formal.
 	 */
 	private PlPruefungFormal plPruefungFormal = null;
-		
+
 	/**
-	 * Verwaltung für alle Empfangsanmeldungen dieses Moduls
+	 * Verwaltung für alle Empfangsanmeldungen dieses Moduls.
 	 */
 	private DAVEmpfangsAnmeldungsVerwaltung empfangsVerwaltung = null;
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public SWETyp getSWETyp() {
 		return SWETyp.PL_PRUEFUNG_FORMAL;
 	}
-		
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void aktualisiereParameter(IPPFVersorger parameter) {
 		/**
-		 * Die Menge der für diese SWE betrachteten
-		 * Objekte ändert sich dynamisch 
+		 * Die Menge der für diese SWE betrachteten Objekte ändert sich
+		 * dynamisch
 		 */
 		this.objekte = parameter.getBetrachteteObjekte();
-		
-		this.empfangsVerwaltung.modifiziereObjektAnmeldung(
-				parameter.getObjektAnmeldungen());
+
+		this.empfangsVerwaltung.modifiziereObjektAnmeldung(parameter
+				.getObjektAnmeldungen());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initialisiere()
-	throws DUAInitialisierungsException {
+	protected void initialisiere() throws DUAInitialisierungsException {
 		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(
-										this.verbindung,
-										ReceiverRole.receiver(),
-										ReceiveOptions.delayed(),
-										this);
-		
+				this.verbindung, ReceiverRole.receiver(), ReceiveOptions
+						.delayed(), this);
+
 		this.plPruefungFormal = new PlPruefungFormal(
 				new PPFStandardAspekteVersorger(this).getStandardPubInfos());
 		this.plPruefungFormal.setPublikation(true);
 		this.plPruefungFormal.initialisiere(this);
-		
+
 		/**
-		 * An dieser Stelle werden die Parameter der formalen Plausibilisierung 
+		 * An dieser Stelle werden die Parameter der formalen Plausibilisierung
 		 * auch ausgewertet, da sich hier aus Gründen der Systemarchitektur auf
-		 * die Daten angemeldet werden muss, die innerhalb der Untermodule 
+		 * die Daten angemeldet werden muss, die innerhalb der Untermodule
 		 * plausibilisiert werden sollen.
 		 */
-		PPFVersorger.getInstanz(this).addListener(this);			
+		PPFVersorger.getInstanz(this).addListener(this);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void update(ResultData[] resultate) {
 		this.plPruefungFormal.aktualisiereDaten(resultate);
 	}
-	
+
 	/**
-	 * Startet diese Applikation
+	 * Startet diese Applikation.
 	 * 
-	 * @param args Argumente der Kommandozeile
+	 * @param argumente
+	 *            Argumente der Kommandozeile
 	 */
-	public static void main(String argumente[]){
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.
-        				UncaughtExceptionHandler(){
-            public void uncaughtException(@SuppressWarnings("unused")
-			Thread t, Throwable e) {
-                LOGGER.error("Applikation wird wegen" +  //$NON-NLS-1$
-                		" unerwartetem Fehler beendet", e);  //$NON-NLS-1$
-                Runtime.getRuntime().exit(0);
-            }
-        });
-		StandardApplicationRunner.run(
-					new VerwaltungPlPruefungFormal(),argumente);
+	public static void main(String[] argumente) {
+		Thread
+				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+					public void uncaughtException(@SuppressWarnings("unused")
+					Thread t, Throwable e) {
+						LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
+								" unerwartetem Fehler beendet", e); //$NON-NLS-1$
+						Runtime.getRuntime().exit(0);
+					}
+				});
+		StandardApplicationRunner.run(new VerwaltungPlPruefungFormal(),
+				argumente);
 	}
-	
+
 }

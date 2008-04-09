@@ -33,76 +33,77 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
  * Über diese Klasse werden alle im DAV-Enumerationstyp
- * <code>att.optionenPlausibilitätsPrüfungFormalGlobal</code>
- * beschriebenen Werte zur Verfügung gestellt.
+ * <code>att.optionenPlausibilitätsPrüfungFormalGlobal</code> beschriebenen
+ * Werte zur Verfügung gestellt.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class PlausibilisierungsMethode
-extends AbstractDavZustand{
+public final class PlausibilisierungsMethode extends AbstractDavZustand {
 
 	/**
-	 * Der Wertebereich dieses DAV-Enumerationstypen
+	 * Der Wertebereich dieses DAV-Enumerationstypen.
 	 */
-	private static Map<Integer, PlausibilisierungsMethode> WERTE_BEREICH = 
-						new HashMap<Integer, PlausibilisierungsMethode>();
-	
+	private static Map<Integer, PlausibilisierungsMethode> werteBereich = new HashMap<Integer, PlausibilisierungsMethode>();
+
 	/**
 	 * Wertebereichsprüfung wird NICHT durchgeführt. Wert wird nicht verändert,
 	 * es werden keine Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = 
-		new PlausibilisierungsMethode("Keine Prüfung", 0); //$NON-NLS-1$
-	
+	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = new PlausibilisierungsMethode(
+			"Keine Prüfung", 0); //$NON-NLS-1$
+
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Fehlerhafte Werte werden 
-	 * nicht verändert, es werden nur die Statusflags gesetzt
+	 * Wertebereichsprüfung wird durchgeführt. Fehlerhafte Werte werden nicht
+	 * verändert, es werden nur die Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode NUR_PRUEFUNG = 
-		new PlausibilisierungsMethode("NurPrüfung", 1); //$NON-NLS-1$
-	
+	public static final PlausibilisierungsMethode NUR_PRUEFUNG = new PlausibilisierungsMethode(
+			"NurPrüfung", 1); //$NON-NLS-1$
+
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunter- bzw.
 	 * überschreitung wird der Wert auf den parametrierten Min- bzw. /Max-Wert
-	 * korrigiert und die Statusflags gesetzt 
+	 * korrigiert und die Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode SETZE_MIN_MAX = 
-		new PlausibilisierungsMethode("Setze MinMax", 2); //$NON-NLS-1$
-	
+	public static final PlausibilisierungsMethode SETZE_MIN_MAX = new PlausibilisierungsMethode(
+			"Setze MinMax", 2); //$NON-NLS-1$
+
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunterschreitung
-	 * wird der Wert auf den parametrierten Min-Wert korrigiert und die
-	 * Statusflags gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
+	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunterschreitung wird
+	 * der Wert auf den parametrierten Min-Wert korrigiert und die Statusflags
+	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
 	 */
-	public static final PlausibilisierungsMethode SETZE_MIN = 
-		new PlausibilisierungsMethode("Setze Min", 3); //$NON-NLS-1$
+	public static final PlausibilisierungsMethode SETZE_MIN = new PlausibilisierungsMethode(
+			"Setze Min", 3); //$NON-NLS-1$
 
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsüberschreitung wird
 	 * der Wert auf den parametrierten Max-Wert korrigiert und die Statusflags
 	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
 	 */
-	public static final PlausibilisierungsMethode SETZE_MAX = 
-		new PlausibilisierungsMethode("Setze Max", 4); //$NON-NLS-1$
-		
-	
+	public static final PlausibilisierungsMethode SETZE_MAX = new PlausibilisierungsMethode(
+			"Setze Max", 4); //$NON-NLS-1$
+
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor.
+	 * 
+	 * @param name der Name 
+	 * @param code der Code
 	 */
-	private PlausibilisierungsMethode(String name, int code){
+	private PlausibilisierungsMethode(String name, int code) {
 		super(code, name);
-		WERTE_BEREICH.put(code, this);
+		werteBereich.put(code, this);
 	}
-	
+
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen 
-	 * mit dem übergebenen Code
-	 *
-	 * @param der Code des Enumerations-Wertes
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * 
+	 * @param code 
+	 * 			der Code des Enumerations-Wertes
+	 * @return den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
 	 */
-	public static final PlausibilisierungsMethode getZustand(int code){
-		return WERTE_BEREICH.get(code);
+	public static PlausibilisierungsMethode getZustand(int code) {
+		return werteBereich.get(code);
 	}
 }
-

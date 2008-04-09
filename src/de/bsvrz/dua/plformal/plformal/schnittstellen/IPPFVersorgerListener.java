@@ -1,5 +1,5 @@
 /**
- * Segment 4 Datenübernahme und Aufbereitung, SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
  * Copyright (C) 2007 BitCtrl Systems GmbH 
  * 
  * This program is free software; you can redistribute it and/or modify it under
@@ -26,26 +26,24 @@
 
 package de.bsvrz.dua.plformal.plformal.schnittstellen;
 
-
 /**
- * Dieses Interface muss von allen Klassen implementiert
- * werden, die aktuellen Informationen über die Parameter
- * zur formalen Plausibilisierung über das Interface
- * <code>IPPFVersorger</code> empfangen wollen.
+ * Dieses Interface muss von allen Klassen implementiert werden, die aktuellen
+ * Informationen über die Parameter zur formalen Plausibilisierung über das
+ * Interface <code>IPPFVersorger</code> empfangen wollen.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public interface IPPFVersorgerListener {
 
 	/**
-	 * Aktualisiert die Parameter zur formalen
-	 * Plausibilisierung
+	 * Aktualisiert die Parameter zur formalen Plausibilisierung.
 	 * 
-	 * @param parameter Zugriff auf alle aktuellen
-	 * Parameter der formalen Plausibilisierung
-	 * (niemals <code>null</code>)
+	 * @param parameter
+	 *            Zugriff auf alle aktuellen Parameter der formalen
+	 *            Plausibilisierung (niemals <code>null</code>)
 	 */
-	public void aktualisiereParameter(final IPPFVersorger parameter);
-	
+	void aktualisiereParameter(final IPPFVersorger parameter);
+
 }

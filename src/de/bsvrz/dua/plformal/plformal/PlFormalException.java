@@ -23,25 +23,27 @@
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
  */
+
 package de.bsvrz.dua.plformal.plformal;
 
 /**
- * Wird geworfen, wenn die Plausibilisierung nicht durchgefuehrt
- * werden kann (aufgrund von z.B. fehlerhaften Parametern)
+ * Wird geworfen, wenn die Plausibilisierung nicht durchgefuehrt werden kann
+ * (aufgrund von z.B. fehlerhaften Parametern)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class PlFormalException
-extends Exception{
+public class PlFormalException extends Exception {
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param text der Fehlertext
+	 * @param text
+	 *            der Fehlertext
 	 */
-	public PlFormalException(final String text){
+	public PlFormalException(final String text) {
 		super(text);
 	}
-	
+
 }

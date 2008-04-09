@@ -27,37 +27,38 @@
 package de.bsvrz.dua.plformal.test;
 
 /**
- * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>.
  * 
  * Klasse zur Repräsentation eines Ergebnisses wie in Tabelle 5-5 (S.16)
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
 public class TestErgebnis {
 
 	/**
-	 * Ergebniswert von Attribut1
+	 * Ergebniswert von Attribut1.
 	 */
 	public long wert1;
 
 	/**
-	 * Ergebniskennung von Attribut1
+	 * Ergebniskennung von Attribut1.
 	 */
 	public boolean[] kennung1;
 
 	/**
-	 * Ergebniswert von Attribut2
+	 * Ergebniswert von Attribut2.
 	 */
 	public double wert2;
 
 	/**
-	 * Ergebniskennung von Attribut2
+	 * Ergebniskennung von Attribut2.
 	 */
 	public boolean[] kennung2;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param wert1
 	 *            Ergebniswert von Attribut1
@@ -98,7 +99,7 @@ public class TestErgebnis {
 	}
 
 	/**
-	 * Ermittelt die Kennung aus dem Bool-Array
+	 * Ermittelt die Kennung aus dem Bool-Array.
 	 * 
 	 * @param k
 	 *            Bool-Array mit verschlüsselter Kennung

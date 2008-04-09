@@ -27,32 +27,35 @@
 package de.bsvrz.dua.plformal.test;
 
 /**
- * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>.
  * 
  * Wie Durchlauf in Tabelle 5-4
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
 public class Durchlauf {
 
 	/**
-	 * Parameter für die Plausibilisierung (Manipulation)
-	 * eines als implausibel erkannten Wertes von AttributTest1
+	 * Parameter für die Plausibilisierung (Manipulation) eines als implausibel
+	 * erkannten Wertes von AttributTest1.
 	 */
 	public long testAtt1;
 
 	/**
-	 * Parameter für die Plausibilisierung (Manipulation)
-	 * eines als implausibel erkannten Wertes von AttributTest2
+	 * Parameter für die Plausibilisierung (Manipulation) eines als implausibel
+	 * erkannten Wertes von AttributTest2.
 	 */
 	public long testAtt2;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
-	 * @param testAtt1 Plausibilisierungsparameter für AttributTest1
-	 * @param testAtt2 Plausibilisierungsparameter für AttributTest2
+	 * @param testAtt1
+	 *            Plausibilisierungsparameter für AttributTest1
+	 * @param testAtt2
+	 *            Plausibilisierungsparameter für AttributTest2
 	 */
 	public Durchlauf(long testAtt1, long testAtt2) {
 		this.testAtt1 = testAtt1;

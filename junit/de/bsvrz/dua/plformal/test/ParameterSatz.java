@@ -36,26 +36,27 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
  * 
+ * @version $Id$
  */
 public class ParameterSatz {
 
 	/**
-	 * das Testobjekt
+	 * das Testobjekt.
 	 */
 	public SystemObject obj;
 
 	/**
-	 * Test-Intervall für Ganzzahl-Attribut
+	 * Test-Intervall für Ganzzahl-Attribut.
 	 */
 	public long min1, max1;
 
 	/**
-	 * Test-Intervall für Kommazahl-Attribut
+	 * Test-Intervall für Kommazahl-Attribut.
 	 */
 	public long min2, max2;
 
 	/**
-	 * Standardkonstruktor
+	 * Standardkonstruktor.
 	 * 
 	 * @param obj
 	 *            das Testobjekt
@@ -85,4 +86,5 @@ public class ParameterSatz {
 		return obj + " --> Attribut1[" + min1 + ", " + max1 + "], " + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				"Attribut2[" + min2 + ", " + max2 + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-}	
+}
+

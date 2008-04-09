@@ -31,23 +31,26 @@ import de.bsvrz.sys.funclib.bitctrl.dua.StandardAspekteVersorger;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 
 /**
- * Diese Klasse repräsentiert die Versorgung des Moduls
- * Pl-Prüfung formal (innerhalb der SWE Pl-Prüfung formal)
- * mit Standard-Publikationsinformationen (Zuordnung von
- * Objekt-Datenbeschreibung-Kombination zu Standard-
+ * Diese Klasse repräsentiert die Versorgung des Moduls Pl-Prüfung formal
+ * (innerhalb der SWE Pl-Prüfung formal) mit Standard-Publikationsinformationen
+ * (Zuordnung von Objekt-Datenbeschreibung-Kombination zu Standard-
  * Publikationsaspekt).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- *
+ * 
+ * @version $Id$
  */
-public class PPFStandardAspekteVersorger 
-extends StandardAspekteVersorger{
+public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
+
 
 	/**
-	 * {@inheritDoc}
+	 * Standardkonstruktor.
+	 * 
+	 * @param verwaltung Verbinsung zum Verwaltungsmodul
+	 * @throws DUAInitialisierungsException wird weitergereicht
 	 */
 	public PPFStandardAspekteVersorger(IVerwaltung verwaltung)
-	throws DUAInitialisierungsException {
+			throws DUAInitialisierungsException {
 		super(verwaltung);
 	}
 
@@ -55,32 +58,29 @@ extends StandardAspekteVersorger{
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void init()
-	throws DUAInitialisierungsException{
-		
-//		/**
-//		 * Test Standardaspekte
-//		 */			
-//		this.standardAspekte = new StandardAspekteAdapter(
-//				new StandardPublikationsZuordnung[] {
-//						new StandardPublikationsZuordnung(
-//								"typ.testPlPrüfungFormal", //$NON-NLS-1$
-//								"atg.testPlPrüfungFormal", //$NON-NLS-1$
-//								"asp.testAusgang", //$NON-NLS-1$
-//								"asp.testEingang") }); //$NON-NLS-1$
+	protected void init() throws DUAInitialisierungsException {
+
+		// /**
+		// * Test Standardaspekte
+		// */
+		// this.standardAspekte = new StandardAspekteAdapter(
+		// new StandardPublikationsZuordnung[] {
+		// new StandardPublikationsZuordnung(
+		// "typ.testPlPrüfungFormal", //$NON-NLS-1$
+		// "atg.testPlPrüfungFormal", //$NON-NLS-1$
+		// "asp.testAusgang", //$NON-NLS-1$
+		// "asp.testEingang") }); //$NON-NLS-1$
 
 		this.standardAspekte = new StandardAspekteAdapter(
 				new StandardPublikationsZuordnung[] {
-						new StandardPublikationsZuordnung(
-								"typ.fahrStreifen", //$NON-NLS-1$
+						new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
 								"atg.verkehrsDatenKurzZeitIntervall", //$NON-NLS-1$
 								"asp.externeErfassung", //$NON-NLS-1$
 								"asp.plausibilitätsPrüfungFormal"), //$NON-NLS-1$
-						new StandardPublikationsZuordnung(
-								"typ.fahrStreifen", //$NON-NLS-1$
+						new StandardPublikationsZuordnung("typ.fahrStreifen", //$NON-NLS-1$
 								"atg.verkehrsDatenLangZeitIntervall", //$NON-NLS-1$
 								"asp.externeErfassung", //$NON-NLS-1$
 								"asp.plausibilitätsPrüfungFormal") }); //$NON-NLS-1$
-					
-	}	
+
+	}
 }

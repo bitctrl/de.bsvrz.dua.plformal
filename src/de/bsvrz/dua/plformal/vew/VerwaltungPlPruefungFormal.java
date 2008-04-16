@@ -38,7 +38,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapter;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVEmpfangsAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
-import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Implementierung des Moduls Verwaltung der SWE PL-Prüfung formal. Dieses Modul
@@ -52,11 +51,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
 		implements IPPFVersorgerListener {
-
-	/**
-	 * Debug-Logger.
-	 */
-	protected static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Instanz des Moduls PL-Prüfung formal.

@@ -58,11 +58,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class PPFPlausibilisierungsBeschreibungen {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * Alle Informationen, die zur Plausibilisierung einer
 	 * Systemobjekt-Attributgruppen-Aspekt-Kombination notwendig sind.
 	 */
@@ -143,7 +138,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
 				} catch (IllegalArgumentException ex) {
-					LOGGER.warning("", ex); //$NON-NLS-1$
+					Debug.getLogger().warning("", ex); //$NON-NLS-1$
 				}
 			}
 		} else {
@@ -151,7 +146,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 					+ DUAKonstanten.NULL);
 		}
 
-		LOGGER.info(this.toString());
+		Debug.getLogger().info(this.toString());
 	}
 
 	/**
@@ -175,15 +170,15 @@ public class PPFPlausibilisierungsBeschreibungen {
 				if (objBeschr != null) {
 					ergebnis.addAll(objBeschr.getAttributSpezifikationen());
 				} else {
-					LOGGER.fine("Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
+					Debug.getLogger().fine("Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
 							" gefunden für: " + resultat); //$NON-NLS-1$
 				}
 			} catch (IllegalArgumentException ex) {
-				LOGGER.error("Attributspezifikationen konnten" + //$NON-NLS-1$
+				Debug.getLogger().error("Attributspezifikationen konnten" + //$NON-NLS-1$
 						" nicht ausgelesen werden", ex); //$NON-NLS-1$
 			}
 		} else {
-			LOGGER
+			Debug.getLogger()
 					.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL); //$NON-NLS-1$
 		}
 

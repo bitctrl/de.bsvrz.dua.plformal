@@ -67,11 +67,6 @@ public final class PPFVersorger implements IPPFVersorger,
 		ClientReceiverInterface {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * die statische Instanz dieser Klasse.
 	 */
 	private static PPFVersorger instanz = null;
@@ -151,7 +146,7 @@ public final class PPFVersorger implements IPPFVersorger,
 					" formalen Plausibilisierung", t); //$NON-NLS-1$
 		}
 
-		LOGGER.config("Initialisierung erfolgreich.\n" + //$NON-NLS-1$
+		Debug.getLogger().config("Initialisierung erfolgreich.\n" + //$NON-NLS-1$
 				"Für die formale Plausibilisierung" + //$NON-NLS-1$
 				" wird das Objekt " + plausbibilisierungsObjekt + //$NON-NLS-1$ 
 				" verwendet."); //$NON-NLS-1$
@@ -203,7 +198,7 @@ public final class PPFVersorger implements IPPFVersorger,
 
 			if (plausibilisierungsObjekte.length > 0) {
 				if (plausibilisierungsObjekte.length > 1) {
-					LOGGER.warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
+					Debug.getLogger().warning("Es liegen mehrere Objekte vom Typ " + //$NON-NLS-1$
 							PPFKonstanten.TYP + " vor"); //$NON-NLS-1$
 				}
 				instanz = new PPFVersorger(verwaltung,
@@ -225,7 +220,7 @@ public final class PPFVersorger implements IPPFVersorger,
 		PPFPlausibilisierungsBeschreibungen neuePlBeschreibungen = new PPFPlausibilisierungsBeschreibungen(
 				verwaltung);
 		boolean fehler = false;
-		LOGGER.info("Neue Parameter empfangen"); //$NON-NLS-1$
+		Debug.getLogger().info("Neue Parameter empfangen"); //$NON-NLS-1$
 
 		if (resultate != null && resultate.length > 0) {
 			/**
@@ -245,10 +240,10 @@ public final class PPFVersorger implements IPPFVersorger,
 					for (int i = 0; i < parameterSaetze.getLength(); i++) {
 						neuePlBeschreibungen.addParameterSatz(parameterSaetze
 								.getItem(i));
-						LOGGER.fine(parameterSaetze.getItem(i).toString());
+						Debug.getLogger().fine(parameterSaetze.getItem(i).toString());
 					}
 				} catch (PlFormalException e) {
-					LOGGER.warning("Parameterdatensatz für die formale" + //$NON-NLS-1$
+					Debug.getLogger().warning("Parameterdatensatz für die formale" + //$NON-NLS-1$
 							" Plausibilisierung konnte nicht" + //$NON-NLS-1$
 							" ausgelesen werden", e); //$NON-NLS-1$
 					fehler = true;
@@ -268,7 +263,7 @@ public final class PPFVersorger implements IPPFVersorger,
 			}
 		}
 
-		LOGGER.info(this.toString());
+		Debug.getLogger().info(this.toString());
 	}
 
 	/**
@@ -302,7 +297,7 @@ public final class PPFVersorger implements IPPFVersorger,
 		Data ergebnis = null;
 
 		if (plBeschreibungen == null) {
-			LOGGER.fine("Es wurden noch keine Parameter" + //$NON-NLS-1$
+			Debug.getLogger().fine("Es wurden noch keine Parameter" + //$NON-NLS-1$
 					" für die formale Plausibilisierung empfangen"); //$NON-NLS-1$
 		} else if (resultat != null && resultat.hasData()
 				&& resultat.getData() != null) {
@@ -319,12 +314,12 @@ public final class PPFVersorger implements IPPFVersorger,
 					}
 				}
 			} else {
-				LOGGER
+				Debug.getLogger()
 						.fine("ResultData " + resultat + //$NON-NLS-1$
 								" ist nicht zur formalen Plausibilisierung vorgesehen."); //$NON-NLS-1$
 			}
 		} else {
-			LOGGER.fine("Das formal zu prüfende Datum" + //$NON-NLS-1$
+			Debug.getLogger().fine("Das formal zu prüfende Datum" + //$NON-NLS-1$
 					" enthält keine sinnvollen Daten: " + //$NON-NLS-1$
 					(resultat == null ? DUAKonstanten.NULL : resultat));
 		}
@@ -429,7 +424,7 @@ public final class PPFVersorger implements IPPFVersorger,
 					ergebnis = dummy;
 				}
 			} else {
-				LOGGER
+				Debug.getLogger()
 						.warning("Für Datum " + datum + " ist die Attributspezifikation "//$NON-NLS-1$ //$NON-NLS-2$
 								+ "unvollständig: " + attSpez); //$NON-NLS-1$
 			}
@@ -508,13 +503,13 @@ public final class PPFVersorger implements IPPFVersorger,
 				if (status != null) {
 					status.asUnscaledValue().set(wert ? 1 : 0);
 				} else {
-					LOGGER.warning("Statuswert konnte nicht" + //$NON-NLS-1$
+					Debug.getLogger().warning("Statuswert konnte nicht" + //$NON-NLS-1$
 							" ausgelesen werden:\n" + //$NON-NLS-1$
 							"Datum: " + datum + "\nAttr.-Pfad: " + attPfad + //$NON-NLS-1$ //$NON-NLS-2$
 							"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$					
 				}
 			} else {
-				LOGGER.error("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
+				Debug.getLogger().error("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
 						" erstellt werden:\n" + //$NON-NLS-1$
 						"Datum: " + datum + "\nAttr.-Pfad: " + attPfad + //$NON-NLS-1$ //$NON-NLS-2$
 						"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$

@@ -58,11 +58,6 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
 		implements IPPFVersorgerListener {
 
 	/**
-	 * Debug-Logger.
-	 */
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
 	 * die Parameter der formalen Plausibilisierung.
 	 */
 	private IPPFVersorger ppfParameter = null;
@@ -164,10 +159,10 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
 	 */
 	public void aktualisiereDaten(ResultData[] resultate) {
 		if (this.ppfParameter == null) {
-			LOGGER.fine("Es wurden noch keine" + //$NON-NLS-1$
+			Debug.getLogger().fine("Es wurden noch keine" + //$NON-NLS-1$
 					" Plausibilisierungsparameter empfangen"); //$NON-NLS-1$
 			if (this.knoten != null) {
-				LOGGER.fine("Die Datenwerden nur" + //$NON-NLS-1$
+				Debug.getLogger().fine("Die Datenwerden nur" + //$NON-NLS-1$
 						" weitergereicht an: " + this.knoten); //$NON-NLS-1$
 				this.knoten.aktualisiereDaten(resultate);
 			}
@@ -221,7 +216,8 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
 						.toArray(new ResultData[0]));
 			}
 		} else {
-			LOGGER.fine("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
+			Debug.getLogger()
+					.fine("Es wurden keine sinnvollen Daten empfangen"); //$NON-NLS-1$
 		}
 	}
 

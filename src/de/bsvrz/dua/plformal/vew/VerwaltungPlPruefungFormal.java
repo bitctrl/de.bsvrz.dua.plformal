@@ -126,15 +126,6 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
 	 *            Argumente der Kommandozeile
 	 */
 	public static void main(String[] argumente) {
-		Thread
-				.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-					public void uncaughtException(@SuppressWarnings("unused")
-					Thread t, Throwable e) {
-						LOGGER.error("Applikation wird wegen" + //$NON-NLS-1$
-								" unerwartetem Fehler beendet", e); //$NON-NLS-1$
-						Runtime.getRuntime().exit(0);
-					}
-				});
 		StandardApplicationRunner.run(new VerwaltungPlPruefungFormal(),
 				argumente);
 	}

@@ -35,9 +35,12 @@ import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.DataDescription;
+import de.bsvrz.dav.daf.main.DataNotSubscribedException;
+import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
+import de.bsvrz.dav.daf.main.SendSubscriptionNotConfirmed;
 import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
@@ -47,6 +50,8 @@ import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
 import de.bsvrz.sys.funclib.bitctrl.daf.DaVKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
+import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
  * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
@@ -197,11 +202,111 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 	private SystemObject ppfObjekt = null;
 
 	/**
+	 * Setzt die Datenflusssteuerung auf die Parameter, wie innerhalb der
+	 * Pruefspezifikation dokumentiert ist.
+	 * 
+	 * @param dav1
+	 *            Verbindung zum Datenverteiler
+	 */
+	public final void setzeDfsParameter(ClientDavInterface dav1) {
+		DataDescription datenBeschreibung = new DataDescription(dav1
+				.getDataModel().getAttributeGroup("atg.datenflussSteuerung"),
+				dav1.getDataModel().getAspect("asp.parameterVorgabe"));
+
+		ClientSenderInterface parameterSender = new ClientSenderInterface() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			public void dataRequest(SystemObject object,
+					DataDescription dataDescription, byte state) {
+				//
+			}
+
+			/**
+			 * {@inheritDoc}
+			 */
+			public boolean isRequestSupported(SystemObject object,
+					DataDescription dataDescription) {
+				return false;
+			}
+
+		};
+
+		try {
+			dav1.subscribeSender(parameterSender, dav1.getDataModel().getType(
+					"typ.datenflussSteuerung").getElements().get(0),
+					datenBeschreibung, SenderRole.sender());
+			try {
+				Thread.sleep(10000L);
+			} catch (InterruptedException ex) {
+				//
+			}
+		} catch (OneSubscriptionPerSendData e) {
+			throw new RuntimeException(e);
+		}
+
+		Data atgData = dav1.createData(datenBeschreibung.getAttributeGroup());
+
+		atgData.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
+				.setSystemObject(null);
+		atgData.getItem("Urlasser").getTextValue("Ursache").setText("");
+		atgData.getItem("Urlasser").getTextValue("Veranlasser").setText("");
+
+		atgData.getArray("ParameterSatz").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE")
+				.setText("SWE_PL_Prüfung_formal");
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0)
+				.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getReferenceValue(
+				"PublikationsAspekt").setSystemObject(
+				dav1.getDataModel().getAspect("asp.testEingang"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getReferenceArray("Objekt")
+				.setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getReferenceArray("Objekt")
+				.getReferenceValue(0).setSystemObject(
+						dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getReferenceArray(
+				"AttributGruppe").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getReferenceArray(
+				"AttributGruppe").getReferenceValue(0).setSystemObject(
+				dav1.getDataModel().getObject("atg.testPlPrüfungFormal"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray(
+				"PublikationsZuordnung").getItem(0).getUnscaledValue(
+				"Publizieren").set(DUAKonstanten.JA);
+
+		ResultData resultat = new ResultData(dav1.getDataModel().getType(
+		"typ.datenflussSteuerung").getElements().get(0), datenBeschreibung, System
+				.currentTimeMillis(), atgData);
+
+		try {
+			dav1.sendData(resultat);
+		} catch (DataNotSubscribedException e) {
+			throw new RuntimeException(e);
+		} catch (SendSubscriptionNotConfirmed e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Before
 	public void setUp() throws Exception {
 		dav = DAVTest.getDav();
+
+		DUAUtensilien.setAlleParameter(dav);
+
+		setzeDfsParameter(dav);
 
 		AttributeGroup atg = this.dav.getDataModel().getAttributeGroup(ATG_PID);
 		Aspect eingang = this.dav.getDataModel().getAspect(ASP_EINGANG_PID);
@@ -249,7 +354,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		try {
 			Thread.sleep(1000L);
 		} catch (InterruptedException e) { //
-			
+
 		}
 
 		/**

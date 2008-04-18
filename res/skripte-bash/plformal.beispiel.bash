@@ -9,8 +9,8 @@ cd `dirname $0`
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #
 ################################################################################
 
-kb=""
-dfs=""
+kb="kb.aoe.bitctrl.tester,kb.duaTestModellUndObjekte"
+dfs="bitctrl.dfs"
 
 ################################################################################
 # Folgende Parameter müssen überprüft und evtl. angepasst werden               #
@@ -35,8 +35,8 @@ fi
 # Applikation starten
 java $jvmArgs -jar ../de.bsvrz.dua.plformal-runtime.jar \
 	$dav1 \
-	$kb \
-	$dfs \
+	-KonfigurationsBereichsPid=$kb \
+	-dfs=$dfs \
 	-debugLevelFileText=all \
 	-debugLevelStdErrText=:error \
 	-debugSetLoggerAndLevel=:none \

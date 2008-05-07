@@ -509,10 +509,10 @@ public final class PPFVersorger implements IPPFVersorger,
 							"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$					
 				}
 			} else {
-				Debug.getLogger().error("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
+				throw new RuntimeException("Attributpfad zum Statuswert konnte nicht" + //$NON-NLS-1$
 						" erstellt werden:\n" + //$NON-NLS-1$
 						"Datum: " + datum + "\nAttr.-Pfad: " + attPfad + //$NON-NLS-1$ //$NON-NLS-2$
-						"\nErsetzung: " + attPfadErsetzung); //$NON-NLS-1$
+						"\nErsetzung: " + attPfadErsetzung);
 			}
 		}
 	}

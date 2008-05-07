@@ -162,20 +162,16 @@ public class PPFPlausibilisierungsBeschreibungen {
 		Collection<PPFAttributSpezifikation> ergebnis = new HashSet<PPFAttributSpezifikation>();
 
 		if (resultat != null) {
-			try {
-				DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(
-						resultat);
-				BeschreibungFuerObjekt objBeschr = this.resDataInfos
-						.get(objektAnmeldung);
-				if (objBeschr != null) {
-					ergebnis.addAll(objBeschr.getAttributSpezifikationen());
-				} else {
-					Debug.getLogger().fine("Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
-							" gefunden für: " + resultat); //$NON-NLS-1$
-				}
-			} catch (IllegalArgumentException ex) {
-				Debug.getLogger().error("Attributspezifikationen konnten" + //$NON-NLS-1$
-						" nicht ausgelesen werden", ex); //$NON-NLS-1$
+			DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(
+					resultat);
+			BeschreibungFuerObjekt objBeschr = this.resDataInfos
+					.get(objektAnmeldung);
+			if (objBeschr != null) {
+				ergebnis.addAll(objBeschr.getAttributSpezifikationen());
+			} else {
+				Debug.getLogger().fine(
+						"Es wurde keine Plausibilisierungsvorschrift" + //$NON-NLS-1$
+								" gefunden für: " + resultat); //$NON-NLS-1$
 			}
 		} else {
 			Debug.getLogger()

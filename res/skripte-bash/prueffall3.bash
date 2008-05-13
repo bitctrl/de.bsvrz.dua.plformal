@@ -21,7 +21,7 @@ appname=plformal
 #     Testroutinen     #
 ########################
 tests[$index]="test.PlPruefungFormalTest"
-testTexts[$index]="Test entsprechend Pruefspezifikation"
+testTexts[$index]="Test entsprechend Pruefspezifikation (Anf. DUA-1, DUA-3, DUA-4)"
 index=$(($index+1))
 
 tests[$index]="allgemein.DUAUtensilienTest"

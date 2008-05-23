@@ -47,7 +47,7 @@ public final class DAVTest {
 //	 * Verbindungsdaten.
 //	 */
 //	private static final String[] CON_DATA = new String[] {
-//			"-datenverteiler=10.44.44.10:8083", //$NON-NLS-1$ 
+//			"-datenverteiler=localhost:8083", //$NON-NLS-1$ 
 //			"-benutzer=Tester", //$NON-NLS-1$
 //			"-authentifizierung=c:\\passwd" }; //$NON-NLS-1$
 

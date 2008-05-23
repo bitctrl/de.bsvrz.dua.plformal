@@ -35,7 +35,7 @@ import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
 import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
-import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapter;
+import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktVerwaltungsAdapterMitGuete;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVEmpfangsAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 
@@ -49,7 +49,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
  * 
  * @version $Id$
  */
-public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
+public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGuete
 		implements IPPFVersorgerListener {
 
 	/**
@@ -88,10 +88,12 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
 	 */
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
+		super.initialisiere();
+		
 		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(
 				this.verbindung, ReceiverRole.receiver(), ReceiveOptions
 						.delayed(), this);
-
+	
 		this.plPruefungFormal = new PlPruefungFormal(
 				new PPFStandardAspekteVersorger(this).getStandardPubInfos());
 		this.plPruefungFormal.setPublikation(true);
@@ -124,4 +126,17 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapter
 				argumente);
 	}
 
+	/**
+	 * {@inheritDoc}.<br>
+	 * 
+	 * Standard-Gütefaktor für Ersetzungen (90%)<br>
+	 * Wenn das Modul Pl-Prüfung logisch LVE einen Messwert ersetzt (eigentlich
+	 * nur bei Wertebereichsprüfung) so vermindert sich die Güte des
+	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert über die
+	 * Kommandozeile übergeben wurde)
+	 */
+	@Override
+	public double getStandardGueteFaktor() {
+		return 0.0;
+	}
 }

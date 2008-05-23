@@ -45,6 +45,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerungF
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IStandardAspekte;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
+import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltungMitGuete;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -93,7 +94,8 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
 	public void initialisiere(IVerwaltung dieVerwaltung)
 			throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
-		PPFVersorger.getInstanz(verwaltung).addListener(this);
+		PPFVersorger.getInstanz((IVerwaltungMitGuete) verwaltung).addListener(
+				this);
 		this.aktualisierePublikationIntern();
 	}
 

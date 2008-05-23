@@ -35,6 +35,10 @@ Versionsgeschichte
 
   - Bash-Startfile hinzu
   
+1.2.2
+ 
+  - Güteanpassung wird jetzt durchgeführt, wenn ein Gütefaktor via -gueteFaktor angegeben wurde
+  
 Bemerkungen
 ===========
 

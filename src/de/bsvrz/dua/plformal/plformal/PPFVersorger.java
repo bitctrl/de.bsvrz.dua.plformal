@@ -48,7 +48,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
-import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
+import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltungMitGuete;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
@@ -95,7 +95,7 @@ public final class PPFVersorger implements IPPFVersorger,
 	/**
 	 * Verbindung zum Verwaltungsmodul.
 	 */
-	private IVerwaltung verwaltung = null;
+	private IVerwaltungMitGuete verwaltung = null;
 
 	/**
 	 * Standardkonstruktor.
@@ -109,7 +109,7 @@ public final class PPFVersorger implements IPPFVersorger,
 	 * @throws DUAInitialisierungsException
 	 *             falls die Datenanmeldung fehl schlägt
 	 */
-	private PPFVersorger(final IVerwaltung verwaltung,
+	private PPFVersorger(final IVerwaltungMitGuete verwaltung,
 			final SystemObject plausbibilisierungsObjekt)
 			throws DUAInitialisierungsException {
 		if (verwaltung == null) {
@@ -165,7 +165,7 @@ public final class PPFVersorger implements IPPFVersorger,
 	 * @throws DUAInitialisierungsException
 	 *             falls die Datenanmeldung fehl schlägt
 	 */
-	public static PPFVersorger getInstanz(final IVerwaltung verwaltung)
+	public static PPFVersorger getInstanz(final IVerwaltungMitGuete verwaltung)
 			throws DUAInitialisierungsException {
 		if (instanz == null) {
 			/**
@@ -502,6 +502,24 @@ public final class PPFVersorger implements IPPFVersorger,
 						datum);
 				if (status != null) {
 					status.asUnscaledValue().set(wert ? 1 : 0);
+
+					if (this.verwaltung.getGueteFaktor() != 0.0 && wert) { // Ein
+																			// Statusflag
+																			// wird
+																			// eingeschaltet
+						final String neuerAttPfadGuete = DUAUtensilien
+								.ersetzeLetztesElemInAttPfad(attPfad,
+										PPFKonstanten.ATT_GUETE);
+						if (neuerAttPfadGuete != null) {
+							Data guete = DUAUtensilien.getAttributDatum(
+									neuerAttPfadGuete, datum);
+							if (guete.asUnscaledValue().longValue() >= 0) {
+								guete.asScaledValue().set(
+										guete.asScaledValue().doubleValue()
+												* verwaltung.getGueteFaktor());
+							}
+						}
+					}
 				} else {
 					Debug.getLogger().warning("Statuswert konnte nicht" + //$NON-NLS-1$
 							" ausgelesen werden:\n" + //$NON-NLS-1$

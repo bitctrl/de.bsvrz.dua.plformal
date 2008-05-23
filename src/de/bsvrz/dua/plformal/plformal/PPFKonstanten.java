@@ -104,6 +104,11 @@ public final class PPFKonstanten {
 	 * Attribut-Pfad <code>Status.MessWertErsetzung.Implausibel</code>.
 	 */
 	public static final String ATT_STATUS_IMPLAUSIBEL = "Status.MessWertErsetzung.Implausibel"; //$NON-NLS-1$
+	
+	/**
+	 * Attribut-Pfad <code>Status.MessWertErsetzung.Implausibel</code>.
+	 */
+	public static final String ATT_GUETE = "Güte.Index"; //$NON-NLS-1$
 
 	/**
 	 * Standardkonstruktor.

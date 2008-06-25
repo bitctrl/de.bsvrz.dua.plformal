@@ -1,9 +1,10 @@
 #!/bin/bash
 
-source ../../../skripte-bash/einstellungen.sh
-
 # In das Verzeichnis des Skripts wechseln, damit relative Pfade funktionieren
 cd `dirname $0`
+
+source ../../../skripte-bash/einstellungen.sh
+
 
 ################################################################################
 # SWE-Spezifische Parameter	(überprüfen und anpassen)                          #

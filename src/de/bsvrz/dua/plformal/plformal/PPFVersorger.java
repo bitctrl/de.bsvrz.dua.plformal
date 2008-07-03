@@ -297,7 +297,7 @@ public final class PPFVersorger implements IPPFVersorger,
 		Data ergebnis = null;
 
 		if (plBeschreibungen == null) {
-			Debug.getLogger().fine("Es wurden noch keine Parameter" + //$NON-NLS-1$
+			Debug.getLogger().finest("Es wurden noch keine Parameter" + //$NON-NLS-1$
 					" für die formale Plausibilisierung empfangen"); //$NON-NLS-1$
 		} else if (resultat != null && resultat.hasData()
 				&& resultat.getData() != null) {
@@ -315,11 +315,11 @@ public final class PPFVersorger implements IPPFVersorger,
 				}
 			} else {
 				Debug.getLogger()
-						.fine("ResultData " + resultat + //$NON-NLS-1$
+						.finest("ResultData " + resultat + //$NON-NLS-1$
 								" ist nicht zur formalen Plausibilisierung vorgesehen."); //$NON-NLS-1$
 			}
 		} else {
-			Debug.getLogger().fine("Das formal zu prüfende Datum" + //$NON-NLS-1$
+			Debug.getLogger().finest("Das formal zu prüfende Datum" + //$NON-NLS-1$
 					" enthält keine sinnvollen Daten: " + //$NON-NLS-1$
 					(resultat == null ? DUAKonstanten.NULL : resultat));
 		}

@@ -38,7 +38,12 @@ Versionsgeschichte
 1.2.2
  
   - Güteanpassung wird jetzt durchgeführt, wenn ein Gütefaktor via -gueteFaktor angegeben wurde
-  
+
+1.2.3
+
+  - Sämtliche Konstruktoren DataDescription(atg, asp, sim)
+    ersetzt durch DataDescription(atg, asp)
+
 Bemerkungen
 ===========
 

@@ -232,21 +232,21 @@ public class DUAUtensilienTest {
 		DataDescription aDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenLangZeitIntervall"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean aSoll = false;
 
 		SystemObject bObj = verbindung.getDataModel().getObject(
 				"atg.verkehrsDatenLangZeitIntervall"); //$NON-NLS-1$
 		DataDescription bDataDesc = new DataDescription(verbindung
 				.getDataModel().getAttributeGroup("atg.info"), //$NON-NLS-1$
-				null, (short) 0);
+				null);
 		boolean bSoll = false;
 
 		SystemObject cObj = null;
 		DataDescription cDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenLangZeitIntervall"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean cSoll = false;
 
 		SystemObject dObj = verbindung.getDataModel().getObject(
@@ -254,13 +254,13 @@ public class DUAUtensilienTest {
 		DataDescription dDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenLangZeitIntervall"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean dSoll = false;
 
 		SystemObject eObj = verbindung.getDataModel().getObject(
 				"objekt1.testPlPrüfungFormal"); //$NON-NLS-1$
 		DataDescription eDataDesc = new DataDescription(null, verbindung
-				.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean eSoll = false;
 
 		SystemObject fObj = verbindung.getDataModel().getObject(
@@ -268,7 +268,7 @@ public class DUAUtensilienTest {
 		DataDescription fDataDesc = new DataDescription(verbindung
 				.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenLangZeitIntervall"), //$NON-NLS-1$
-				null, (short) 0);
+				null);
 		boolean fSoll = false;
 
 		SystemObject gObj = verbindung.getDataModel().getObject(
@@ -276,7 +276,7 @@ public class DUAUtensilienTest {
 		DataDescription gDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.testPlPrüfungFormal"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean gSoll = false;
 
 		SystemObject hObj = verbindung.getDataModel().getObject(
@@ -284,14 +284,14 @@ public class DUAUtensilienTest {
 		DataDescription hDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenLangZeitIntervall"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.testEingang"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.testEingang")); //$NON-NLS-1$
 		boolean hSoll = false;
 
 		SystemObject iObj = verbindung.getDataModel().getObject(
 				"objekt1.testPlPrüfungFormal"); //$NON-NLS-1$
 		DataDescription iDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup("atg.XXX"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.externeErfassung"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.externeErfassung")); //$NON-NLS-1$
 		boolean iSoll = false;
 
 		SystemObject jObj = verbindung.getDataModel().getObject(
@@ -299,7 +299,7 @@ public class DUAUtensilienTest {
 		DataDescription jDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.testPlPrüfungFormal"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.testEingang"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.testEingang")); //$NON-NLS-1$
 		boolean jSoll = true;
 
 		SystemObject kObj = verbindung.getDataModel().getObject(
@@ -307,7 +307,7 @@ public class DUAUtensilienTest {
 		DataDescription kDataDesc = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.testPlPrüfungFormal"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.testEingang"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.testEingang")); //$NON-NLS-1$
 		boolean kSoll = false;
 
 		Assert

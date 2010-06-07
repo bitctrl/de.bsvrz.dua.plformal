@@ -136,7 +136,7 @@ public final class PPFVersorger implements IPPFVersorger,
 					.getDataModel().getAttributeGroup(PPFKonstanten.ATG);
 			final Aspect asp = verwaltung.getVerbindung().getDataModel()
 					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL);
-			final DataDescription dd = new DataDescription(atg, asp, (short) 0);
+			final DataDescription dd = new DataDescription(atg, asp);
 			verwaltung.getVerbindung().subscribeReceiver(this,
 					plausbibilisierungsObjekt, dd, ReceiveOptions.normal(),
 					ReceiverRole.receiver());

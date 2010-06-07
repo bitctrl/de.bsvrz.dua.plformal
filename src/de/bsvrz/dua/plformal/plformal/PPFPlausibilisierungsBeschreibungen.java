@@ -105,7 +105,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 				throw new PlFormalException("Uebergebener Aspekt ist " //$NON-NLS-1$
 						+ DUAKonstanten.NULL + ": " + parameterSatz); //$NON-NLS-1$
 			}
-			DataDescription dd = new DataDescription(atg, asp, (short) 0);
+			DataDescription dd = new DataDescription(atg, asp);
 
 			final ReferenceArray objekte = parameterSatz.getArray(
 					PPFKonstanten.ATL_PARA_SATZ_OBJ).asReferenceArray();

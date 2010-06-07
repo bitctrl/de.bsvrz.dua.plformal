@@ -89,32 +89,32 @@ public class TestDAVObjektAnmeldung {
 		d[0] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.agregation1Minute"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.agregation1Minute")); //$NON-NLS-1$
 
 		d[1] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.parameterVorgabe"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.parameterVorgabe")); //$NON-NLS-1$
 
 		d[2] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.agregation5Minuten"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.agregation5Minuten")); //$NON-NLS-1$
 
 		d[3] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.agregation15Minuten"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.agregation15Minuten")); //$NON-NLS-1$
 
 		d[4] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.parameterSoll"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.parameterSoll")); //$NON-NLS-1$
 
 		d[5] = new DataDescription(
 				verbindung.getDataModel().getAttributeGroup(
 						"atg.verkehrsDatenKurzZeitAnalyseMq"), //$NON-NLS-1$
-				verbindung.getDataModel().getAspect("asp.parameterIst"), (short) 0); //$NON-NLS-1$
+				verbindung.getDataModel().getAspect("asp.parameterIst")); //$NON-NLS-1$
 
 		try {
 			DAVObjektAnmeldung[] a = { new DAVObjektAnmeldung(o[0], d[0]),

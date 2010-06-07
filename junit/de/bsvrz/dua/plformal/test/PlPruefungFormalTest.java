@@ -320,10 +320,10 @@ public class PlPruefungFormalTest implements ClientSenderInterface,
 		Aspect aspParaSoll = this.dav.getDataModel().getAspect(
 				DaVKonstanten.ASP_PARAMETER_SOLL);
 
-		ddAusgang = new DataDescription(atg, ausgang, (short) 0);
-		ddEingang = new DataDescription(atg, eingang, (short) 0);
-		ddParamVor = new DataDescription(atgPara, aspParaVor, (short) 0);
-		ddParamSoll = new DataDescription(atgPara, aspParaSoll, (short) 0);
+		ddAusgang = new DataDescription(atg, ausgang);
+		ddEingang = new DataDescription(atg, eingang);
+		ddParamVor = new DataDescription(atgPara, aspParaVor);
+		ddParamSoll = new DataDescription(atgPara, aspParaSoll);
 		this.obj1 = this.dav.getDataModel().getObject(OBJ1_PID);
 		this.obj2 = this.dav.getDataModel().getObject(OBJ2_PID);
 

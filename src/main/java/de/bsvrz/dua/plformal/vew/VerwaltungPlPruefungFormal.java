@@ -118,7 +118,7 @@ AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
 	}
 
 	/**
-	 * Standard-Gütefaktor für Ersetzungen (90%)<br>
+	 * Standard-Gütefaktor für Ersetzungen (90%).<br>
 	 * Wenn das Modul Pl-Prüfung logisch LVE einen Messwert ersetzt (eigentlich
 	 * nur bei Wertebereichsprüfung) so vermindert sich die Güte des
 	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert über die

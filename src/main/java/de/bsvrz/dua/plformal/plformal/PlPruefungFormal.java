@@ -58,6 +58,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
 implements IPPFVersorgerListener {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * die Parameter der formalen Plausibilisierung.
 	 */
@@ -150,11 +152,11 @@ implements IPPFVersorgerListener {
 	@Override
 	public void aktualisiereDaten(final ResultData[] resultate) {
 		if (this.ppfParameter == null) {
-			Debug.getLogger().fine(
+			LOGGER.fine(
 					"Es wurden noch keine"
 							+ " Plausibilisierungsparameter empfangen");
 			if (this.knoten != null) {
-				Debug.getLogger().fine(
+				LOGGER.fine(
 						"Die Datenwerden nur" + " weitergereicht an: "
 								+ this.knoten);
 				this.knoten.aktualisiereDaten(resultate);
@@ -211,7 +213,7 @@ implements IPPFVersorgerListener {
 						.toArray(new ResultData[0]));
 			}
 		} else {
-			Debug.getLogger()
+			LOGGER
 			.fine("Es wurden keine sinnvollen Daten empfangen");
 		}
 	}

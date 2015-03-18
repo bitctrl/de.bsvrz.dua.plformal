@@ -66,6 +66,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
 public final class PPFVersorger implements IPPFVersorger,
 ClientReceiverInterface {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * die statische Instanz dieser Klasse.
 	 */
@@ -146,7 +148,7 @@ ClientReceiverInterface {
 					+ " formalen Plausibilisierung", t);
 		}
 
-		Debug.getLogger().config(
+		LOGGER.config(
 				"Initialisierung erfolgreich.\n"
 						+ "Für die formale Plausibilisierung"
 						+ " wird das Objekt " + plausbibilisierungsObjekt
@@ -199,7 +201,7 @@ ClientReceiverInterface {
 
 			if (plausibilisierungsObjekte.length > 0) {
 				if (plausibilisierungsObjekte.length > 1) {
-					Debug.getLogger().warning(
+					LOGGER.warning(
 							"Es liegen mehrere Objekte vom Typ "
 									+ PPFKonstanten.TYP + " vor");
 				}
@@ -220,7 +222,7 @@ ClientReceiverInterface {
 		final PPFPlausibilisierungsBeschreibungen neuePlBeschreibungen = new PPFPlausibilisierungsBeschreibungen(
 				verwaltung);
 		boolean fehler = false;
-		Debug.getLogger().info("Neue Parameter empfangen");
+		LOGGER.info("Neue Parameter empfangen");
 
 		if ((resultate != null) && (resultate.length > 0)) {
 			/**
@@ -240,11 +242,11 @@ ClientReceiverInterface {
 					for (int i = 0; i < parameterSaetze.getLength(); i++) {
 						neuePlBeschreibungen.addParameterSatz(parameterSaetze
 								.getItem(i));
-						Debug.getLogger().fine(
+						LOGGER.fine(
 								parameterSaetze.getItem(i).toString());
 					}
 				} catch (final PlFormalException e) {
-					Debug.getLogger().warning(
+					LOGGER.warning(
 							"Parameterdatensatz für die formale"
 									+ " Plausibilisierung konnte nicht"
 									+ " ausgelesen werden", e);
@@ -265,7 +267,7 @@ ClientReceiverInterface {
 			}
 		}
 
-		Debug.getLogger().info(this.toString());
+		LOGGER.info(this.toString());
 	}
 
 	@Override
@@ -293,7 +295,7 @@ ClientReceiverInterface {
 		Data ergebnis = null;
 
 		if (plBeschreibungen == null) {
-			Debug.getLogger().finest(
+			LOGGER.finest(
 					"Es wurden noch keine Parameter"
 							+ " für die formale Plausibilisierung empfangen");
 		} else if ((resultat != null) && resultat.hasData()
@@ -312,13 +314,13 @@ ClientReceiverInterface {
 					}
 				}
 			} else {
-				Debug.getLogger()
+				LOGGER
 				.finest("ResultData "
 						+ resultat
 						+ " ist nicht zur formalen Plausibilisierung vorgesehen.");
 			}
 		} else {
-			Debug.getLogger()
+			LOGGER
 			.finest("Das formal zu prüfende Datum"
 					+ " enthält keine sinnvollen Daten: "
 					+ (resultat == null ? DUAKonstanten.NULL : resultat));
@@ -426,7 +428,7 @@ ClientReceiverInterface {
 					ergebnis = dummy;
 				}
 			} else {
-				Debug.getLogger().warning(
+				LOGGER.warning(
 						"Für Datum " + datum
 						+ " ist die Attributspezifikation "
 						+ "unvollständig: " + attSpez);
@@ -520,7 +522,7 @@ ClientReceiverInterface {
 						}
 					}
 				} else {
-					Debug.getLogger().warning(
+					LOGGER.warning(
 							"Statuswert konnte nicht" + " ausgelesen werden:\n"
 									+ "Datum: " + datum + "\nAttr.-Pfad: "
 									+ attPfad + "\nErsetzung: "

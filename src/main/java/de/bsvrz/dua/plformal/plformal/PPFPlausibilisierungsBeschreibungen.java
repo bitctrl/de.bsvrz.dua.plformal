@@ -57,6 +57,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  */
 public class PPFPlausibilisierungsBeschreibungen {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/**
 	 * Alle Informationen, die zur Plausibilisierung einer
 	 * Systemobjekt-Attributgruppen-Aspekt-Kombination notwendig sind.
@@ -138,7 +140,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
 				} catch (final IllegalArgumentException ex) {
-					Debug.getLogger().warning("", ex);
+					LOGGER.warning("", ex);
 				}
 			}
 		} else {
@@ -146,7 +148,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 					+ DUAKonstanten.NULL);
 		}
 
-		Debug.getLogger().info(this.toString());
+		LOGGER.info(this.toString());
 	}
 
 	/**
@@ -169,12 +171,12 @@ public class PPFPlausibilisierungsBeschreibungen {
 			if (objBeschr != null) {
 				ergebnis.addAll(objBeschr.getAttributSpezifikationen());
 			} else {
-				Debug.getLogger().fine(
+				LOGGER.fine(
 						"Es wurde keine Plausibilisierungsvorschrift"
 								+ " gefunden für: " + resultat);
 			}
 		} else {
-			Debug.getLogger().warning(
+			LOGGER.warning(
 					"Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL);
 		}
 

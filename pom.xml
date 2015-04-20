@@ -213,10 +213,15 @@
 
 	<distributionManagement>
 		<repository>
+			<id>bitctrl.nexus</id>
+			<name>BitCtrl Nexus Releases Repository</name>
+			<url>http://bitctrlbuildserver:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
 			<id>bitctrl.nexus.snapshots</id>
 			<name>BitCtrl Nexus Snapshots Repository</name>
 			<url>http://bitctrlbuildserver:8081/nexus/content/repositories/snapshots/</url>
-		</repository>
+		</snapshotRepository>
 	</distributionManagement>
 
 

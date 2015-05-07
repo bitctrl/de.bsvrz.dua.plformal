@@ -64,8 +64,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * @version $Id$
  */
 @Ignore("Datenverteilerverbindung prüfen")
-public class PlPruefungFormalTest implements ClientSenderInterface,
-ClientReceiverInterface {
+public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiverInterface {
 
 	/**
 	 * Kumulation der verschiedenen Kennungen in einen Wert. Da die Kennungen
@@ -74,24 +73,21 @@ ClientReceiverInterface {
 	 * vorgenommen werden. Dabei gilt:
 	 *
 	 * kennung[0] = Attribut --> Status.PlFormal.WertMin kennung[1] = Attribut
-	 * --> Status.PlFormal.WertMax kennung[2] = Attribut -->
+	 * --&gt; Status.PlFormal.WertMax kennung[2] = Attribut --&gt;
 	 * Status.MessWertErsetzung.Implausibel
 	 *
 	 */
-	private static final boolean[] WERT_MIN = new boolean[] { true, false,
-		false };
+	private static final boolean[] WERT_MIN = new boolean[] { true, false, false };
 
 	/**
 	 * siehe WERT_MIN.
 	 */
-	private static final boolean[] WERT_MAX = new boolean[] { false, true,
-		false };
+	private static final boolean[] WERT_MAX = new boolean[] { false, true, false };
 
 	/**
 	 * siehe WERT_MIN.
 	 */
-	private static final boolean[] IMPLAUSIBEL = new boolean[] { false, false,
-		true };
+	private static final boolean[] IMPLAUSIBEL = new boolean[] { false, false, true };
 
 	/**
 	 * siehe WERT_MIN.
@@ -146,22 +142,22 @@ ClientReceiverInterface {
 	/**
 	 * Datenbeschreibung für zu sendende Daten.
 	 */
-	DataDescription ddAusgang;
+	private DataDescription ddAusgang;
 
 	/**
 	 * Datenbeschreibung für zu empfangene Daten.
 	 */
-	DataDescription ddEingang;
+	private DataDescription ddEingang;
 
 	/**
 	 * Parameter der Pl-Prüfung (Vorgabe).
 	 */
-	DataDescription ddParamVor;
+	private DataDescription ddParamVor;
 
 	/**
 	 * Parameter der Pl-Prüfung (Soll).
 	 */
-	DataDescription ddParamSoll;
+	private DataDescription ddParamSoll;
 
 	/**
 	 * Testdatensätze.
@@ -211,21 +207,20 @@ ClientReceiverInterface {
 	 *            Verbindung zum Datenverteiler
 	 */
 	public final void setzeDfsParameter(final ClientDavInterface dav1) {
-		final DataDescription datenBeschreibung = new DataDescription(dav1
-				.getDataModel().getAttributeGroup("atg.datenflussSteuerung"),
+		final DataDescription datenBeschreibung = new DataDescription(
+				dav1.getDataModel().getAttributeGroup("atg.datenflussSteuerung"),
 				dav1.getDataModel().getAspect("asp.parameterVorgabe"));
 
 		final ClientSenderInterface parameterSender = new ClientSenderInterface() {
 
 			@Override
-			public void dataRequest(final SystemObject object,
-					final DataDescription dataDescription, final byte state) {
+			public void dataRequest(final SystemObject object, final DataDescription dataDescription,
+					final byte state) {
 				//
 			}
 
 			@Override
-			public boolean isRequestSupported(final SystemObject object,
-					final DataDescription dataDescription) {
+			public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 				return false;
 			}
 
@@ -233,8 +228,7 @@ ClientReceiverInterface {
 
 		try {
 			dav1.subscribeSender(parameterSender,
-					dav1.getDataModel().getType("typ.datenflussSteuerung")
-					.getElements().get(0), datenBeschreibung,
+					dav1.getDataModel().getType("typ.datenflussSteuerung").getElements().get(0), datenBeschreibung,
 					SenderRole.sender());
 			try {
 				Thread.sleep(10000L);
@@ -245,59 +239,36 @@ ClientReceiverInterface {
 			throw new RuntimeException(e);
 		}
 
-		final Data atgData = dav1.createData(datenBeschreibung
-				.getAttributeGroup());
+		final Data atgData = dav1.createData(datenBeschreibung.getAttributeGroup());
 
-		atgData.getItem("Urlasser").getReferenceValue("BenutzerReferenz")
-		.setSystemObject(null);
+		atgData.getItem("Urlasser").getReferenceValue("BenutzerReferenz").setSystemObject(null);
 		atgData.getItem("Urlasser").getTextValue("Ursache").setText("");
 		atgData.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
 		atgData.getArray("ParameterSatz").setLength(1);
-		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE")
-		.setText("SWE_PL_Prüfung_formal");
-		atgData.getArray("ParameterSatz").getItem(0)
-		.getArray("PublikationsZuordnung").setLength(1);
-		atgData.getArray("ParameterSatz").getItem(0)
-		.getArray("PublikationsZuordnung").getItem(0)
-		.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
-		atgData.getArray("ParameterSatz")
-		.getItem(0)
-		.getArray("PublikationsZuordnung")
-		.getItem(0)
-		.getReferenceValue("PublikationsAspekt")
-		.setSystemObject(
-				dav1.getDataModel().getAspect("asp.testEingang"));
-		atgData.getArray("ParameterSatz").getItem(0)
-		.getArray("PublikationsZuordnung").getItem(0)
-		.getReferenceArray("Objekt").setLength(1);
-		atgData.getArray("ParameterSatz")
-		.getItem(0)
-		.getArray("PublikationsZuordnung")
-		.getItem(0)
-		.getReferenceArray("Objekt")
-		.getReferenceValue(0)
-		.setSystemObject(
-				dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
-		atgData.getArray("ParameterSatz").getItem(0)
-		.getArray("PublikationsZuordnung").getItem(0)
-		.getReferenceArray("AttributGruppe").setLength(1);
-		atgData.getArray("ParameterSatz")
-		.getItem(0)
-		.getArray("PublikationsZuordnung")
-		.getItem(0)
-		.getReferenceArray("AttributGruppe")
-		.getReferenceValue(0)
-		.setSystemObject(
-				dav1.getDataModel()
-				.getObject("atg.testPlPrüfungFormal"));
-		atgData.getArray("ParameterSatz").getItem(0)
-		.getArray("PublikationsZuordnung").getItem(0)
-		.getUnscaledValue("Publizieren").set(DUAKonstanten.JA);
+		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE").setText("SWE_PL_Prüfung_formal");
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getReferenceValue("PublikationsAspekt")
+				.setSystemObject(dav1.getDataModel().getAspect("asp.testEingang"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getReferenceArray("Objekt").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getReferenceArray("Objekt").getReferenceValue(0)
+				.setSystemObject(dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getReferenceArray("AttributGruppe").setLength(1);
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getReferenceArray("AttributGruppe").getReferenceValue(0)
+				.setSystemObject(dav1.getDataModel().getObject("atg.testPlPrüfungFormal"));
+		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
+				.getUnscaledValue("Publizieren").set(DUAKonstanten.JA);
 
-		final ResultData resultat = new ResultData(dav1.getDataModel()
-				.getType("typ.datenflussSteuerung").getElements().get(0),
-				datenBeschreibung, System.currentTimeMillis(), atgData);
+		final ResultData resultat = new ResultData(
+				dav1.getDataModel().getType("typ.datenflussSteuerung").getElements().get(0), datenBeschreibung,
+				System.currentTimeMillis(), atgData);
 
 		try {
 			dav1.sendData(resultat);
@@ -317,35 +288,25 @@ ClientReceiverInterface {
 
 		setzeDfsParameter(dav);
 
-		final AttributeGroup atg = this.dav.getDataModel().getAttributeGroup(
-				PlPruefungFormalTest.ATG_PID);
-		final Aspect eingang = this.dav.getDataModel().getAspect(
-				PlPruefungFormalTest.ASP_EINGANG_PID);
-		final Aspect ausgang = this.dav.getDataModel().getAspect(
-				PlPruefungFormalTest.ASP_AUSGANG_PID);
-		final SystemObjectType typ = this.dav.getDataModel().getType(
-				PlPruefungFormalTest.TYP);
+		final AttributeGroup atg = this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID);
+		final Aspect eingang = this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_EINGANG_PID);
+		final Aspect ausgang = this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID);
+		final SystemObjectType typ = this.dav.getDataModel().getType(PlPruefungFormalTest.TYP);
 
-		final AttributeGroup atgPara = this.dav.getDataModel()
-				.getAttributeGroup(PPFKonstanten.ATG);
-		final Aspect aspParaVor = this.dav.getDataModel().getAspect(
-				DaVKonstanten.ASP_PARAMETER_VORGABE);
-		final Aspect aspParaSoll = this.dav.getDataModel().getAspect(
-				DaVKonstanten.ASP_PARAMETER_SOLL);
+		final AttributeGroup atgPara = this.dav.getDataModel().getAttributeGroup(PPFKonstanten.ATG);
+		final Aspect aspParaVor = this.dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_VORGABE);
+		final Aspect aspParaSoll = this.dav.getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL);
 
 		ddAusgang = new DataDescription(atg, ausgang);
 		ddEingang = new DataDescription(atg, eingang);
 		ddParamVor = new DataDescription(atgPara, aspParaVor);
 		ddParamSoll = new DataDescription(atgPara, aspParaSoll);
-		this.obj1 = this.dav.getDataModel().getObject(
-				PlPruefungFormalTest.OBJ1_PID);
-		this.obj2 = this.dav.getDataModel().getObject(
-				PlPruefungFormalTest.OBJ2_PID);
+		this.obj1 = this.dav.getDataModel().getObject(PlPruefungFormalTest.OBJ1_PID);
+		this.obj2 = this.dav.getDataModel().getObject(PlPruefungFormalTest.OBJ2_PID);
 
-		for (final SystemObject elem : this.dav.getDataModel()
-				.getType(PPFKonstanten.TYP).getElements()) {
+		for (final SystemObject elem : this.dav.getDataModel().getType(PPFKonstanten.TYP).getElements()) {
 			System.out.println(elem);
-			if (elem.getPid().equals("ppfTest")) {
+			if ("ppfTest".equals(elem.getPid())) {
 				this.ppfObjekt = elem;
 			}
 		}
@@ -353,18 +314,14 @@ ClientReceiverInterface {
 		/**
 		 * Daten zum Senden anmelden
 		 */
-		dav.subscribeSender(this, this.ppfObjekt, ddParamVor,
-				SenderRole.sender());
-		dav.subscribeSender(this, typ.getObjects(), ddAusgang,
-				SenderRole.source());
+		dav.subscribeSender(this, this.ppfObjekt, ddParamVor, SenderRole.sender());
+		dav.subscribeSender(this, typ.getObjects(), ddAusgang, SenderRole.source());
 
 		/**
 		 * Auf Empfang von Daten/Parametern anmelden
 		 */
-		dav.subscribeReceiver(this, typ.getObjects(), ddEingang,
-				ReceiveOptions.normal(), ReceiverRole.receiver());
-		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll,
-				ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, typ.getObjects(), ddEingang, ReceiveOptions.normal(), ReceiverRole.receiver());
+		dav.subscribeReceiver(this, this.ppfObjekt, ddParamSoll, ReceiveOptions.normal(), ReceiverRole.receiver());
 
 		try {
 			Thread.sleep(1000L);
@@ -376,139 +333,93 @@ ClientReceiverInterface {
 		 * Testdatensätze wie in Tabelle 5-3 (bzw. Änderungsantrag
 		 * AeA_SWE4.1_VRZ3_Nr001)
 		 */
-		this.testDatenSaetze = new RohdatenSatz[] {
-				new RohdatenSatz(obj1, -4, -2.00000901),
-				new RohdatenSatz(obj1, -3, -2.0),
-				new RohdatenSatz(obj1, 17, 73.1087001),
-				new RohdatenSatz(obj1, 18, 73.0),
-				new RohdatenSatz(obj1, -2, 13), new RohdatenSatz(obj2, -2, 13),
+		this.testDatenSaetze = new RohdatenSatz[] { new RohdatenSatz(obj1, -4, -2.00000901),
+				new RohdatenSatz(obj1, -3, -2.0), new RohdatenSatz(obj1, 17, 73.1087001),
+				new RohdatenSatz(obj1, 18, 73.0), new RohdatenSatz(obj1, -2, 13), new RohdatenSatz(obj2, -2, 13),
 				new RohdatenSatz(obj1, 5, 67), new RohdatenSatz(obj2, 5, 67), };
 
 		/**
 		 * Testparameter wie in Tabelle 5-2 (bzw. Änderungsantrag
 		 * AeA_SWE4.1_VRZ3_Nr001)
 		 */
-		this.parameter = new ParameterSatz[] {
-				new ParameterSatz(this.obj1, -3, 17, -2, 73),
+		this.parameter = new ParameterSatz[] { new ParameterSatz(this.obj1, -3, 17, -2, 73),
 				new ParameterSatz(this.obj2, -251, -2, -2, 63) };
 
 		/**
 		 * Durchläufe wie in Tabelle 5-4
 		 */
 		this.durchlaeufe = new Durchlauf[] {
-				new Durchlauf(
-						PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(),
+				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(),
 						PlausibilisierungsMethode.SETZE_MIN.getCode()),
-						new Durchlauf(
-								PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
-								PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
-								new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
-										PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
-										new Durchlauf(PlausibilisierungsMethode.SETZE_MIN.getCode(),
-												PlausibilisierungsMethode.SETZE_MIN_MAX.getCode()),
-												new Durchlauf(PlausibilisierungsMethode.NUR_PRUEFUNG.getCode(),
-														PlausibilisierungsMethode.SETZE_MAX.getCode()) };
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
+						PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
+						PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN.getCode(),
+						PlausibilisierungsMethode.SETZE_MIN_MAX.getCode()),
+				new Durchlauf(PlausibilisierungsMethode.NUR_PRUEFUNG.getCode(),
+						PlausibilisierungsMethode.SETZE_MAX.getCode()) };
 
 		/**
 		 * Erwartete Ergebnisse
 		 */
 		this.ergebnisse = new TestErgebnis[][] {
 				new TestErgebnis[] {
-						new TestErgebnis(-4, PlPruefungFormalTest.NICHTS, -2.0,
-								PlPruefungFormalTest.WERT_MIN),
-								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0,
-										PlPruefungFormalTest.NICHTS),
-										new TestErgebnis(17, PlPruefungFormalTest.NICHTS,
-												73.1087001, PlPruefungFormalTest.NICHTS),
-												new TestErgebnis(18, PlPruefungFormalTest.NICHTS, 73.0,
-														PlPruefungFormalTest.NICHTS),
-														new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																PlPruefungFormalTest.NICHTS),
-																new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																		PlPruefungFormalTest.NICHTS),
-																		new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																				PlPruefungFormalTest.NICHTS),
-																				new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																						PlPruefungFormalTest.NICHTS) },
-																						new TestErgebnis[] {
-						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN,
-								-2.00000901, PlPruefungFormalTest.IMPLAUSIBEL),
-								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0,
-										PlPruefungFormalTest.NICHTS),
-										new TestErgebnis(17, PlPruefungFormalTest.NICHTS,
-												73.1087001, PlPruefungFormalTest.IMPLAUSIBEL),
-												new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX,
-														73.0, PlPruefungFormalTest.NICHTS),
-														new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																PlPruefungFormalTest.NICHTS),
-																new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																		PlPruefungFormalTest.NICHTS),
-																		new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																				PlPruefungFormalTest.NICHTS),
-																				new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67,
-																						PlPruefungFormalTest.IMPLAUSIBEL) },
-																						new TestErgebnis[] {
-						new TestErgebnis(-4, PlPruefungFormalTest.NICHTS,
-								-2.00000901, PlPruefungFormalTest.NICHTS),
-								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0,
-										PlPruefungFormalTest.NICHTS),
-										new TestErgebnis(17, PlPruefungFormalTest.NICHTS,
-												73.1087001, PlPruefungFormalTest.NICHTS),
-												new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX,
-														73.0, PlPruefungFormalTest.NICHTS),
-														new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																PlPruefungFormalTest.NICHTS),
-																new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																		PlPruefungFormalTest.NICHTS),
-																		new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																				PlPruefungFormalTest.NICHTS),
-																				new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67,
-																						PlPruefungFormalTest.NICHTS) },
-																						new TestErgebnis[] {
-						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN,
-								-2.0, PlPruefungFormalTest.WERT_MIN),
-								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0,
-										PlPruefungFormalTest.NICHTS),
-										new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0,
-												PlPruefungFormalTest.WERT_MAX),
-												new TestErgebnis(18, PlPruefungFormalTest.NICHTS, 73.0,
-														PlPruefungFormalTest.NICHTS),
-														new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																PlPruefungFormalTest.NICHTS),
-																new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																		PlPruefungFormalTest.NICHTS),
-																		new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																				PlPruefungFormalTest.NICHTS),
-																				new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 63,
-																						PlPruefungFormalTest.WERT_MAX) },
-																						new TestErgebnis[] {
-						new TestErgebnis(-4, PlPruefungFormalTest.IMPLAUSIBEL,
-								-2.00000901, PlPruefungFormalTest.NICHTS),
-								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0,
-										PlPruefungFormalTest.NICHTS),
-										new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0,
-												PlPruefungFormalTest.WERT_MAX),
-												new TestErgebnis(18, PlPruefungFormalTest.IMPLAUSIBEL,
-														73.0, PlPruefungFormalTest.NICHTS),
-														new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																PlPruefungFormalTest.NICHTS),
-																new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13,
-																		PlPruefungFormalTest.NICHTS),
-																		new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67,
-																				PlPruefungFormalTest.NICHTS),
-																				new TestErgebnis(5, PlPruefungFormalTest.IMPLAUSIBEL,
-																						63, PlPruefungFormalTest.WERT_MAX) } };
+						new TestErgebnis(-4, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.WERT_MIN),
+						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(18, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS) },
+				new TestErgebnis[] {
+						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN, -2.00000901,
+								PlPruefungFormalTest.IMPLAUSIBEL),
+						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.IMPLAUSIBEL),
+						new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX, 73.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67, PlPruefungFormalTest.IMPLAUSIBEL) },
+				new TestErgebnis[] {
+						new TestErgebnis(-4, PlPruefungFormalTest.NICHTS, -2.00000901, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX, 73.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67, PlPruefungFormalTest.NICHTS) },
+				new TestErgebnis[] {
+						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN, -2.0, PlPruefungFormalTest.WERT_MIN),
+						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.WERT_MAX),
+						new TestErgebnis(18, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 63, PlPruefungFormalTest.WERT_MAX) },
+				new TestErgebnis[] {
+						new TestErgebnis(-4, PlPruefungFormalTest.IMPLAUSIBEL, -2.00000901,
+								PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.WERT_MAX),
+						new TestErgebnis(18, PlPruefungFormalTest.IMPLAUSIBEL, 73.0, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+						new TestErgebnis(5, PlPruefungFormalTest.IMPLAUSIBEL, 63, PlPruefungFormalTest.WERT_MAX) } };
 	}
 
 	@Override
-	public void dataRequest(final SystemObject object,
-			final DataDescription dataDescription, final byte state) {
+	public void dataRequest(final SystemObject object, final DataDescription dataDescription, final byte state) {
 		// mache nichts
 	}
 
 	@Override
-	public boolean isRequestSupported(final SystemObject object,
-			final DataDescription dataDescription) {
+	public boolean isRequestSupported(final SystemObject object, final DataDescription dataDescription) {
 		return false;
 	}
 
@@ -521,17 +432,13 @@ ClientReceiverInterface {
 			for (int iDatensatz = 0; iDatensatz < 8; iDatensatz++) {
 				final TestErgebnis soll = this.ergebnisse[iDurchlauf][iDatensatz];
 
-				final TestErgebnis ist = this.testLauf(
-						this.durchlaeufe[iDurchlauf],
-						this.testDatenSaetze[iDatensatz]);
+				final TestErgebnis ist = this.testLauf(this.durchlaeufe[iDurchlauf], this.testDatenSaetze[iDatensatz]);
 
-				System.out.println("Test " + (iDurchlauf + 1) + "/"
-						+ (iDatensatz + 1) + ":");
+				System.out.println("Test " + (iDurchlauf + 1) + "/" + (iDatensatz + 1) + ":");
 				System.out.println("Soll: " + soll);
 				System.out.println("Ist : " + ist);
-				System.out.println("Ergebnis: ---"
-						+ (soll.equals(ist) ? "erfolgreich"
-								: "nicht erfolgreich") + "---\n");
+				System.out
+						.println("Ergebnis: ---" + (soll.equals(ist) ? "erfolgreich" : "nicht erfolgreich") + "---\n");
 
 				Assert.assertEquals(soll, ist);
 			}
@@ -552,23 +459,18 @@ ClientReceiverInterface {
 		/**
 		 * Parameter setzen
 		 */
-		final Data data = this.dav.createData(this.dav.getDataModel()
-				.getAttributeGroup(PPFKonstanten.ATG));
-		final Data.Array ps = data.getItem(
-				"ParameterSatzPlausibilitätsPrüfungFormal").asArray();
+		final Data data = this.dav.createData(this.dav.getDataModel().getAttributeGroup(PPFKonstanten.ATG));
+		final Data.Array ps = data.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray();
 		ps.setLength(2);
 
 		final Data ps0 = ps.getItem(0);
-		ps0.getReferenceValue("Attributgruppe").setSystemObject(
-				this.dav.getDataModel().getAttributeGroup(
-						PlPruefungFormalTest.ATG_PID));
-		ps0.getReferenceValue("Aspekt").setSystemObject(
-				this.dav.getDataModel().getAspect(
-						PlPruefungFormalTest.ASP_AUSGANG_PID));
+		ps0.getReferenceValue("Attributgruppe")
+				.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
+		ps0.getReferenceValue("Aspekt")
+				.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
 		final Data.Array objekte = ps0.getArray("Objekt");
 		objekte.setLength(1);
-		objekte.getItem(0).asReferenceValue()
-		.setSystemObject(this.parameter[0].obj);
+		objekte.getItem(0).asReferenceValue().setSystemObject(this.parameter[0].obj);
 		final Data.Array attribut = ps0.getArray("AttributSpezifikation");
 		attribut.setLength(2);
 		final Data attSpez1 = attribut.getItem(0);
@@ -583,16 +485,13 @@ ClientReceiverInterface {
 		attSpez2.getUnscaledValue("Optionen").set(dl.testAtt2);
 
 		final Data ps1 = ps.getItem(1);
-		ps1.getReferenceValue("Attributgruppe").setSystemObject(
-				this.dav.getDataModel().getAttributeGroup(
-						PlPruefungFormalTest.ATG_PID));
-		ps1.getReferenceValue("Aspekt").setSystemObject(
-				this.dav.getDataModel().getAspect(
-						PlPruefungFormalTest.ASP_AUSGANG_PID));
+		ps1.getReferenceValue("Attributgruppe")
+				.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
+		ps1.getReferenceValue("Aspekt")
+				.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
 		final Data.Array objekte1 = ps1.getArray("Objekt");
 		objekte1.setLength(1);
-		objekte1.getItem(0).asReferenceValue()
-		.setSystemObject(this.parameter[1].obj);
+		objekte1.getItem(0).asReferenceValue().setSystemObject(this.parameter[1].obj);
 		final Data.Array attribut1 = ps1.getArray("AttributSpezifikation");
 		attribut1.setLength(2);
 		final Data attSpez3 = attribut1.getItem(0);
@@ -605,15 +504,12 @@ ClientReceiverInterface {
 		attSpez4.getUnscaledValue("Min").set(this.parameter[1].min2);
 		attSpez4.getUnscaledValue("Max").set(this.parameter[1].max2);
 		attSpez4.getUnscaledValue("Optionen").set(dl.testAtt2);
-		final ResultData parameter1 = new ResultData(this.ppfObjekt,
-				this.ddParamVor, System.currentTimeMillis(), data);
+		final ResultData parameter1 = new ResultData(this.ppfObjekt, this.ddParamVor, System.currentTimeMillis(), data);
 
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]);
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]);
-		System.out.println("Methode für Obj1: "
-				+ PlausibilisierungsMethode.getZustand((int) dl.testAtt1)
-				+ ", Methode für Obj2: "
-				+ PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
+		System.out.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt1)
+				+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
 
 		long letzteZeit = paraZeit;
 		try {
@@ -670,35 +566,24 @@ ClientReceiverInterface {
 	 * @param att2
 	 *            das Attribut 2
 	 */
-	private void sendeDatum(final SystemObject obj, final long att1,
-			final double att2) {
-		final Data data = this.dav.createData(this.dav.getDataModel()
-				.getAttributeGroup(PlPruefungFormalTest.ATG_PID));
+	private void sendeDatum(final SystemObject obj, final long att1, final double att2) {
+		final Data data = this.dav.createData(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
 		data.getItem("Attribut1").getUnscaledValue("Wert").set(att1);
-		data.getItem("Attribut1").getItem("Status").getItem("PlFormal")
-		.getItem("WertMin").asUnscaledValue().set(0);
-		data.getItem("Attribut1").getItem("Status").getItem("PlFormal")
-		.getItem("WertMax").asUnscaledValue().set(0);
-		data.getItem("Attribut1").getItem("Status")
-		.getItem("MessWertErsetzung").getItem("Implausibel")
-		.asUnscaledValue().set(0);
-		data.getItem("Attribut1").getItem("Status")
-		.getItem("MessWertErsetzung").getItem("Interpoliert")
-		.asUnscaledValue().set(0);
+		data.getItem("Attribut1").getItem("Status").getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0);
+		data.getItem("Attribut1").getItem("Status").getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0);
+		data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getItem("Implausibel")
+				.asUnscaledValue().set(0);
+		data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getItem("Interpoliert")
+				.asUnscaledValue().set(0);
 		data.getItem("Attribut2").getUnscaledValue("Wert").set(att2);
-		data.getItem("Attribut2").getItem("Status").getItem("PlFormal")
-		.getItem("WertMin").asUnscaledValue().set(0);
-		data.getItem("Attribut2").getItem("Status").getItem("PlFormal")
-		.getItem("WertMax").asUnscaledValue().set(0);
-		data.getItem("Attribut2").getItem("Status")
-		.getItem("MessWertErsetzung").getItem("Implausibel")
-		.asUnscaledValue().set(0);
-		data.getItem("Attribut2").getItem("Status")
-		.getItem("MessWertErsetzung").getItem("Interpoliert")
-		.asUnscaledValue().set(0);
+		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0);
+		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0);
+		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getItem("Implausibel")
+				.asUnscaledValue().set(0);
+		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getItem("Interpoliert")
+				.asUnscaledValue().set(0);
 
-		final ResultData resultat = new ResultData(obj, ddAusgang,
-				System.currentTimeMillis(), data);
+		final ResultData resultat = new ResultData(obj, ddAusgang, System.currentTimeMillis(), data);
 		try {
 			this.dav.sendData(resultat);
 		} catch (final Exception e) {
@@ -716,35 +601,26 @@ ClientReceiverInterface {
 					} else {
 						final Data data = resultat.getData();
 
-						final long wert1 = data.getItem("Attribut1")
-								.getUnscaledValue("Wert").longValue();
+						final long wert1 = data.getItem("Attribut1").getUnscaledValue("Wert").longValue();
 						final boolean[] kennung1 = new boolean[3];
-						kennung1[0] = data.getItem("Attribut1")
-								.getItem("Status").getItem("PlFormal")
+						kennung1[0] = data.getItem("Attribut1").getItem("Status").getItem("PlFormal")
 								.getUnscaledValue("WertMin").longValue() == 1;
-						kennung1[1] = data.getItem("Attribut1")
-								.getItem("Status").getItem("PlFormal")
+						kennung1[1] = data.getItem("Attribut1").getItem("Status").getItem("PlFormal")
 								.getUnscaledValue("WertMax").longValue() == 1;
-						kennung1[2] = data.getItem("Attribut1")
-								.getItem("Status").getItem("MessWertErsetzung")
+						kennung1[2] = data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung")
 								.getUnscaledValue("Implausibel").longValue() == 1;
 
-						final double wert2 = data.getItem("Attribut2")
-								.getUnscaledValue("Wert").doubleValue();
+						final double wert2 = data.getItem("Attribut2").getUnscaledValue("Wert").doubleValue();
 						final boolean[] kennung2 = new boolean[3];
-						kennung2[0] = data.getItem("Attribut2")
-								.getItem("Status").getItem("PlFormal")
+						kennung2[0] = data.getItem("Attribut2").getItem("Status").getItem("PlFormal")
 								.getUnscaledValue("WertMin").longValue() == 1;
-						kennung2[1] = data.getItem("Attribut2")
-								.getItem("Status").getItem("PlFormal")
+						kennung2[1] = data.getItem("Attribut2").getItem("Status").getItem("PlFormal")
 								.getUnscaledValue("WertMax").longValue() == 1;
-						kennung2[2] = data.getItem("Attribut2")
-								.getItem("Status").getItem("MessWertErsetzung")
+						kennung2[2] = data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung")
 								.getUnscaledValue("Implausibel").longValue() == 1;
 
 						this.ergebnisZeit = resultat.getDataTime();
-						this.aktuellesErgebnis = new TestErgebnis(wert1,
-								kennung1, wert2, kennung2);
+						this.aktuellesErgebnis = new TestErgebnis(wert1, kennung1, wert2, kennung2);
 					}
 				}
 			}

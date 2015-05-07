@@ -72,8 +72,8 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	 * Werte zur Verfügung stehen muss hier eine Übersetzung dieser Werte
 	 * vorgenommen werden. Dabei gilt:
 	 *
-	 * kennung[0] = Attribut --> Status.PlFormal.WertMin kennung[1] = Attribut
-	 * --&gt; Status.PlFormal.WertMax kennung[2] = Attribut --&gt;
+	 * kennung[0] = Attribut --&gt; Status.PlFormal.WertMin kennung[1] =
+	 * Attribut --&gt; Status.PlFormal.WertMax kennung[2] = Attribut --&gt;
 	 * Status.MessWertErsetzung.Implausibel
 	 *
 	 */
@@ -249,22 +249,22 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE").setText("SWE_PL_Prüfung_formal");
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
+		.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getReferenceValue("PublikationsAspekt")
-				.setSystemObject(dav1.getDataModel().getAspect("asp.testEingang"));
+		.getReferenceValue("PublikationsAspekt")
+		.setSystemObject(dav1.getDataModel().getAspect("asp.testEingang"));
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getReferenceArray("Objekt").setLength(1);
+		.getReferenceArray("Objekt").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getReferenceArray("Objekt").getReferenceValue(0)
-				.setSystemObject(dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
+		.getReferenceArray("Objekt").getReferenceValue(0)
+		.setSystemObject(dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getReferenceArray("AttributGruppe").setLength(1);
+		.getReferenceArray("AttributGruppe").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getReferenceArray("AttributGruppe").getReferenceValue(0)
-				.setSystemObject(dav1.getDataModel().getObject("atg.testPlPrüfungFormal"));
+		.getReferenceArray("AttributGruppe").getReferenceValue(0)
+		.setSystemObject(dav1.getDataModel().getObject("atg.testPlPrüfungFormal"));
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getUnscaledValue("Publizieren").set(DUAKonstanten.JA);
+		.getUnscaledValue("Publizieren").set(DUAKonstanten.JA);
 
 		final ResultData resultat = new ResultData(
 				dav1.getDataModel().getType("typ.datenflussSteuerung").getElements().get(0), datenBeschreibung,
@@ -351,14 +351,14 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		this.durchlaeufe = new Durchlauf[] {
 				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(),
 						PlausibilisierungsMethode.SETZE_MIN.getCode()),
-				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
-						PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
-				new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
-						PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
-				new Durchlauf(PlausibilisierungsMethode.SETZE_MIN.getCode(),
-						PlausibilisierungsMethode.SETZE_MIN_MAX.getCode()),
-				new Durchlauf(PlausibilisierungsMethode.NUR_PRUEFUNG.getCode(),
-						PlausibilisierungsMethode.SETZE_MAX.getCode()) };
+						new Durchlauf(PlausibilisierungsMethode.SETZE_MIN_MAX.getCode(),
+								PlausibilisierungsMethode.NUR_PRUEFUNG.getCode()),
+								new Durchlauf(PlausibilisierungsMethode.SETZE_MAX.getCode(),
+										PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode()),
+										new Durchlauf(PlausibilisierungsMethode.SETZE_MIN.getCode(),
+												PlausibilisierungsMethode.SETZE_MIN_MAX.getCode()),
+												new Durchlauf(PlausibilisierungsMethode.NUR_PRUEFUNG.getCode(),
+														PlausibilisierungsMethode.SETZE_MAX.getCode()) };
 
 		/**
 		 * Erwartete Ergebnisse
@@ -373,17 +373,17 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS) },
-				new TestErgebnis[] {
+						new TestErgebnis[] {
 						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN, -2.00000901,
 								PlPruefungFormalTest.IMPLAUSIBEL),
-						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.IMPLAUSIBEL),
-						new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX, 73.0, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67, PlPruefungFormalTest.IMPLAUSIBEL) },
-				new TestErgebnis[] {
+								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.IMPLAUSIBEL),
+								new TestErgebnis(17, PlPruefungFormalTest.WERT_MAX, 73.0, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67, PlPruefungFormalTest.IMPLAUSIBEL) },
+								new TestErgebnis[] {
 						new TestErgebnis(-4, PlPruefungFormalTest.NICHTS, -2.00000901, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.1087001, PlPruefungFormalTest.NICHTS),
@@ -392,7 +392,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(-2, PlPruefungFormalTest.WERT_MAX, 67, PlPruefungFormalTest.NICHTS) },
-				new TestErgebnis[] {
+						new TestErgebnis[] {
 						new TestErgebnis(-3, PlPruefungFormalTest.WERT_MIN, -2.0, PlPruefungFormalTest.WERT_MIN),
 						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.WERT_MAX),
@@ -401,16 +401,16 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
 						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 63, PlPruefungFormalTest.WERT_MAX) },
-				new TestErgebnis[] {
+						new TestErgebnis[] {
 						new TestErgebnis(-4, PlPruefungFormalTest.IMPLAUSIBEL, -2.00000901,
 								PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.WERT_MAX),
-						new TestErgebnis(18, PlPruefungFormalTest.IMPLAUSIBEL, 73.0, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
-						new TestErgebnis(5, PlPruefungFormalTest.IMPLAUSIBEL, 63, PlPruefungFormalTest.WERT_MAX) } };
+								new TestErgebnis(-3, PlPruefungFormalTest.NICHTS, -2.0, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(17, PlPruefungFormalTest.NICHTS, 73.0, PlPruefungFormalTest.WERT_MAX),
+								new TestErgebnis(18, PlPruefungFormalTest.IMPLAUSIBEL, 73.0, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(-2, PlPruefungFormalTest.NICHTS, 13, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(5, PlPruefungFormalTest.NICHTS, 67, PlPruefungFormalTest.NICHTS),
+								new TestErgebnis(5, PlPruefungFormalTest.IMPLAUSIBEL, 63, PlPruefungFormalTest.WERT_MAX) } };
 	}
 
 	@Override
@@ -438,7 +438,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 				System.out.println("Soll: " + soll);
 				System.out.println("Ist : " + ist);
 				System.out
-						.println("Ergebnis: ---" + (soll.equals(ist) ? "erfolgreich" : "nicht erfolgreich") + "---\n");
+				.println("Ergebnis: ---" + (soll.equals(ist) ? "erfolgreich" : "nicht erfolgreich") + "---\n");
 
 				Assert.assertEquals(soll, ist);
 			}
@@ -465,9 +465,9 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 
 		final Data ps0 = ps.getItem(0);
 		ps0.getReferenceValue("Attributgruppe")
-				.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
+		.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
 		ps0.getReferenceValue("Aspekt")
-				.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
+		.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
 		final Data.Array objekte = ps0.getArray("Objekt");
 		objekte.setLength(1);
 		objekte.getItem(0).asReferenceValue().setSystemObject(this.parameter[0].obj);
@@ -486,9 +486,9 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 
 		final Data ps1 = ps.getItem(1);
 		ps1.getReferenceValue("Attributgruppe")
-				.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
+		.setSystemObject(this.dav.getDataModel().getAttributeGroup(PlPruefungFormalTest.ATG_PID));
 		ps1.getReferenceValue("Aspekt")
-				.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
+		.setSystemObject(this.dav.getDataModel().getAspect(PlPruefungFormalTest.ASP_AUSGANG_PID));
 		final Data.Array objekte1 = ps1.getArray("Objekt");
 		objekte1.setLength(1);
 		objekte1.getItem(0).asReferenceValue().setSystemObject(this.parameter[1].obj);
@@ -509,7 +509,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		System.out.println("Setze PL-Parameter für " + this.parameter[0]);
 		System.out.println("Setze PL-Parameter für " + this.parameter[1]);
 		System.out.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt1)
-				+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
+		+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
 
 		long letzteZeit = paraZeit;
 		try {
@@ -572,16 +572,16 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		data.getItem("Attribut1").getItem("Status").getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0);
 		data.getItem("Attribut1").getItem("Status").getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0);
 		data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getItem("Implausibel")
-				.asUnscaledValue().set(0);
+		.asUnscaledValue().set(0);
 		data.getItem("Attribut1").getItem("Status").getItem("MessWertErsetzung").getItem("Interpoliert")
-				.asUnscaledValue().set(0);
+		.asUnscaledValue().set(0);
 		data.getItem("Attribut2").getUnscaledValue("Wert").set(att2);
 		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").getItem("WertMin").asUnscaledValue().set(0);
 		data.getItem("Attribut2").getItem("Status").getItem("PlFormal").getItem("WertMax").asUnscaledValue().set(0);
 		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getItem("Implausibel")
-				.asUnscaledValue().set(0);
+		.asUnscaledValue().set(0);
 		data.getItem("Attribut2").getItem("Status").getItem("MessWertErsetzung").getItem("Interpoliert")
-				.asUnscaledValue().set(0);
+		.asUnscaledValue().set(0);
 
 		final ResultData resultat = new ResultData(obj, ddAusgang, System.currentTimeMillis(), data);
 		try {

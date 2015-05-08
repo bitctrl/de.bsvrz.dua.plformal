@@ -46,11 +46,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
  * durchführt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class VerwaltungPlPruefungFormal extends
-AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
+public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
 
 	/**
 	 * Instanz des Moduls PL-Prüfung formal.
@@ -75,20 +72,17 @@ AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
 		 */
 		this.objekte = parameter.getBetrachteteObjekte();
 
-		this.empfangsVerwaltung.modifiziereObjektAnmeldung(parameter
-				.getObjektAnmeldungen());
+		this.empfangsVerwaltung.modifiziereObjektAnmeldung(parameter.getObjektAnmeldungen());
 	}
 
 	@Override
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
 
-		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(
-				this.verbindung, ReceiverRole.receiver(),
+		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(this.verbindung, ReceiverRole.receiver(),
 				ReceiveOptions.delayed(), this);
 
-		this.plPruefungFormal = new PlPruefungFormal(
-				new PPFStandardAspekteVersorger(this).getStandardPubInfos());
+		this.plPruefungFormal = new PlPruefungFormal(new PPFStandardAspekteVersorger(this).getStandardPubInfos());
 		this.plPruefungFormal.setPublikation(true);
 		this.plPruefungFormal.initialisiere(this);
 
@@ -113,8 +107,7 @@ AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
 	 *            Argumente der Kommandozeile
 	 */
 	public static void main(final String[] argumente) {
-		StandardApplicationRunner.run(new VerwaltungPlPruefungFormal(),
-				argumente);
+		StandardApplicationRunner.run(new VerwaltungPlPruefungFormal(), argumente);
 	}
 
 	/**

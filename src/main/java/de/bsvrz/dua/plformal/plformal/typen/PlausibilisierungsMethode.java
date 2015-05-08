@@ -37,8 +37,6 @@ import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
  * Werte zur Verfügung gestellt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class PlausibilisierungsMethode extends AbstractDavZustand {
 
@@ -51,39 +49,34 @@ public final class PlausibilisierungsMethode extends AbstractDavZustand {
 	 * Wertebereichsprüfung wird NICHT durchgeführt. Wert wird nicht verändert,
 	 * es werden keine Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = new PlausibilisierungsMethode(
-			"Keine Prüfung", 0);
+	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = new PlausibilisierungsMethode("Keine Prüfung", 0);
 
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Fehlerhafte Werte werden nicht
 	 * verändert, es werden nur die Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode NUR_PRUEFUNG = new PlausibilisierungsMethode(
-			"NurPrüfung", 1);
+	public static final PlausibilisierungsMethode NUR_PRUEFUNG = new PlausibilisierungsMethode("NurPrüfung", 1);
 
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunter- bzw.
 	 * überschreitung wird der Wert auf den parametrierten Min- bzw. /Max-Wert
 	 * korrigiert und die Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode SETZE_MIN_MAX = new PlausibilisierungsMethode(
-			"Setze MinMax", 2);
+	public static final PlausibilisierungsMethode SETZE_MIN_MAX = new PlausibilisierungsMethode("Setze MinMax", 2);
 
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunterschreitung wird
 	 * der Wert auf den parametrierten Min-Wert korrigiert und die Statusflags
 	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
 	 */
-	public static final PlausibilisierungsMethode SETZE_MIN = new PlausibilisierungsMethode(
-			"Setze Min", 3);
+	public static final PlausibilisierungsMethode SETZE_MIN = new PlausibilisierungsMethode("Setze Min", 3);
 
 	/**
 	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsüberschreitung wird
 	 * der Wert auf den parametrierten Max-Wert korrigiert und die Statusflags
 	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
 	 */
-	public static final PlausibilisierungsMethode SETZE_MAX = new PlausibilisierungsMethode(
-			"Setze Max", 4);
+	public static final PlausibilisierungsMethode SETZE_MAX = new PlausibilisierungsMethode("Setze Max", 4);
 
 	/**
 	 * Standardkonstruktor.

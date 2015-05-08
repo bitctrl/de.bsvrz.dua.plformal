@@ -52,11 +52,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Implementierung des Moduls PL-Prüfung formal.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter
-implements IPPFVersorgerListener {
+public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implements IPPFVersorgerListener {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -90,11 +87,9 @@ implements IPPFVersorgerListener {
 	}
 
 	@Override
-	public void initialisiere(final IVerwaltung dieVerwaltung)
-			throws DUAInitialisierungsException {
+	public void initialisiere(final IVerwaltung dieVerwaltung) throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
-		PPFVersorger.getInstanz((IVerwaltungMitGuete) verwaltung).addListener(
-				this);
+		PPFVersorger.getInstanz((IVerwaltungMitGuete) verwaltung).addListener(this);
 		this.aktualisierePublikationIntern();
 	}
 
@@ -105,8 +100,7 @@ implements IPPFVersorgerListener {
 
 	@Override
 	public void aktualisierePublikation(final IDatenFlussSteuerung iDfs) {
-		this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(),
-				this.getModulTyp());
+		this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(), this.getModulTyp());
 		aktualisierePublikationIntern();
 	}
 
@@ -135,16 +129,14 @@ implements IPPFVersorgerListener {
 			Collection<DAVObjektAnmeldung> anmeldungenStd = new ArrayList<DAVObjektAnmeldung>();
 
 			if (this.standardAspekte != null) {
-				anmeldungenStd = this.standardAspekte
-						.getStandardAnmeldungen(objektFilter);
+				anmeldungenStd = this.standardAspekte.getStandardAnmeldungen(objektFilter);
 			}
 
-			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod
-					.getDatenAnmeldungen(objektFilter, anmeldungenStd);
+			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod.getDatenAnmeldungen(objektFilter,
+					anmeldungenStd);
 
 			synchronized (this) {
-				this.publikationsAnmeldungen
-				.modifiziereObjektAnmeldung(anmeldungen);
+				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
 			}
 		}
 	}
@@ -152,13 +144,9 @@ implements IPPFVersorgerListener {
 	@Override
 	public void aktualisiereDaten(final ResultData[] resultate) {
 		if (this.ppfParameter == null) {
-			LOGGER.fine(
-					"Es wurden noch keine"
-							+ " Plausibilisierungsparameter empfangen");
+			PlPruefungFormal.LOGGER.fine("Es wurden noch keine" + " Plausibilisierungsparameter empfangen");
 			if (this.knoten != null) {
-				LOGGER.fine(
-						"Die Datenwerden nur" + " weitergereicht an: "
-								+ this.knoten);
+				PlPruefungFormal.LOGGER.fine("Die Datenwerden nur" + " weitergereicht an: " + this.knoten);
 				this.knoten.aktualisiereDaten(resultate);
 			}
 		} else if ((resultate != null) && (resultate.length > 0)) {
@@ -167,22 +155,15 @@ implements IPPFVersorgerListener {
 			for (final ResultData resultat : resultate) {
 
 				if (resultat.getData() != null) {
-					final Data pData = this.ppfParameter
-							.plausibilisiere(resultat);
+					final Data pData = this.ppfParameter.plausibilisiere(resultat);
 					if (pData != null) {
-						final ResultData ersetztesResultat = new ResultData(
-								resultat.getObject(),
-								resultat.getDataDescription(),
-								resultat.getDataTime(), pData);
+						final ResultData ersetztesResultat = new ResultData(resultat.getObject(),
+								resultat.getDataDescription(), resultat.getDataTime(), pData);
 						weiterzuleitendeResultate.add(ersetztesResultat);
 
 						if (this.publizieren) {
-							final ResultData publikationsDatum = iDfsMod
-									.getPublikationsDatum(
-											resultat,
-											pData,
-											standardAspekte
-											.getStandardAspekt(resultat));
+							final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, pData,
+									standardAspekte.getStandardAspekt(resultat));
 							if (publikationsDatum != null) {
 								this.sendeSinnvoll(publikationsDatum);
 							}
@@ -194,10 +175,8 @@ implements IPPFVersorgerListener {
 					weiterzuleitendeResultate.add(resultat);
 
 					if (this.publizieren) {
-						final ResultData publikationsDatum = iDfsMod
-								.getPublikationsDatum(resultat, null,
-										standardAspekte
-										.getStandardAspekt(resultat));
+						final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, null,
+								standardAspekte.getStandardAspekt(resultat));
 						if (publikationsDatum != null) {
 							this.sendeSinnvoll(publikationsDatum);
 						}
@@ -209,12 +188,10 @@ implements IPPFVersorgerListener {
 			 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
 			 */
 			if (this.knoten != null) {
-				this.knoten.aktualisiereDaten(weiterzuleitendeResultate
-						.toArray(new ResultData[0]));
+				this.knoten.aktualisiereDaten(weiterzuleitendeResultate.toArray(new ResultData[0]));
 			}
 		} else {
-			LOGGER
-			.fine("Es wurden keine sinnvollen Daten empfangen");
+			PlPruefungFormal.LOGGER.fine("Es wurden keine sinnvollen Daten empfangen");
 		}
 	}
 
@@ -226,8 +203,7 @@ implements IPPFVersorgerListener {
 	 */
 	private void sendeSinnvoll(final ResultData resultat) {
 		if (resultat.getData() == null) {
-			final Boolean keineDaten1 = this.keineDaten.get(resultat
-					.getObject());
+			final Boolean keineDaten1 = this.keineDaten.get(resultat.getObject());
 			if ((keineDaten1 != null) && !keineDaten1) {
 				this.publikationsAnmeldungen.sende(resultat);
 			}

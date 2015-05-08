@@ -37,8 +37,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
  * Publikationsaspekt).
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 
@@ -50,8 +48,7 @@ public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 	 * @throws DUAInitialisierungsException
 	 *             wird weitergereicht
 	 */
-	public PPFStandardAspekteVersorger(final IVerwaltung verwaltung)
-			throws DUAInitialisierungsException {
+	public PPFStandardAspekteVersorger(final IVerwaltung verwaltung) throws DUAInitialisierungsException {
 		super(verwaltung);
 	}
 
@@ -69,16 +66,11 @@ public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 		// "asp.testAusgang",
 		// "asp.testEingang") });
 
-		this.standardAspekte = new StandardAspekteAdapter(
-				new StandardPublikationsZuordnung[] {
-						new StandardPublikationsZuordnung("typ.fahrStreifen",
-								"atg.verkehrsDatenKurzZeitIntervall",
-								"asp.externeErfassung",
-								"asp.plausibilitätsPrüfungFormal"),
-								new StandardPublikationsZuordnung("typ.fahrStreifen",
-										"atg.verkehrsDatenLangZeitIntervall",
-										"asp.externeErfassung",
-										"asp.plausibilitätsPrüfungFormal") });
+		this.standardAspekte = new StandardAspekteAdapter(new StandardPublikationsZuordnung[] {
+				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenKurzZeitIntervall",
+						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal"),
+				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenLangZeitIntervall",
+						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal") });
 
 	}
 }

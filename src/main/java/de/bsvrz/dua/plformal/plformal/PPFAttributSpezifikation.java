@@ -35,15 +35,13 @@ import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
  * <code>atg.plausibilitätsPrüfungFormal</code> enthalten sind.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class PPFAttributSpezifikation {
 
 	/**
 	 * der Attributpfad.
 	 */
-	private String attributPfad;
+	private final String attributPfad;
 
 	/**
 	 * Min-Wert.
@@ -70,21 +68,15 @@ public class PPFAttributSpezifikation {
 	 * @throws PlFormalException
 	 *             falls die Parameter fehlerhaft sind
 	 */
-	public PPFAttributSpezifikation(final Data attributSpezifikation)
-			throws PlFormalException {
-		this.attributPfad = attributSpezifikation
-				.getTextValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_PFAD)
-				.getText().toString();
-		this.min = attributSpezifikation.getUnscaledValue(
-				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MIN).longValue();
-		this.max = attributSpezifikation.getUnscaledValue(
-				PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MAX).longValue();
-		this.methode = PlausibilisierungsMethode
-				.getZustand(attributSpezifikation.getUnscaledValue(
-						PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_OPT).intValue());
+	public PPFAttributSpezifikation(final Data attributSpezifikation) throws PlFormalException {
+		this.attributPfad = attributSpezifikation.getTextValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_PFAD).getText()
+				.toString();
+		this.min = attributSpezifikation.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MIN).longValue();
+		this.max = attributSpezifikation.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_MAX).longValue();
+		this.methode = PlausibilisierungsMethode.getZustand(
+				attributSpezifikation.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_OPT).intValue());
 		if (min > max) {
-			throw new PlFormalException("MIN (" + this.min
-					+ ") ist größer als MAX (" + max + ")");
+			throw new PlFormalException("MIN (" + this.min + ") ist größer als MAX (" + max + ")");
 		}
 	}
 

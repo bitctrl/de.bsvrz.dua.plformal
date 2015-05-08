@@ -32,8 +32,6 @@ package de.bsvrz.dua.plformal.test;
  * Wie Durchlauf in Tabelle 5-4
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class Durchlauf {
 

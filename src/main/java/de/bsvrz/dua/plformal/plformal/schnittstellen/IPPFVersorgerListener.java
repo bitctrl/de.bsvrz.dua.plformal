@@ -32,8 +32,6 @@ package de.bsvrz.dua.plformal.plformal.schnittstellen;
  * Interface <code>IPPFVersorger</code> empfangen wollen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IPPFVersorgerListener {
 

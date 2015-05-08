@@ -35,8 +35,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * herangezogen werden.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class ParameterSatz {
 
@@ -69,8 +67,7 @@ public class ParameterSatz {
 	 * @param max2
 	 *            Test-Intervallende für Kommazahl-Attribut
 	 */
-	public ParameterSatz(final SystemObject obj, final long min1,
-			final long max1, final long min2, final long max2) {
+	public ParameterSatz(final SystemObject obj, final long min1, final long max1, final long min2, final long max2) {
 		this.obj = obj;
 		this.min1 = min1;
 		this.max1 = max1;
@@ -80,7 +77,6 @@ public class ParameterSatz {
 
 	@Override
 	public String toString() {
-		return obj + " --> Attribut1[" + min1 + ", " + max1 + "], "
-				+ "Attribut2[" + min2 + ", " + max2 + "]";
+		return obj + " --> Attribut1[" + min1 + ", " + max1 + "], " + "Attribut2[" + min2 + ", " + max2 + "]";
 	}
 }

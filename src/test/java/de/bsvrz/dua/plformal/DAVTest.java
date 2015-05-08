@@ -37,8 +37,6 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
  * Stellt eine Datenverteiler-Verbindung zur Verfügung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class DAVTest {
 
@@ -53,9 +51,8 @@ public final class DAVTest {
 	/**
 	 * Verbindungsdaten.
 	 */
-	private static final String[] CON_DATA = new String[] {
-		"-datenverteiler=localhost:8083", "-benutzer=Tester",
-	"-authentifizierung=passwd" };
+	private static final String[] CON_DATA = new String[] { "-datenverteiler=localhost:8083", "-benutzer=Tester",
+			"-authentifizierung=passwd" };
 
 	/**
 	 * Verbindung zum Datenverteiler.
@@ -87,14 +84,12 @@ public final class DAVTest {
 			StandardApplicationRunner.run(new StandardApplication() {
 
 				@Override
-				public void initialize(final ClientDavInterface connection)
-						throws Exception {
+				public void initialize(final ClientDavInterface connection) throws Exception {
 					DAVTest.verbindung = connection;
 				}
 
 				@Override
-				public void parseArguments(final ArgumentList argumentList)
-						throws Exception {
+				public void parseArguments(final ArgumentList argumentList) throws Exception {
 					//
 				}
 

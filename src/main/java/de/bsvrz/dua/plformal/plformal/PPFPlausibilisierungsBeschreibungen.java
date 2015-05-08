@@ -52,8 +52,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * ResultData-Objekt erfragt werden, wie dieses formal zu plausibilisieren ist.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class PPFPlausibilisierungsBeschreibungen {
 
@@ -68,7 +66,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 	/**
 	 * Verbindung zum Verwaltungsmodul.
 	 */
-	private IVerwaltung verwaltung;
+	private final IVerwaltung verwaltung;
 
 	/**
 	 * Standardkonstruktor.
@@ -90,65 +88,54 @@ public class PPFPlausibilisierungsBeschreibungen {
 	 * @throws PlFormalException
 	 *             falls Fehler beim Auslesen des DAV-Datensatzes auftreten
 	 */
-	protected final void addParameterSatz(final Data parameterSatz)
-			throws PlFormalException {
+	protected final void addParameterSatz(final Data parameterSatz) throws PlFormalException {
 		if (parameterSatz != null) {
-			final AttributeGroup atg = (AttributeGroup) parameterSatz
-					.getReferenceValue(PPFKonstanten.ATT_PARA_SATZ_ATG)
+			final AttributeGroup atg = (AttributeGroup) parameterSatz.getReferenceValue(PPFKonstanten.ATT_PARA_SATZ_ATG)
 					.getSystemObject();
-			final Aspect asp = (Aspect) parameterSatz.getReferenceValue(
-					PPFKonstanten.ATT_PARA_SATZ_ASP).getSystemObject();
+			final Aspect asp = (Aspect) parameterSatz.getReferenceValue(PPFKonstanten.ATT_PARA_SATZ_ASP)
+					.getSystemObject();
 
 			if (atg == null) {
-				throw new PlFormalException("Uebergebene Attributgruppe ist "
-						+ DUAKonstanten.NULL + ": " + parameterSatz);
+				throw new PlFormalException(
+						"Uebergebene Attributgruppe ist " + DUAKonstanten.NULL + ": " + parameterSatz);
 			}
 			if (asp == null) {
-				throw new PlFormalException("Uebergebener Aspekt ist "
-						+ DUAKonstanten.NULL + ": " + parameterSatz);
+				throw new PlFormalException("Uebergebener Aspekt ist " + DUAKonstanten.NULL + ": " + parameterSatz);
 			}
 			final DataDescription dd = new DataDescription(atg, asp);
 
-			final ReferenceArray objekte = parameterSatz.getArray(
-					PPFKonstanten.ATL_PARA_SATZ_OBJ).asReferenceArray();
+			final ReferenceArray objekte = parameterSatz.getArray(PPFKonstanten.ATL_PARA_SATZ_OBJ).asReferenceArray();
 
 			Collection<SystemObject> finObjekte = new HashSet<SystemObject>();
 			if ((objekte == null) || (objekte.getLength() == 0)) {
-				finObjekte = DUAUtensilien.getBasisInstanzen(null,
-						this.verwaltung.getVerbindung(),
+				finObjekte = DUAUtensilien.getBasisInstanzen(null, this.verwaltung.getVerbindung(),
 						this.verwaltung.getKonfigurationsBereiche());
 			} else {
 				for (int i = 0; i < objekte.getLength(); i++) {
-					finObjekte.addAll(DUAUtensilien.getBasisInstanzen(
-							objekte.getSystemObject(i),
-							this.verwaltung.getVerbindung(),
-							this.verwaltung.getKonfigurationsBereiche()));
+					finObjekte.addAll(DUAUtensilien.getBasisInstanzen(objekte.getSystemObject(i),
+							this.verwaltung.getVerbindung(), this.verwaltung.getKonfigurationsBereiche()));
 				}
 			}
 
-			final BeschreibungFuerObjekt objBeschr = new BeschreibungFuerObjekt(
-					parameterSatz);
+			final BeschreibungFuerObjekt objBeschr = new BeschreibungFuerObjekt(parameterSatz);
 
 			for (final SystemObject finObj : finObjekte) {
 				try {
-					final DAVObjektAnmeldung dummy = new DAVObjektAnmeldung(
-							finObj, dd);
+					final DAVObjektAnmeldung dummy = new DAVObjektAnmeldung(finObj, dd);
 					if (this.resDataInfos.containsKey(dummy)) {
-						this.resDataInfos.get(dummy).addBeschreibung(
-								parameterSatz);
+						this.resDataInfos.get(dummy).addBeschreibung(parameterSatz);
 					} else {
 						this.resDataInfos.put(dummy, objBeschr);
 					}
 				} catch (final IllegalArgumentException ex) {
-					LOGGER.warning("", ex);
+					PPFPlausibilisierungsBeschreibungen.LOGGER.warning("", ex);
 				}
 			}
 		} else {
-			throw new PlFormalException("Uebergebener Parametersatz ist "
-					+ DUAKonstanten.NULL);
+			throw new PlFormalException("Uebergebener Parametersatz ist " + DUAKonstanten.NULL);
 		}
 
-		LOGGER.info(this.toString());
+		PPFPlausibilisierungsBeschreibungen.LOGGER.info(this.toString());
 	}
 
 	/**
@@ -159,25 +146,21 @@ public class PPFPlausibilisierungsBeschreibungen {
 	 *            ein <code>ResultData</code>-Objekt
 	 * @return eine (ggf. leere) Menge von Attributspezifikationen
 	 */
-	protected final Collection<PPFAttributSpezifikation> getAttributSpezifikationenFuer(
-			final ResultData resultat) {
+	protected final Collection<PPFAttributSpezifikation> getAttributSpezifikationenFuer(final ResultData resultat) {
 		final Collection<PPFAttributSpezifikation> ergebnis = new HashSet<PPFAttributSpezifikation>();
 
 		if (resultat != null) {
-			final DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(
-					resultat);
-			final BeschreibungFuerObjekt objBeschr = this.resDataInfos
-					.get(objektAnmeldung);
+			final DAVObjektAnmeldung objektAnmeldung = new DAVObjektAnmeldung(resultat);
+			final BeschreibungFuerObjekt objBeschr = this.resDataInfos.get(objektAnmeldung);
 			if (objBeschr != null) {
 				ergebnis.addAll(objBeschr.getAttributSpezifikationen());
 			} else {
-				LOGGER.fine(
-						"Es wurde keine Plausibilisierungsvorschrift"
-								+ " gefunden für: " + resultat);
+				PPFPlausibilisierungsBeschreibungen.LOGGER
+						.fine("Es wurde keine Plausibilisierungsvorschrift" + " gefunden für: " + resultat);
 			}
 		} else {
-			LOGGER.warning(
-					"Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL);
+			PPFPlausibilisierungsBeschreibungen.LOGGER
+					.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL);
 		}
 
 		return ergebnis;
@@ -237,8 +220,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
 		 *             war
 		 */
-		protected BeschreibungFuerObjekt(final Data attSpezDatum)
-				throws PlFormalException {
+		protected BeschreibungFuerObjekt(final Data attSpezDatum) throws PlFormalException {
 			addBeschreibung(attSpezDatum);
 		}
 
@@ -252,15 +234,12 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
 		 *             war
 		 */
-		protected void addBeschreibung(final Data attSpezDatum)
-				throws PlFormalException {
-			final Data.Array attribut = attSpezDatum
-					.getArray(PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
+		protected void addBeschreibung(final Data attSpezDatum) throws PlFormalException {
+			final Data.Array attribut = attSpezDatum.getArray(PPFKonstanten.ATL_PARA_SATZ_ATT_SPEZ);
 
 			for (int i = 0; i < attribut.getLength(); i++) {
 				final Data attributSpezifikation = attribut.getItem(i);
-				final PPFAttributSpezifikation dummy = new PPFAttributSpezifikation(
-						attributSpezifikation);
+				final PPFAttributSpezifikation dummy = new PPFAttributSpezifikation(attributSpezifikation);
 				attSpez.add(dummy);
 			}
 		}

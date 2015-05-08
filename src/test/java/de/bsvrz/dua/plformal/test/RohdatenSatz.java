@@ -34,8 +34,6 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
  * Wie Rohdatensatz in Tabelle 5-3 (S.15)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class RohdatenSatz {
 
@@ -64,8 +62,7 @@ public class RohdatenSatz {
 	 * @param att2
 	 *            Wert, der in das 'AttributTest2' geschrieben werden soll
 	 */
-	public RohdatenSatz(final SystemObject obj, final long att1,
-			final double att2) {
+	public RohdatenSatz(final SystemObject obj, final long att1, final double att2) {
 		this.obj = obj;
 		this.att1 = att1;
 		this.att2 = att2;
@@ -73,7 +70,6 @@ public class RohdatenSatz {
 
 	@Override
 	public String toString() {
-		return "Objekt: " + obj + ", Wert1: " + att1 + ", Wert2: " + att2
-				+ "\n";
+		return "Objekt: " + obj + ", Wert1: " + att1 + ", Wert2: " + att2 + "\n";
 	}
 }

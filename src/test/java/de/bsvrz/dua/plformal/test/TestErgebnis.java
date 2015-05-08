@@ -34,8 +34,6 @@ import java.util.Arrays;
  * Klasse zur Repräsentation eines Ergebnisses wie in Tabelle 5-5 (S.16)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class TestErgebnis {
 
@@ -71,8 +69,7 @@ public class TestErgebnis {
 	 * @param kennung2
 	 *            Ergebniskennung von Attribut2
 	 */
-	public TestErgebnis(final long wert1, final boolean[] kennung1,
-			final double wert2, final boolean[] kennung2) {
+	public TestErgebnis(final long wert1, final boolean[] kennung1, final double wert2, final boolean[] kennung2) {
 		this.wert1 = wert1;
 		this.kennung1 = kennung1;
 		this.wert2 = wert2;
@@ -89,8 +86,7 @@ public class TestErgebnis {
 			ergebnis = (this.wert1 == that.wert1) & (this.wert2 == that.wert2);
 
 			for (int i = 0; i < 3; i++) {
-				ergebnis &= (this.kennung1[i] == that.kennung1[i])
-						& (this.kennung2[i] == that.kennung2[i]);
+				ergebnis &= (this.kennung1[i] == that.kennung1[i]) & (this.kennung2[i] == that.kennung2[i]);
 			}
 		}
 
@@ -125,22 +121,20 @@ public class TestErgebnis {
 
 	@Override
 	public String toString() {
-		return "Wert1: " + wert1 + " - " + getKennung(kennung1) + ", Wert2: "
-				+ wert2 + " - " + getKennung(kennung2);
+		return "Wert1: " + wert1 + " - " + getKennung(kennung1) + ", Wert2: " + wert2 + " - " + getKennung(kennung2);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(kennung1);
-		result = prime * result + Arrays.hashCode(kennung2);
-		result = prime * result + (int) (wert1 ^ (wert1 >>> 32));
+		result = (prime * result) + Arrays.hashCode(kennung1);
+		result = (prime * result) + Arrays.hashCode(kennung2);
+		result = (prime * result) + (int) (wert1 ^ (wert1 >>> 32));
 		long temp;
 		temp = Double.doubleToLongBits(wert2);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
-
 
 }

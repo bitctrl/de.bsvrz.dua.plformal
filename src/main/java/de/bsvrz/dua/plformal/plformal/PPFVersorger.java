@@ -60,11 +60,8 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * Verfügung. Sie führt die Plausibilisierung von Daten durch
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
-public final class PPFVersorger implements IPPFVersorger,
-ClientReceiverInterface {
+public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterface {
 
 	private static final Debug LOGGER = Debug.getLogger();
 
@@ -97,7 +94,7 @@ ClientReceiverInterface {
 	/**
 	 * Verbindung zum Verwaltungsmodul.
 	 */
-	private IVerwaltungMitGuete verwaltung;
+	private final IVerwaltungMitGuete verwaltung;
 
 	/**
 	 * Standardkonstruktor.
@@ -111,48 +108,35 @@ ClientReceiverInterface {
 	 * @throws DUAInitialisierungsException
 	 *             falls die Datenanmeldung fehl schlägt
 	 */
-	private PPFVersorger(final IVerwaltungMitGuete verwaltung,
-			final SystemObject plausbibilisierungsObjekt)
-					throws DUAInitialisierungsException {
+	private PPFVersorger(final IVerwaltungMitGuete verwaltung, final SystemObject plausbibilisierungsObjekt)
+			throws DUAInitialisierungsException {
 		if (verwaltung == null) {
-			throw new DUAInitialisierungsException("Keine Verbindung"
-					+ " zum Verwaltungsmodul");
+			throw new DUAInitialisierungsException("Keine Verbindung" + " zum Verwaltungsmodul");
 		}
 		if (verwaltung.getVerbindung() == null) {
-			throw new DUAInitialisierungsException("Keine Verbindung"
-					+ " zum Datenverteiler");
+			throw new DUAInitialisierungsException("Keine Verbindung" + " zum Datenverteiler");
 		}
 		if (plausbibilisierungsObjekt == null) {
-			throw new DUAInitialisierungsException("Ungültiges"
-					+ " Plausibilisierungsobjekt");
+			throw new DUAInitialisierungsException("Ungültiges" + " Plausibilisierungsobjekt");
 		}
 		this.verwaltung = verwaltung;
 
-		PPFVersorger.typGanzZahl = verwaltung.getVerbindung().getDataModel()
-				.getType("typ.ganzzahlAttributTyp");
-		PPFVersorger.typKommaZahl = verwaltung.getVerbindung().getDataModel()
-				.getType("typ.kommazahlAttributTyp");
+		PPFVersorger.typGanzZahl = verwaltung.getVerbindung().getDataModel().getType("typ.ganzzahlAttributTyp");
+		PPFVersorger.typKommaZahl = verwaltung.getVerbindung().getDataModel().getType("typ.kommazahlAttributTyp");
 
 		try {
-			final AttributeGroup atg = verwaltung.getVerbindung()
-					.getDataModel().getAttributeGroup(PPFKonstanten.ATG);
-			final Aspect asp = verwaltung.getVerbindung().getDataModel()
-					.getAspect(DaVKonstanten.ASP_PARAMETER_SOLL);
+			final AttributeGroup atg = verwaltung.getVerbindung().getDataModel().getAttributeGroup(PPFKonstanten.ATG);
+			final Aspect asp = verwaltung.getVerbindung().getDataModel().getAspect(DaVKonstanten.ASP_PARAMETER_SOLL);
 			final DataDescription dd = new DataDescription(atg, asp);
-			verwaltung.getVerbindung().subscribeReceiver(this,
-					plausbibilisierungsObjekt, dd, ReceiveOptions.normal(),
+			verwaltung.getVerbindung().subscribeReceiver(this, plausbibilisierungsObjekt, dd, ReceiveOptions.normal(),
 					ReceiverRole.receiver());
 		} catch (final Throwable t) {
-			throw new DUAInitialisierungsException("Unerwarteter"
-					+ " Fehler beim Initialisieren der"
-					+ " formalen Plausibilisierung", t);
+			throw new DUAInitialisierungsException(
+					"Unerwarteter" + " Fehler beim Initialisieren der" + " formalen Plausibilisierung", t);
 		}
 
-		LOGGER.config(
-				"Initialisierung erfolgreich.\n"
-						+ "Für die formale Plausibilisierung"
-						+ " wird das Objekt " + plausbibilisierungsObjekt
-						+ " verwendet.");
+		PPFVersorger.LOGGER.config("Initialisierung erfolgreich.\n" + "Für die formale Plausibilisierung"
+				+ " wird das Objekt " + plausbibilisierungsObjekt + " verwendet.");
 	}
 
 	/**
@@ -175,17 +159,15 @@ ClientReceiverInterface {
 			 * Ermittlung des Objektes, das die formale Plausibilisierung
 			 * beschreibt
 			 */
-			final SystemObjectType typPPF = (SystemObjectType) verwaltung
-					.getVerbindung().getDataModel()
+			final SystemObjectType typPPF = (SystemObjectType) verwaltung.getVerbindung().getDataModel()
 					.getObject(PPFKonstanten.TYP);
 
 			SystemObject[] plausibilisierungsObjekte = new SystemObject[0];
 
 			if (typPPF != null) {
-				plausibilisierungsObjekte = DUAUtensilien.getBasisInstanzen(
-						typPPF, verwaltung.getVerbindung(),
-						verwaltung.getKonfigurationsBereiche()).toArray(
-								new SystemObject[0]);
+				plausibilisierungsObjekte = DUAUtensilien
+						.getBasisInstanzen(typPPF, verwaltung.getVerbindung(), verwaltung.getKonfigurationsBereiche())
+						.toArray(new SystemObject[0]);
 			}
 
 			if (plausibilisierungsObjekte.length == 0) {
@@ -194,23 +176,17 @@ ClientReceiverInterface {
 				 * Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
 				 * vorhanden ist
 				 */
-				plausibilisierungsObjekte = DUAUtensilien.getBasisInstanzen(
-						typPPF, verwaltung.getVerbindung(), null).toArray(
-								new SystemObject[0]);
+				plausibilisierungsObjekte = DUAUtensilien.getBasisInstanzen(typPPF, verwaltung.getVerbindung(), null)
+						.toArray(new SystemObject[0]);
 			}
 
 			if (plausibilisierungsObjekte.length > 0) {
 				if (plausibilisierungsObjekte.length > 1) {
-					LOGGER.warning(
-							"Es liegen mehrere Objekte vom Typ "
-									+ PPFKonstanten.TYP + " vor");
+					PPFVersorger.LOGGER.warning("Es liegen mehrere Objekte vom Typ " + PPFKonstanten.TYP + " vor");
 				}
-				PPFVersorger.instanz = new PPFVersorger(verwaltung,
-						plausibilisierungsObjekte[0]);
+				PPFVersorger.instanz = new PPFVersorger(verwaltung, plausibilisierungsObjekte[0]);
 			} else {
-				throw new DUAInitialisierungsException(
-						"Es liegt kein Objekt vom Typ " + PPFKonstanten.TYP
-						+ " vor");
+				throw new DUAInitialisierungsException("Es liegt kein Objekt vom Typ " + PPFKonstanten.TYP + " vor");
 			}
 		}
 
@@ -222,7 +198,7 @@ ClientReceiverInterface {
 		final PPFPlausibilisierungsBeschreibungen neuePlBeschreibungen = new PPFPlausibilisierungsBeschreibungen(
 				verwaltung);
 		boolean fehler = false;
-		LOGGER.info("Neue Parameter empfangen");
+		PPFVersorger.LOGGER.info("Neue Parameter empfangen");
 
 		if ((resultate != null) && (resultate.length > 0)) {
 			/**
@@ -231,25 +207,19 @@ ClientReceiverInterface {
 			 */
 			final ResultData resultat = resultate[resultate.length - 1];
 
-			if ((resultat != null) && resultat.isSourceAvailable()
-					&& !resultat.isNoDataAvailable() && resultat.hasData()
-					&& (resultat.getData() != null)) {
+			if ((resultat != null) && resultat.isSourceAvailable() && !resultat.isNoDataAvailable()
+					&& resultat.hasData() && (resultat.getData() != null)) {
 
 				try {
-					final Data.Array parameterSaetze = resultat.getData()
-							.getArray(PPFKonstanten.ATL_PARA_SATZ);
+					final Data.Array parameterSaetze = resultat.getData().getArray(PPFKonstanten.ATL_PARA_SATZ);
 
 					for (int i = 0; i < parameterSaetze.getLength(); i++) {
-						neuePlBeschreibungen.addParameterSatz(parameterSaetze
-								.getItem(i));
-						LOGGER.fine(
-								parameterSaetze.getItem(i).toString());
+						neuePlBeschreibungen.addParameterSatz(parameterSaetze.getItem(i));
+						PPFVersorger.LOGGER.fine(parameterSaetze.getItem(i).toString());
 					}
 				} catch (final PlFormalException e) {
-					LOGGER.warning(
-							"Parameterdatensatz für die formale"
-									+ " Plausibilisierung konnte nicht"
-									+ " ausgelesen werden", e);
+					PPFVersorger.LOGGER.warning("Parameterdatensatz für die formale" + " Plausibilisierung konnte nicht"
+							+ " ausgelesen werden", e);
 					fehler = true;
 				}
 			}
@@ -267,7 +237,7 @@ ClientReceiverInterface {
 			}
 		}
 
-		LOGGER.info(this.toString());
+		PPFVersorger.LOGGER.info(this.toString());
 	}
 
 	@Override
@@ -275,8 +245,7 @@ ClientReceiverInterface {
 		final Collection<SystemObject> objekte = new HashSet<SystemObject>();
 
 		if (this.plBeschreibungen != null) {
-			for (final DAVObjektAnmeldung anmeldung : this.plBeschreibungen
-					.getObjektAnmeldungen()) {
+			for (final DAVObjektAnmeldung anmeldung : this.plBeschreibungen.getObjektAnmeldungen()) {
 				objekte.add(anmeldung.getObjekt());
 			}
 		}
@@ -295,11 +264,9 @@ ClientReceiverInterface {
 		Data ergebnis = null;
 
 		if (plBeschreibungen == null) {
-			LOGGER.finest(
-					"Es wurden noch keine Parameter"
-							+ " für die formale Plausibilisierung empfangen");
-		} else if ((resultat != null) && resultat.hasData()
-				&& (resultat.getData() != null)) {
+			PPFVersorger.LOGGER
+					.finest("Es wurden noch keine Parameter" + " für die formale Plausibilisierung empfangen");
+		} else if ((resultat != null) && resultat.hasData() && (resultat.getData() != null)) {
 			final Collection<PPFAttributSpezifikation> attSpezifikationen = this.plBeschreibungen
 					.getAttributSpezifikationenFuer(resultat);
 
@@ -307,22 +274,17 @@ ClientReceiverInterface {
 				ergebnis = resultat.getData();
 
 				for (final PPFAttributSpezifikation attSpez : attSpezifikationen) {
-					final Data dummy = plausibilisiereAttribut(ergebnis,
-							attSpez);
+					final Data dummy = plausibilisiereAttribut(ergebnis, attSpez);
 					if (dummy != null) {
 						ergebnis = dummy;
 					}
 				}
 			} else {
-				LOGGER
-				.finest("ResultData "
-						+ resultat
-						+ " ist nicht zur formalen Plausibilisierung vorgesehen.");
+				PPFVersorger.LOGGER
+						.finest("ResultData " + resultat + " ist nicht zur formalen Plausibilisierung vorgesehen.");
 			}
 		} else {
-			LOGGER
-			.finest("Das formal zu prüfende Datum"
-					+ " enthält keine sinnvollen Daten: "
+			PPFVersorger.LOGGER.finest("Das formal zu prüfende Datum" + " enthält keine sinnvollen Daten: "
 					+ (resultat == null ? DUAKonstanten.NULL : resultat));
 		}
 
@@ -343,8 +305,7 @@ ClientReceiverInterface {
 	 *         verändert werden musste</b>), oder <code>null</code> sonst
 	 *
 	 */
-	private Data plausibilisiereAttribut(final Data datum,
-			final PPFAttributSpezifikation attSpez) {
+	private Data plausibilisiereAttribut(final Data datum, final PPFAttributSpezifikation attSpez) {
 		Data ergebnis = null;
 
 		if (attSpez != null) {
@@ -356,19 +317,14 @@ ClientReceiverInterface {
 			if ((attPfad != null) && (methode != null)) {
 				final Data dummy = datum.createModifiableCopy();
 
-				final Data plausDatum = DUAUtensilien.getAttributDatum(attPfad,
-						dummy);
+				final Data plausDatum = DUAUtensilien.getAttributDatum(attPfad, dummy);
 				if ((plausDatum != null)
-						&& (plausDatum.getAttributeType().isOfType(
-								PPFVersorger.typGanzZahl) || plausDatum
-								.getAttributeType().isOfType(
-										PPFVersorger.typKommaZahl))
-										&& !plausDatum.asUnscaledValue().isState()) {
+						&& (plausDatum.getAttributeType().isOfType(PPFVersorger.typGanzZahl)
+								|| plausDatum.getAttributeType().isOfType(PPFVersorger.typKommaZahl))
+						&& !plausDatum.asUnscaledValue().isState()) {
 
-					final double alterWert = plausDatum.asUnscaledValue()
-							.doubleValue();
-					double neuerWert = plausDatum.asUnscaledValue()
-							.doubleValue();
+					final double alterWert = plausDatum.asUnscaledValue().doubleValue();
+					double neuerWert = plausDatum.asUnscaledValue().doubleValue();
 					final boolean implausibelMin = alterWert < min;
 					final boolean implausibelMax = alterWert > max;
 
@@ -377,44 +333,31 @@ ClientReceiverInterface {
 					 */
 					if (methode.equals(PlausibilisierungsMethode.NUR_PRUEFUNG)) {
 						if (implausibelMin || implausibelMax) {
-							setStatusPlFormalWert(dummy, true, attPfad,
-									PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
+							setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
 						} else {
-							setStatusPlFormalWert(dummy, false, attPfad,
-									PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
+							setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_IMPLAUSIBEL);
 						}
-					} else if (methode
-							.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)) {
+					} else if (methode.equals(PlausibilisierungsMethode.SETZE_MIN_MAX)) {
 						if (implausibelMax) {
 							neuerWert = max;
-							setStatusPlFormalWert(dummy, false, attPfad,
-									PPFKonstanten.ATT_STATUS_MIN);
-							setStatusPlFormalWert(dummy, true, attPfad,
-									PPFKonstanten.ATT_STATUS_MAX);
+							setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_MIN);
+							setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_MAX);
 						} else if (implausibelMin) {
 							neuerWert = min;
-							setStatusPlFormalWert(dummy, true, attPfad,
-									PPFKonstanten.ATT_STATUS_MIN);
-							setStatusPlFormalWert(dummy, false, attPfad,
-									PPFKonstanten.ATT_STATUS_MAX);
+							setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_MIN);
+							setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_MAX);
 						}
-					} else if (methode
-							.equals(PlausibilisierungsMethode.SETZE_MIN)) {
+					} else if (methode.equals(PlausibilisierungsMethode.SETZE_MIN)) {
 						if (implausibelMin) {
 							neuerWert = min;
-							setStatusPlFormalWert(dummy, true, attPfad,
-									PPFKonstanten.ATT_STATUS_MIN);
-							setStatusPlFormalWert(dummy, false, attPfad,
-									PPFKonstanten.ATT_STATUS_MAX);
+							setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_MIN);
+							setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_MAX);
 						}
-					} else if (methode
-							.equals(PlausibilisierungsMethode.SETZE_MAX)) {
+					} else if (methode.equals(PlausibilisierungsMethode.SETZE_MAX)) {
 						if (implausibelMax) {
 							neuerWert = max;
-							setStatusPlFormalWert(dummy, false, attPfad,
-									PPFKonstanten.ATT_STATUS_MIN);
-							setStatusPlFormalWert(dummy, true, attPfad,
-									PPFKonstanten.ATT_STATUS_MAX);
+							setStatusPlFormalWert(dummy, false, attPfad, PPFKonstanten.ATT_STATUS_MIN);
+							setStatusPlFormalWert(dummy, true, attPfad, PPFKonstanten.ATT_STATUS_MAX);
 						}
 					}
 
@@ -428,10 +371,8 @@ ClientReceiverInterface {
 					ergebnis = dummy;
 				}
 			} else {
-				LOGGER.warning(
-						"Für Datum " + datum
-						+ " ist die Attributspezifikation "
-						+ "unvollständig: " + attSpez);
+				PPFVersorger.LOGGER.warning(
+						"Für Datum " + datum + " ist die Attributspezifikation " + "unvollständig: " + attSpez);
 			}
 		}
 
@@ -492,15 +433,13 @@ ClientReceiverInterface {
 	 * @param attPfadErsetzung
 	 *            der Attributpfad bis zum Status- Flag (vom Wert aus gesehen)
 	 */
-	private void setStatusPlFormalWert(final Data datum, final boolean wert,
-			final String attPfad, final String attPfadErsetzung) {
+	private void setStatusPlFormalWert(final Data datum, final boolean wert, final String attPfad,
+			final String attPfadErsetzung) {
 		if ((datum != null) && (attPfad != null) && (attPfadErsetzung != null)) {
-			final String neuerAttPfad = DUAUtensilien
-					.ersetzeLetztesElemInAttPfad(attPfad, attPfadErsetzung);
+			final String neuerAttPfad = DUAUtensilien.ersetzeLetztesElemInAttPfad(attPfad, attPfadErsetzung);
 
 			if (neuerAttPfad != null) {
-				final Data status = DUAUtensilien.getAttributDatum(
-						neuerAttPfad, datum);
+				final Data status = DUAUtensilien.getAttributDatum(neuerAttPfad, datum);
 				if (status != null) {
 					status.asUnscaledValue().set(wert ? 1 : 0);
 
@@ -508,32 +447,23 @@ ClientReceiverInterface {
 						// Statusflag
 						// wird
 						// eingeschaltet
-						final String neuerAttPfadGuete = DUAUtensilien
-								.ersetzeLetztesElemInAttPfad(attPfad,
-										PPFKonstanten.ATT_GUETE);
+						final String neuerAttPfadGuete = DUAUtensilien.ersetzeLetztesElemInAttPfad(attPfad,
+								PPFKonstanten.ATT_GUETE);
 						if (neuerAttPfadGuete != null) {
-							final Data guete = DUAUtensilien.getAttributDatum(
-									neuerAttPfadGuete, datum);
+							final Data guete = DUAUtensilien.getAttributDatum(neuerAttPfadGuete, datum);
 							if (guete.asUnscaledValue().longValue() >= 0) {
-								guete.asScaledValue().set(
-										guete.asScaledValue().doubleValue()
-										* verwaltung.getGueteFaktor());
+								guete.asScaledValue()
+										.set(guete.asScaledValue().doubleValue() * verwaltung.getGueteFaktor());
 							}
 						}
 					}
 				} else {
-					LOGGER.warning(
-							"Statuswert konnte nicht" + " ausgelesen werden:\n"
-									+ "Datum: " + datum + "\nAttr.-Pfad: "
-									+ attPfad + "\nErsetzung: "
-									+ attPfadErsetzung);
+					PPFVersorger.LOGGER.warning("Statuswert konnte nicht" + " ausgelesen werden:\n" + "Datum: " + datum
+							+ "\nAttr.-Pfad: " + attPfad + "\nErsetzung: " + attPfadErsetzung);
 				}
 			} else {
-				throw new RuntimeException(
-						"Attributpfad zum Statuswert konnte nicht"
-								+ " erstellt werden:\n" + "Datum: " + datum
-								+ "\nAttr.-Pfad: " + attPfad + "\nErsetzung: "
-								+ attPfadErsetzung);
+				throw new RuntimeException("Attributpfad zum Statuswert konnte nicht" + " erstellt werden:\n"
+						+ "Datum: " + datum + "\nAttr.-Pfad: " + attPfad + "\nErsetzung: " + attPfadErsetzung);
 			}
 		}
 	}

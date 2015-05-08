@@ -53,8 +53,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
  * Testklasse für die statischen Methoden der Klasse DUAUtensilien.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 @Ignore("Datenverteilerverbindung klären")
 public class DUAUtensilienTest {
@@ -121,22 +119,14 @@ public class DUAUtensilienTest {
 		final String suche8 = "a";
 		final String soll8 = "1";
 
-		Assert.assertEquals("1: ", DUAUtensilien.getArgument(suche1, para1),
-				soll1);
-		Assert.assertEquals("2: ", DUAUtensilien.getArgument(suche2, para2),
-				soll2);
-		Assert.assertEquals("3: ", DUAUtensilien.getArgument(suche3, para3),
-				soll3);
-		Assert.assertEquals("4: ", DUAUtensilien.getArgument(suche4, para4),
-				soll4);
-		Assert.assertEquals("5: ", DUAUtensilien.getArgument(suche5, para5),
-				soll5);
-		Assert.assertEquals("6: ", DUAUtensilien.getArgument(suche6, para6),
-				soll6);
-		Assert.assertEquals("7: ", DUAUtensilien.getArgument(suche7, para7),
-				soll7);
-		Assert.assertEquals("8: ", DUAUtensilien.getArgument(suche8, para8),
-				soll8);
+		Assert.assertEquals("1: ", DUAUtensilien.getArgument(suche1, para1), soll1);
+		Assert.assertEquals("2: ", DUAUtensilien.getArgument(suche2, para2), soll2);
+		Assert.assertEquals("3: ", DUAUtensilien.getArgument(suche3, para3), soll3);
+		Assert.assertEquals("4: ", DUAUtensilien.getArgument(suche4, para4), soll4);
+		Assert.assertEquals("5: ", DUAUtensilien.getArgument(suche5, para5), soll5);
+		Assert.assertEquals("6: ", DUAUtensilien.getArgument(suche6, para6), soll6);
+		Assert.assertEquals("7: ", DUAUtensilien.getArgument(suche7, para7), soll7);
+		Assert.assertEquals("8: ", DUAUtensilien.getArgument(suche8, para8), soll8);
 	}
 
 	/**
@@ -144,26 +134,17 @@ public class DUAUtensilienTest {
 	 */
 	@Test
 	public void testGetBasisInstanzen1() {
-		final SystemObject o1 = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.messQuerschnittAllgemein");
-		final SystemObject o2 = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.messQuerschnitt");
-		final SystemObject o3 = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("mq.a100.0010");
+		final SystemObject o1 = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.messQuerschnittAllgemein");
+		final SystemObject o2 = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.messQuerschnitt");
+		final SystemObject o3 = DUAUtensilienTest.verbindung.getDataModel().getObject("mq.a100.0010");
 		final SystemObject o4 = null;
-		final SystemObject o5 = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.typ");
+		final SystemObject o5 = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.typ");
 
-		final Collection<SystemObject> ist1 = DUAUtensilien.getBasisInstanzen(
-				o1, DUAUtensilienTest.verbindung);
-		final Collection<SystemObject> ist2 = DUAUtensilien.getBasisInstanzen(
-				o2, DUAUtensilienTest.verbindung);
-		final Collection<SystemObject> ist3 = DUAUtensilien.getBasisInstanzen(
-				o3, DUAUtensilienTest.verbindung);
-		final Collection<SystemObject> ist4 = DUAUtensilien.getBasisInstanzen(
-				o4, DUAUtensilienTest.verbindung);
-		final Collection<SystemObject> ist5 = DUAUtensilien.getBasisInstanzen(
-				o5, DUAUtensilienTest.verbindung);
+		final Collection<SystemObject> ist1 = DUAUtensilien.getBasisInstanzen(o1, DUAUtensilienTest.verbindung);
+		final Collection<SystemObject> ist2 = DUAUtensilien.getBasisInstanzen(o2, DUAUtensilienTest.verbindung);
+		final Collection<SystemObject> ist3 = DUAUtensilien.getBasisInstanzen(o3, DUAUtensilienTest.verbindung);
+		final Collection<SystemObject> ist4 = DUAUtensilien.getBasisInstanzen(o4, DUAUtensilienTest.verbindung);
+		final Collection<SystemObject> ist5 = DUAUtensilien.getBasisInstanzen(o5, DUAUtensilienTest.verbindung);
 
 		final Collection<SystemObject> soll1 = new HashSet<SystemObject>();
 		final Collection<SystemObject> soll2 = new HashSet<SystemObject>();
@@ -171,21 +152,18 @@ public class DUAUtensilienTest {
 		final Collection<SystemObject> soll4 = new HashSet<SystemObject>();
 		Collection<SystemObject> soll5 = new HashSet<SystemObject>();
 
-		soll1.addAll(((SystemObjectType) DUAUtensilienTest.verbindung
-				.getDataModel().getObject("typ.messQuerschnitt")).getElements());
-		soll2.addAll(((SystemObjectType) DUAUtensilienTest.verbindung
-				.getDataModel().getObject("typ.messQuerschnitt")).getElements());
-		soll3.add(DUAUtensilienTest.verbindung.getDataModel().getObject(
-				"mq.a100.0010"));
-		for (final SystemObject obj : ((SystemObjectType) DUAUtensilienTest.verbindung
-				.getDataModel().getObject("typ.typ")).getElements()) {
-			for (final SystemObject elem : ((SystemObjectType) obj)
-					.getElements()) {
+		soll1.addAll(((SystemObjectType) DUAUtensilienTest.verbindung.getDataModel().getObject("typ.messQuerschnitt"))
+				.getElements());
+		soll2.addAll(((SystemObjectType) DUAUtensilienTest.verbindung.getDataModel().getObject("typ.messQuerschnitt"))
+				.getElements());
+		soll3.add(DUAUtensilienTest.verbindung.getDataModel().getObject("mq.a100.0010"));
+		for (final SystemObject obj : ((SystemObjectType) DUAUtensilienTest.verbindung.getDataModel()
+				.getObject("typ.typ")).getElements()) {
+			for (final SystemObject elem : ((SystemObjectType) obj).getElements()) {
 
 				if (elem.getClass().equals(DafConfigurationObject.class)
 						|| elem.getClass().equals(DafDynamicObject.class)
-						|| elem.getClass().equals(
-								DafConfigurationAuthority.class)) {
+						|| elem.getClass().equals(DafConfigurationAuthority.class)) {
 					soll4.add(elem);
 
 				}
@@ -212,8 +190,7 @@ public class DUAUtensilienTest {
 	 * @return <code>true</code>, wenn beide Objekte identisch oder beide
 	 *         <code>null</code> sind
 	 */
-	public static final boolean objectEquals(final Object obj1,
-			final Object obj2) {
+	public static final boolean objectEquals(final Object obj1, final Object obj2) {
 		boolean eq = false;
 
 		if ((obj1 == null) && (obj2 == null)) {
@@ -230,130 +207,82 @@ public class DUAUtensilienTest {
 	 */
 	@Test
 	public void testIsKombinationOk() {
-		final SystemObject aObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.fahrStreifen");
+		final SystemObject aObj = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifen");
 		final DataDescription aDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean aSoll = false;
 
 		final SystemObject bObj = DUAUtensilienTest.verbindung.getDataModel()
 				.getObject("atg.verkehrsDatenLangZeitIntervall");
 		final DataDescription bDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.info"), null);
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.info"), null);
 		final boolean bSoll = false;
 
 		final SystemObject cObj = null;
 		final DataDescription cDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean cSoll = false;
 
-		final SystemObject dObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject dObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription dDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean dSoll = false;
 
-		final SystemObject eObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject eObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription eDataDesc = new DataDescription(null,
-				DUAUtensilienTest.verbindung.getDataModel().getAspect(
-						"asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean eSoll = false;
 
-		final SystemObject fObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject fObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription fDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"), null);
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
+				null);
 		final boolean fSoll = false;
 
-		final SystemObject gObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject gObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription gDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.testPlPrüfungFormal"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean gSoll = false;
 
-		final SystemObject hObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject hObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription hDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.testEingang"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean hSoll = false;
 
-		final SystemObject iObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject iObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription iDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.XXX"), DUAUtensilienTest.verbindung.getDataModel()
-						.getAspect("asp.externeErfassung"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.XXX"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean iSoll = false;
 
-		final SystemObject jObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject jObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
 		final DataDescription jDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.testPlPrüfungFormal"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.testEingang"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean jSoll = true;
 
-		final SystemObject kObj = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.testPlPrüfungFormal");
+		final SystemObject kObj = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.testPlPrüfungFormal");
 		final DataDescription kDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.testPlPrüfungFormal"),
-						DUAUtensilienTest.verbindung.getDataModel().getAspect(
-								"asp.testEingang"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean kSoll = false;
 
-		Assert.assertTrue(
-				"A:",
-				(DUAUtensilien.isKombinationOk(aObj, aDataDesc) == null) == aSoll);
-		Assert.assertTrue(
-				"B:",
-				(DUAUtensilien.isKombinationOk(bObj, bDataDesc) == null) == bSoll);
-		Assert.assertTrue(
-				"C:",
-				(DUAUtensilien.isKombinationOk(cObj, cDataDesc) == null) == cSoll);
-		Assert.assertTrue(
-				"D:",
-				(DUAUtensilien.isKombinationOk(dObj, dDataDesc) == null) == dSoll);
-		Assert.assertTrue(
-				"E:",
-				(DUAUtensilien.isKombinationOk(eObj, eDataDesc) == null) == eSoll);
-		Assert.assertTrue(
-				"F:",
-				(DUAUtensilien.isKombinationOk(fObj, fDataDesc) == null) == fSoll);
-		Assert.assertTrue(
-				"G:",
-				(DUAUtensilien.isKombinationOk(gObj, gDataDesc) == null) == gSoll);
-		Assert.assertTrue(
-				"H:",
-				(DUAUtensilien.isKombinationOk(hObj, hDataDesc) == null) == hSoll);
-		Assert.assertTrue(
-				"I:",
-				(DUAUtensilien.isKombinationOk(iObj, iDataDesc) == null) == iSoll);
-		Assert.assertTrue(
-				"J:",
-				(DUAUtensilien.isKombinationOk(jObj, jDataDesc) == null) == jSoll);
-		Assert.assertTrue(
-				"K:",
-				(DUAUtensilien.isKombinationOk(kObj, kDataDesc) == null) == kSoll);
+		Assert.assertTrue("A:", (DUAUtensilien.isKombinationOk(aObj, aDataDesc) == null) == aSoll);
+		Assert.assertTrue("B:", (DUAUtensilien.isKombinationOk(bObj, bDataDesc) == null) == bSoll);
+		Assert.assertTrue("C:", (DUAUtensilien.isKombinationOk(cObj, cDataDesc) == null) == cSoll);
+		Assert.assertTrue("D:", (DUAUtensilien.isKombinationOk(dObj, dDataDesc) == null) == dSoll);
+		Assert.assertTrue("E:", (DUAUtensilien.isKombinationOk(eObj, eDataDesc) == null) == eSoll);
+		Assert.assertTrue("F:", (DUAUtensilien.isKombinationOk(fObj, fDataDesc) == null) == fSoll);
+		Assert.assertTrue("G:", (DUAUtensilien.isKombinationOk(gObj, gDataDesc) == null) == gSoll);
+		Assert.assertTrue("H:", (DUAUtensilien.isKombinationOk(hObj, hDataDesc) == null) == hSoll);
+		Assert.assertTrue("I:", (DUAUtensilien.isKombinationOk(iObj, iDataDesc) == null) == iSoll);
+		Assert.assertTrue("J:", (DUAUtensilien.isKombinationOk(jObj, jDataDesc) == null) == jSoll);
+		Assert.assertTrue("K:", (DUAUtensilien.isKombinationOk(kObj, kDataDesc) == null) == kSoll);
 	}
 
 	/**
@@ -371,22 +300,14 @@ public class DUAUtensilienTest {
 		final String gVorher = "a.a", gNachher = null, gErsetz = "";
 		final String hVorher = "a.a", hNachher = null, hErsetz = null;
 
-		Assert.assertEquals("A:", aNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(aVorher, aErsetz));
-		Assert.assertEquals("B:", bNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(bVorher, bErsetz));
-		Assert.assertEquals("C:", cNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(cVorher, cErsetz));
-		Assert.assertEquals("D:", dNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(dVorher, dErsetz));
-		Assert.assertEquals("E:", eNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(eVorher, eErsetz));
-		Assert.assertEquals("F:", fNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(fVorher, fErsetz));
-		Assert.assertEquals("G:", gNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(gVorher, gErsetz));
-		Assert.assertEquals("H:", hNachher,
-				DUAUtensilien.ersetzeLetztesElemInAttPfad(hVorher, hErsetz));
+		Assert.assertEquals("A:", aNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(aVorher, aErsetz));
+		Assert.assertEquals("B:", bNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(bVorher, bErsetz));
+		Assert.assertEquals("C:", cNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(cVorher, cErsetz));
+		Assert.assertEquals("D:", dNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(dVorher, dErsetz));
+		Assert.assertEquals("E:", eNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(eVorher, eErsetz));
+		Assert.assertEquals("F:", fNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(fVorher, fErsetz));
+		Assert.assertEquals("G:", gNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(gVorher, gErsetz));
+		Assert.assertEquals("H:", hNachher, DUAUtensilien.ersetzeLetztesElemInAttPfad(hVorher, hErsetz));
 
 	}
 
@@ -397,10 +318,8 @@ public class DUAUtensilienTest {
 	@Test
 	public void testGetAttributDatum() {
 		final Data testDatum = DUAUtensilienTest.verbindung
-				.createData(DUAUtensilienTest.verbindung.getDataModel()
-						.getAttributeGroup(PPFKonstanten.ATG));
-		final Data.Array ps = testDatum.getItem(
-				"ParameterSatzPlausibilitätsPrüfungFormal").asArray();
+				.createData(DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(PPFKonstanten.ATG));
+		final Data.Array ps = testDatum.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray();
 		ps.setLength(2);
 		final Data ps0 = ps.getItem(0);
 		final Data ps1 = ps.getItem(1);
@@ -408,30 +327,22 @@ public class DUAUtensilienTest {
 		final String[] soll = new String[30];
 
 		pfade[0] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Attributgruppe";
-		soll[0] = DUAUtensilienTest.verbindung.getDataModel()
-				.getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall")
+		soll[0] = DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall")
 				.toString();
 		ps0.getReferenceValue("Attributgruppe").setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenKurzZeitIntervall"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall"));
 
 		pfade[1] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Aspekt";
-		soll[1] = DUAUtensilienTest.verbindung.getDataModel()
-				.getAspect("asp.externeErfassung").toString();
-		ps0.getReferenceValue("Aspekt").setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getAspect(
-						"asp.externeErfassung"));
+		soll[1] = DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung").toString();
+		ps0.getReferenceValue("Aspekt")
+				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 
 		pfade[2] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Objekt.0";
-		soll[2] = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.fahrStreifen").toString();
+		soll[2] = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifen").toString();
 		final Data.Array objekte = ps0.getArray("Objekt");
 		objekte.setLength(1);
-		objekte.getItem(0)
-		.asReferenceValue()
-		.setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getObject(
-						"typ.fahrStreifen"));
+		objekte.getItem(0).asReferenceValue()
+				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifen"));
 		final Data.Array attribut = ps0.getArray("AttributSpezifikation");
 
 		pfade[3] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.0.AttributPfad";
@@ -470,30 +381,22 @@ public class DUAUtensilienTest {
 		attSpez2.getUnscaledValue("Optionen").set(1);
 
 		pfade[11] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Attributgruppe";
-		soll[11] = DUAUtensilienTest.verbindung.getDataModel()
-				.getAttributeGroup("atg.verkehrsDatenLangZeitIntervall")
+		soll[11] = DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall")
 				.toString();
 		ps1.getReferenceValue("Attributgruppe").setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(
-						"atg.verkehrsDatenLangZeitIntervall"));
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"));
 
 		pfade[12] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Aspekt";
-		soll[12] = DUAUtensilienTest.verbindung.getDataModel()
-				.getAspect("asp.messWertErsetzung").toString();
-		ps1.getReferenceValue("Aspekt").setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getAspect(
-						"asp.messWertErsetzung"));
+		soll[12] = DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.messWertErsetzung").toString();
+		ps1.getReferenceValue("Aspekt")
+				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.messWertErsetzung"));
 
 		pfade[13] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Objekt.0";
-		soll[13] = DUAUtensilienTest.verbindung.getDataModel()
-				.getObject("typ.fahrStreifenLangZeit").toString();
+		soll[13] = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifenLangZeit").toString();
 		final Data.Array objekte1 = ps1.getArray("Objekt");
 		objekte1.setLength(1);
-		objekte1.getItem(0)
-		.asReferenceValue()
-		.setSystemObject(
-				DUAUtensilienTest.verbindung.getDataModel().getObject(
-						"typ.fahrStreifenLangZeit"));
+		objekte1.getItem(0).asReferenceValue()
+				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifenLangZeit"));
 		final Data.Array attribut1 = ps1.getArray("AttributSpezifikation");
 
 		pfade[14] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.0.AttributPfad";
@@ -532,15 +435,13 @@ public class DUAUtensilienTest {
 		attSpez4.getUnscaledValue("Optionen").set(3);
 
 		for (int j = 0; j < 22; j++) {
-			final Data dummy = DUAUtensilien.getAttributDatum(pfade[j],
-					testDatum);
+			final Data dummy = DUAUtensilien.getAttributDatum(pfade[j], testDatum);
 			String ist = dummy.valueToString();
 
 			if (dummy.getAttributeType() instanceof ReferenceAttributeType) {
 				ist = dummy.asReferenceValue().getSystemObject().toString();
 			}
-			if ((dummy.getAttributeType() instanceof IntegerAttributeType)
-					&& dummy.asUnscaledValue().isState()) {
+			if ((dummy.getAttributeType() instanceof IntegerAttributeType) && dummy.asUnscaledValue().isState()) {
 				ist = new Long(dummy.asUnscaledValue().longValue()).toString();
 			}
 

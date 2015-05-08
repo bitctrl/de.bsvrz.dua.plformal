@@ -39,8 +39,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
  * <code>typ.plausibilitätsPrüfungFormal</code> zur Verfügung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public interface IPPFVersorger {
 

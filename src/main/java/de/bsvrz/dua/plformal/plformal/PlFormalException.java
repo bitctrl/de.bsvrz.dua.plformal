@@ -31,8 +31,6 @@ package de.bsvrz.dua.plformal.plformal;
  * (aufgrund von z.B. fehlerhaften Parametern)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public class PlFormalException extends Exception {
 

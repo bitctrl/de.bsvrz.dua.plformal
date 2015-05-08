@@ -30,8 +30,6 @@ package de.bsvrz.dua.plformal.plformal;
  * Konstanten, die für die Pl-Prüfung formal benötigt werden.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
- *
- * @version $Id$
  */
 public final class PPFKonstanten {
 

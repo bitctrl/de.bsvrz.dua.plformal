@@ -2,8 +2,7 @@
 *  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal  *
 ********************************************************************************
 
-Version: 1.3.0
-
+Version: ${version}
 
 Übersicht
 =========

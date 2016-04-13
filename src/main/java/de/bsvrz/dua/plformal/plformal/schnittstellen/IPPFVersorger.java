@@ -74,6 +74,6 @@ public interface IPPFVersorger {
 	 * @return alle zur formalen Plausibilisierung vorgesehenen (finalen)
 	 *         Objekte in einem Array oder ein leeres Array.
 	 */
-	SystemObject[] getBetrachteteObjekte();
+	Collection<SystemObject> getBetrachteteObjekte();
 
 }

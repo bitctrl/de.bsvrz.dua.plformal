@@ -17,6 +17,9 @@ zu überprüfen, die innerhalb einer Datenidentifikation vorkommen können.
 Versionsgeschichte
 ==================
 
+1.4.0
+- Umstellung auf Funclib-BitCtrl-Dua
+
 1.3.0
 - Umstellung auf Maven-Build
 

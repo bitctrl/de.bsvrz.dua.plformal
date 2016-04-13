@@ -70,7 +70,7 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGue
 		 * Die Menge der für diese SWE betrachteten Objekte ändert sich
 		 * dynamisch
 		 */
-		this.objekte = parameter.getBetrachteteObjekte();
+		setSystemObjekte(parameter.getBetrachteteObjekte());
 
 		this.empfangsVerwaltung.modifiziereObjektAnmeldung(parameter.getObjektAnmeldungen());
 	}
@@ -79,7 +79,7 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGue
 	protected void initialisiere() throws DUAInitialisierungsException {
 		super.initialisiere();
 
-		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(this.verbindung, ReceiverRole.receiver(),
+		this.empfangsVerwaltung = new DAVEmpfangsAnmeldungsVerwaltung(getVerbindung(), ReceiverRole.receiver(),
 				ReceiveOptions.delayed(), this);
 
 		this.plPruefungFormal = new PlPruefungFormal(new PPFStandardAspekteVersorger(this).getStandardPubInfos());

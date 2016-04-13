@@ -66,11 +66,11 @@ public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 		// "asp.testAusgang",
 		// "asp.testEingang") });
 
-		this.standardAspekte = new StandardAspekteAdapter(new StandardPublikationsZuordnung[] {
+		setStandardAspekte(new StandardAspekteAdapter(new StandardPublikationsZuordnung[] {
 				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenKurzZeitIntervall",
 						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal"),
 				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenLangZeitIntervall",
-						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal") });
+						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal") }));
 
 	}
 }

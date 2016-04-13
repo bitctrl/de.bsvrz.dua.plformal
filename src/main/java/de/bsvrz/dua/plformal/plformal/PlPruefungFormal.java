@@ -82,14 +82,14 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	 */
 	public PlPruefungFormal(final IStandardAspekte stdAspekte) {
 		if (stdAspekte != null) {
-			this.standardAspekte = stdAspekte;
+			setStandardAspekte(stdAspekte);
 		}
 	}
 
 	@Override
 	public void initialisiere(final IVerwaltung dieVerwaltung) throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
-		PPFVersorger.getInstanz((IVerwaltungMitGuete) verwaltung).addListener(this);
+		PPFVersorger.getInstanz((IVerwaltungMitGuete) getVerwaltung()).addListener(this);
 		this.aktualisierePublikationIntern();
 	}
 
@@ -100,7 +100,7 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 
 	@Override
 	public void aktualisierePublikation(final IDatenFlussSteuerung iDfs) {
-		this.iDfsMod = iDfs.getDFSFuerModul(this.verwaltung.getSWETyp(), this.getModulTyp());
+		this.iDfsMod = iDfs.getDFSFuerModul(getVerwaltung().getSWETyp(), this.getModulTyp());
 		aktualisierePublikationIntern();
 	}
 
@@ -119,24 +119,24 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	 * Plausibilitätsprüfung ändert.
 	 */
 	private void aktualisierePublikationIntern() {
-		if (this.publizieren) {
-			SystemObject[] objektFilter = new SystemObject[0];
+		if (isPublizieren()) {
+			final Collection<SystemObject> objektFilter = new ArrayList<>();
 
 			if (this.ppfParameter != null) {
-				objektFilter = this.ppfParameter.getBetrachteteObjekte();
+				objektFilter.addAll(ppfParameter.getBetrachteteObjekte());
 			}
 
 			Collection<DAVObjektAnmeldung> anmeldungenStd = new ArrayList<DAVObjektAnmeldung>();
 
-			if (this.standardAspekte != null) {
-				anmeldungenStd = this.standardAspekte.getStandardAnmeldungen(objektFilter);
+			if (getStandardAspekte() != null) {
+				anmeldungenStd = getStandardAspekte().getStandardAnmeldungen(objektFilter);
 			}
 
 			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod.getDatenAnmeldungen(objektFilter,
 					anmeldungenStd);
 
 			synchronized (this) {
-				this.publikationsAnmeldungen.modifiziereObjektAnmeldung(anmeldungen);
+				getPublikationsAnmeldungen().modifiziereObjektAnmeldung(anmeldungen);
 			}
 		}
 	}
@@ -145,9 +145,9 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	public void aktualisiereDaten(final ResultData[] resultate) {
 		if (this.ppfParameter == null) {
 			PlPruefungFormal.LOGGER.fine("Es wurden noch keine" + " Plausibilisierungsparameter empfangen");
-			if (this.knoten != null) {
-				PlPruefungFormal.LOGGER.fine("Die Datenwerden nur" + " weitergereicht an: " + this.knoten);
-				this.knoten.aktualisiereDaten(resultate);
+			if (getKnoten() != null) {
+				PlPruefungFormal.LOGGER.fine("Die Datenwerden nur" + " weitergereicht an: " + getKnoten());
+				getKnoten().aktualisiereDaten(resultate);
 			}
 		} else if ((resultate != null) && (resultate.length > 0)) {
 			final Collection<ResultData> weiterzuleitendeResultate = new ArrayList<ResultData>();
@@ -161,9 +161,9 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 								resultat.getDataDescription(), resultat.getDataTime(), pData);
 						weiterzuleitendeResultate.add(ersetztesResultat);
 
-						if (this.publizieren) {
+						if (isPublizieren()) {
 							final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, pData,
-									standardAspekte.getStandardAspekt(resultat));
+									getStandardAspekte().getStandardAspekt(resultat));
 							if (publikationsDatum != null) {
 								this.sendeSinnvoll(publikationsDatum);
 							}
@@ -174,9 +174,9 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 				} else {
 					weiterzuleitendeResultate.add(resultat);
 
-					if (this.publizieren) {
+					if (isPublizieren()) {
 						final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, null,
-								standardAspekte.getStandardAspekt(resultat));
+								getStandardAspekte().getStandardAspekt(resultat));
 						if (publikationsDatum != null) {
 							this.sendeSinnvoll(publikationsDatum);
 						}
@@ -187,8 +187,8 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 			/**
 			 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
 			 */
-			if (this.knoten != null) {
-				this.knoten.aktualisiereDaten(weiterzuleitendeResultate.toArray(new ResultData[0]));
+			if (getKnoten() != null) {
+				getKnoten().aktualisiereDaten(weiterzuleitendeResultate.toArray(new ResultData[0]));
 			}
 		} else {
 			PlPruefungFormal.LOGGER.fine("Es wurden keine sinnvollen Daten empfangen");
@@ -205,10 +205,10 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 		if (resultat.getData() == null) {
 			final Boolean keineDaten1 = this.keineDaten.get(resultat.getObject());
 			if ((keineDaten1 != null) && !keineDaten1) {
-				this.publikationsAnmeldungen.sende(resultat);
+				getPublikationsAnmeldungen().sende(resultat);
 			}
 		} else {
-			this.publikationsAnmeldungen.sende(resultat);
+			getPublikationsAnmeldungen().sende(resultat);
 		}
 		this.keineDaten.put(resultat.getObject(), resultat.getData() == null);
 	}

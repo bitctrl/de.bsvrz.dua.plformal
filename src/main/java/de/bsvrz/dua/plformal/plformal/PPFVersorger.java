@@ -241,7 +241,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 	}
 
 	@Override
-	public SystemObject[] getBetrachteteObjekte() {
+	public Collection<SystemObject> getBetrachteteObjekte() {
 		final Collection<SystemObject> objekte = new HashSet<SystemObject>();
 
 		if (this.plBeschreibungen != null) {
@@ -250,7 +250,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 			}
 		}
 
-		return objekte.toArray(new SystemObject[0]);
+		return objekte;
 	}
 
 	@Override
@@ -265,7 +265,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 
 		if (plBeschreibungen == null) {
 			PPFVersorger.LOGGER
-					.finest("Es wurden noch keine Parameter" + " für die formale Plausibilisierung empfangen");
+			.finest("Es wurden noch keine Parameter" + " für die formale Plausibilisierung empfangen");
 		} else if ((resultat != null) && resultat.hasData() && (resultat.getData() != null)) {
 			final Collection<PPFAttributSpezifikation> attSpezifikationen = this.plBeschreibungen
 					.getAttributSpezifikationenFuer(resultat);
@@ -281,7 +281,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 				}
 			} else {
 				PPFVersorger.LOGGER
-						.finest("ResultData " + resultat + " ist nicht zur formalen Plausibilisierung vorgesehen.");
+				.finest("ResultData " + resultat + " ist nicht zur formalen Plausibilisierung vorgesehen.");
 			}
 		} else {
 			PPFVersorger.LOGGER.finest("Das formal zu prüfende Datum" + " enthält keine sinnvollen Daten: "
@@ -453,7 +453,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 							final Data guete = DUAUtensilien.getAttributDatum(neuerAttPfadGuete, datum);
 							if (guete.asUnscaledValue().longValue() >= 0) {
 								guete.asScaledValue()
-										.set(guete.asScaledValue().doubleValue() * verwaltung.getGueteFaktor());
+								.set(guete.asScaledValue().doubleValue() * verwaltung.getGueteFaktor());
 							}
 						}
 					}

@@ -129,10 +129,10 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 			Collection<DAVObjektAnmeldung> anmeldungenStd = new ArrayList<DAVObjektAnmeldung>();
 
 			if (getStandardAspekte() != null) {
-				anmeldungenStd = getStandardAspekte().getStandardAnmeldungen(objektFilter);
+				anmeldungenStd = getStandardAspekte().getStandardAnmeldungen(objektFilter.toArray(new SystemObject[objektFilter.size()]));
 			}
 
-			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod.getDatenAnmeldungen(objektFilter,
+			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod.getDatenAnmeldungen(objektFilter.toArray(new SystemObject[objektFilter.size()]),
 					anmeldungenStd);
 
 			synchronized (this) {

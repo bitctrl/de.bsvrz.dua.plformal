@@ -5,7 +5,7 @@
 
 	<groupId>de.bsvrz.dua</groupId>
 	<artifactId>de.bsvrz.dua.plformal</artifactId>
-	<version>1.4.0-SNAPSHOT</version>
+	<version>1.4.1-SNAPSHOT</version>
 
 	<name>Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal</name>
 

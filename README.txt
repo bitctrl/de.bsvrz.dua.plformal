@@ -17,6 +17,9 @@ zu überprüfen, die innerhalb einer Datenidentifikation vorkommen können.
 Versionsgeschichte
 ==================
 
+1.4.1
+- Kompatibilität zu DuA-2.0 hergestellt
+
 1.4.0
 - Umstellung auf Funclib-BitCtrl-Dua
 

@@ -1,24 +1,28 @@
 ********************************************************************************
-*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal  *
+*  Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 Pl-PrÃ¼fung formal  *
 ********************************************************************************
 
 Version: ${version}
 
-Übersicht
+Ãœbersicht
 =========
 
-Aufgabe der SWE Pl-Prüfung formal ist es, die Werte aller parametrierten
-Attribute nach formalen Kriterien zu überprüfen. Je Attribut müssen dazu
+Aufgabe der SWE Pl-PrÃ¼fung formal ist es, die Werte aller parametrierten
+Attribute nach formalen Kriterien zu Ã¼berprÃ¼fen. Je Attribut mÃ¼ssen dazu
 numerische Grenzwerte in der Parametrierung hinterlegt sein. Prinzipiell
-ermöglicht die SWE Pl-Prüfung formal, alle terminalen numerischen Attribute
-zu überprüfen, die innerhalb einer Datenidentifikation vorkommen können.
+ermÃ¶glicht die SWE Pl-PrÃ¼fung formal, alle terminalen numerischen Attribute
+zu Ã¼berprÃ¼fen, die innerhalb einer Datenidentifikation vorkommen kÃ¶nnen.
 
 
 Versionsgeschichte
 ==================
 
+1.5.0
+=====
+- Umstellung auf Java 8 und UTF-8
+
 1.4.1
-- Kompatibilität zu DuA-2.0 hergestellt
+- KompatibilitÃ¤t zu DuA-2.0 hergestellt
 
 1.4.0
 - Umstellung auf Funclib-BitCtrl-Dua
@@ -45,11 +49,11 @@ Versionsgeschichte
   
 1.2.2
  
-  - Güteanpassung wird jetzt durchgeführt, wenn ein Gütefaktor via -gueteFaktor angegeben wurde
+  - GÃ¼teanpassung wird jetzt durchgefÃ¼hrt, wenn ein GÃ¼tefaktor via -gueteFaktor angegeben wurde
 
 1.2.3
 
-  - Sämtliche Konstruktoren DataDescription(atg, asp, sim)
+  - SÃ¤mtliche Konstruktoren DataDescription(atg, asp, sim)
     ersetzt durch DataDescription(atg, asp)
 
 Bemerkungen
@@ -57,9 +61,9 @@ Bemerkungen
 
 - Tests:
 
-	Die automatischen Tests, die in Zusammenhang mit der Prüfspezifikation durchgeführt
+	Die automatischen Tests, die in Zusammenhang mit der PrÃ¼fspezifikation durchgefÃ¼hrt
 	werden, befinden sich innerhalb des Packages de.bsvrz.dua.plformal.test und
-	sind als JUnit-Tests ausführbar. Alle anderen Tests sind analog der Package-Struktur
+	sind als JUnit-Tests ausfÃ¼hrbar. Alle anderen Tests sind analog der Package-Struktur
 	der SWE selbst definiert. 
 	
 
@@ -71,8 +75,8 @@ Bemerkungen
 	- Interne unerwartete Fehler
 	
 	WARNING:
-	- Fehler, die die Funktionalität grundsätzlich nicht
-	  beeinträchtigen, aber zum Datenverlust führen können
+	- Fehler, die die FunktionalitÃ¤t grundsÃ¤tzlich nicht
+	  beeintrÃ¤chtigen, aber zum Datenverlust fÃ¼hren kÃ¶nnen
 	- Nicht identifizierbare Konfigurationsbereiche
 	- Probleme beim Explorieren von Attributpfaden 
 	  (von Plausibilisierungsbeschreibungen)
@@ -80,9 +84,9 @@ Bemerkungen
 	  nur eine Instanz erwartet wird
 	- Wenn Parameter nicht korrekt ausgelesen werden konnten
 	  bzw. nicht interpretierbar sind
-	- Wenn inkompatible Parameter übergeben wurden
-	- Wenn Parameter unvollständig sind
-	- Wenn der Statuswert bei der formalen Pl-Prüfung formal
+	- Wenn inkompatible Parameter Ã¼bergeben wurden
+	- Wenn Parameter unvollstÃ¤ndig sind
+	- Wenn der Statuswert bei der formalen Pl-PrÃ¼fung formal
 	  nicht gesetzt werden konnte
 	
 	INFO:
@@ -92,20 +96,20 @@ Bemerkungen
 	- Allgemeine Ausgaben, welche die Konfiguration betreffen
 	- Benutzte Konfigurationsbereiche der Applikation bzw.
 	  einzelner Funktionen innerhalb der Applikation
-	- Benutzte Objekte für Parametersteuerung von Applikationen
+	- Benutzte Objekte fÃ¼r Parametersteuerung von Applikationen
 	  (z.B. die Instanz der Datenflusssteuerung, die verwendet wird)
 	- An- und Abmeldungen von Daten beim Datenverteiler
 	
 	FINE:
 	- Wenn Daten empfangen wurden, die nicht weiterverarbeitet 
-	  (plausibilisiert) werden können (weil keine Parameter vorliegen)
+	  (plausibilisiert) werden kÃ¶nnen (weil keine Parameter vorliegen)
 	- Informationen, die nur zum Debugging interessant sind 
 
 
 Disclaimer
 ==========
 
-Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal
+Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 Pl-PrÃ¼fung formal
 Copyright (C) 2007 BitCtrl Systems GmbH 
 
 This program is free software; you can redistribute it and/or modify it under
@@ -127,7 +131,7 @@ Kontakt
 =======
 
 BitCtrl Systems GmbH
-Weißenfelser Straße 67
+WeiÃŸenfelser StraÃŸe 67
 04229 Leipzig
 Phone: +49 341-490670
 mailto: info@bitctrl.de

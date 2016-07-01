@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -35,32 +35,32 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**
  * Dieses Interface stellt alle Informationen der Attributgruppe
- * <code>atg.plausibilitätsPrüfungFormal</code> eines Objekts vom Typ
- * <code>typ.plausibilitätsPrüfungFormal</code> zur Verfügung.
+ * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> eines Objekts vom Typ
+ * <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code> zur VerfÃ¼gung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public interface IPPFVersorger {
 
 	/**
-	 * Führt die formale Plausibilisierung für ein bestimmtes Datum durch,
-	 * welches innerhalb des übergebenen <code>ResultData</code>-Objektes
+	 * FÃ¼hrt die formale Plausibilisierung fÃ¼r ein bestimmtes Datum durch,
+	 * welches innerhalb des Ã¼bergebenen <code>ResultData</code>-Objektes
 	 * enthalten ist.
 	 *
 	 * @param resultat
 	 *            das Datum
 	 * @return wenn die formale Plausibilisierung dieses Datum bearbeiten
-	 *         konnte, so wird das ggf. veränderte Datum zurückgegeben. Sonst
+	 *         konnte, so wird das ggf. verÃ¤nderte Datum zurÃ¼ckgegeben. Sonst
 	 *         <code>null</code>.
 	 */
 	Data plausibilisiere(final ResultData resultat);
 
 	/**
-	 * Erfragt alle Anmeldungen für alle (finalen) Objekte (also Instanzen von
-	 * <code>DAVObjektAnmeldung</code>), die durchgeführt werden müssen, um alle
-	 * Plausibilitätsprüfungen so wie in
-	 * <code>atg.plausibilitätsPrüfungFormal</code> beschrieben, durchführen zu
-	 * können.
+	 * Erfragt alle Anmeldungen fÃ¼r alle (finalen) Objekte (also Instanzen von
+	 * <code>DAVObjektAnmeldung</code>), die durchgefÃ¼hrt werden mÃ¼ssen, um alle
+	 * PlausibilitÃ¤tsprÃ¼fungen so wie in
+	 * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> beschrieben, durchfÃ¼hren zu
+	 * kÃ¶nnen.
 	 *
 	 * @return eine (ggf. leere) Menge von Objektanmeldungen
 	 */
@@ -69,7 +69,7 @@ public interface IPPFVersorger {
 	/**
 	 * Erfragt alle zur formalen Plausibilisierung vorgesehenen (finalen)
 	 * Objekte. Diese Objekte werden von den Parametern der Attributgruppe
-	 * <code>atg.plausibilitätsPrüfungFormal</code> bereitgestellt.
+	 * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> bereitgestellt.
 	 *
 	 * @return alle zur formalen Plausibilisierung vorgesehenen (finalen)
 	 *         Objekte in einem Array oder ein leeres Array.

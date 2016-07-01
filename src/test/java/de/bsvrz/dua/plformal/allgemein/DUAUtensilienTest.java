@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -50,11 +50,11 @@ import de.bsvrz.dua.plformal.plformal.PPFKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
- * Testklasse für die statischen Methoden der Klasse DUAUtensilien.
+ * Testklasse fÃ¼r die statischen Methoden der Klasse DUAUtensilien.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-@Ignore("Datenverteilerverbindung klären")
+@Ignore("Datenverteilerverbindung klÃ¤ren")
 public class DUAUtensilienTest {
 
 	/**
@@ -225,50 +225,50 @@ public class DUAUtensilienTest {
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean cSoll = false;
 
-		final SystemObject dObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject dObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription dDataDesc = new DataDescription(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean dSoll = false;
 
-		final SystemObject eObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject eObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription eDataDesc = new DataDescription(null,
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean eSoll = false;
 
-		final SystemObject fObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject fObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription fDataDesc = new DataDescription(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
 				null);
 		final boolean fSoll = false;
 
-		final SystemObject gObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject gObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription gDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrÃ¼fungFormal"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean gSoll = false;
 
-		final SystemObject hObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject hObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription hDataDesc = new DataDescription(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean hSoll = false;
 
-		final SystemObject iObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject iObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription iDataDesc = new DataDescription(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.XXX"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 		final boolean iSoll = false;
 
-		final SystemObject jObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrüfungFormal");
+		final SystemObject jObj = DUAUtensilienTest.verbindung.getDataModel().getObject("objekt1.testPlPrÃ¼fungFormal");
 		final DataDescription jDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrÃ¼fungFormal"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean jSoll = true;
 
-		final SystemObject kObj = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.testPlPrüfungFormal");
+		final SystemObject kObj = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.testPlPrÃ¼fungFormal");
 		final DataDescription kDataDesc = new DataDescription(
-				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrüfungFormal"),
+				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.testPlPrÃ¼fungFormal"),
 				DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.testEingang"));
 		final boolean kSoll = false;
 
@@ -312,32 +312,32 @@ public class DUAUtensilienTest {
 	}
 
 	/**
-	 * Testet, ob bestimmte Eingabevarianten für den Attributpfad zum richtigen
-	 * Ergebnis führen.
+	 * Testet, ob bestimmte Eingabevarianten fÃ¼r den Attributpfad zum richtigen
+	 * Ergebnis fÃ¼hren.
 	 */
 	@Test
 	public void testGetAttributDatum() {
 		final Data testDatum = DUAUtensilienTest.verbindung
 				.createData(DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup(PPFKonstanten.ATG));
-		final Data.Array ps = testDatum.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray();
+		final Data.Array ps = testDatum.getItem("ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal").asArray();
 		ps.setLength(2);
 		final Data ps0 = ps.getItem(0);
 		final Data ps1 = ps.getItem(1);
 		final String[] pfade = new String[30];
 		final String[] soll = new String[30];
 
-		pfade[0] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Attributgruppe";
+		pfade[0] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.Attributgruppe";
 		soll[0] = DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall")
 				.toString();
 		ps0.getReferenceValue("Attributgruppe").setSystemObject(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenKurzZeitIntervall"));
 
-		pfade[1] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Aspekt";
+		pfade[1] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.Aspekt";
 		soll[1] = DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung").toString();
 		ps0.getReferenceValue("Aspekt")
 				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.externeErfassung"));
 
-		pfade[2] = "ParameterSatzPlausibilitätsPrüfungFormal.0.Objekt.0";
+		pfade[2] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.Objekt.0";
 		soll[2] = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifen").toString();
 		final Data.Array objekte = ps0.getArray("Objekt");
 		objekte.setLength(1);
@@ -345,53 +345,53 @@ public class DUAUtensilienTest {
 				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifen"));
 		final Data.Array attribut = ps0.getArray("AttributSpezifikation");
 
-		pfade[3] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.0.AttributPfad";
+		pfade[3] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.0.AttributPfad";
 		soll[3] = "a11";
 		attribut.setLength(2);
 		final Data attSpez1 = attribut.getItem(0);
 		attSpez1.getTextValue("AttributPfad").setText("a11");
 
-		pfade[4] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.0.Min";
+		pfade[4] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.0.Min";
 		soll[4] = "10";
 		attSpez1.getUnscaledValue("Min").set(10);
 
-		pfade[5] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.0.Max";
+		pfade[5] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.0.Max";
 		soll[5] = "20";
 		attSpez1.getUnscaledValue("Max").set(20);
 
-		pfade[6] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.0.Optionen";
+		pfade[6] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.0.Optionen";
 		soll[6] = "0";
 		attSpez1.getUnscaledValue("Optionen").set(0);
 
 		final Data attSpez2 = attribut.getItem(1);
-		pfade[7] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.1.AttributPfad";
+		pfade[7] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.1.AttributPfad";
 		soll[7] = "a12";
 		attSpez2.getTextValue("AttributPfad").setText("a12");
 
-		pfade[8] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.1.Min";
+		pfade[8] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.1.Min";
 		soll[8] = "30";
 		attSpez2.getUnscaledValue("Min").set(30);
 
-		pfade[9] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.1.Max";
+		pfade[9] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.1.Max";
 		soll[9] = "40";
 		attSpez2.getUnscaledValue("Max").set(40);
 
-		pfade[10] = "ParameterSatzPlausibilitätsPrüfungFormal.0.AttributSpezifikation.1.Optionen";
+		pfade[10] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.0.AttributSpezifikation.1.Optionen";
 		soll[10] = "1";
 		attSpez2.getUnscaledValue("Optionen").set(1);
 
-		pfade[11] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Attributgruppe";
+		pfade[11] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.Attributgruppe";
 		soll[11] = DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall")
 				.toString();
 		ps1.getReferenceValue("Attributgruppe").setSystemObject(
 				DUAUtensilienTest.verbindung.getDataModel().getAttributeGroup("atg.verkehrsDatenLangZeitIntervall"));
 
-		pfade[12] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Aspekt";
+		pfade[12] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.Aspekt";
 		soll[12] = DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.messWertErsetzung").toString();
 		ps1.getReferenceValue("Aspekt")
 				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getAspect("asp.messWertErsetzung"));
 
-		pfade[13] = "ParameterSatzPlausibilitätsPrüfungFormal.1.Objekt.0";
+		pfade[13] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.Objekt.0";
 		soll[13] = DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifenLangZeit").toString();
 		final Data.Array objekte1 = ps1.getArray("Objekt");
 		objekte1.setLength(1);
@@ -399,38 +399,38 @@ public class DUAUtensilienTest {
 				.setSystemObject(DUAUtensilienTest.verbindung.getDataModel().getObject("typ.fahrStreifenLangZeit"));
 		final Data.Array attribut1 = ps1.getArray("AttributSpezifikation");
 
-		pfade[14] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.0.AttributPfad";
+		pfade[14] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.0.AttributPfad";
 		soll[14] = "a21";
 		attribut1.setLength(2);
 		final Data attSpez3 = attribut1.getItem(0);
 		attSpez3.getTextValue("AttributPfad").setText("a21");
 
-		pfade[15] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.0.Min";
+		pfade[15] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.0.Min";
 		soll[15] = "50";
 		attSpez3.getUnscaledValue("Min").set(50);
 
-		pfade[16] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.0.Max";
+		pfade[16] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.0.Max";
 		soll[16] = "60";
 		attSpez3.getUnscaledValue("Max").set(60);
 
-		pfade[17] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.0.Optionen";
+		pfade[17] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.0.Optionen";
 		soll[17] = "2";
 		attSpez3.getUnscaledValue("Optionen").set(2);
 
 		final Data attSpez4 = attribut1.getItem(1);
-		pfade[18] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.1.AttributPfad";
+		pfade[18] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.1.AttributPfad";
 		soll[18] = "a22";
 		attSpez4.getTextValue("AttributPfad").setText("a22");
 
-		pfade[19] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.1.Min";
+		pfade[19] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.1.Min";
 		soll[19] = "70";
 		attSpez4.getUnscaledValue("Min").set(70);
 
-		pfade[20] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.1.Max";
+		pfade[20] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.1.Max";
 		soll[20] = "80";
 		attSpez4.getUnscaledValue("Max").set(80);
 
-		pfade[21] = "ParameterSatzPlausibilitätsPrüfungFormal.1.AttributSpezifikation.1.Optionen";
+		pfade[21] = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal.1.AttributSpezifikation.1.Optionen";
 		soll[21] = "3";
 		attSpez4.getUnscaledValue("Optionen").set(3);
 
@@ -445,7 +445,7 @@ public class DUAUtensilienTest {
 				ist = new Long(dummy.asUnscaledValue().longValue()).toString();
 			}
 
-			System.out.println("Überprüfe: " + pfade[j]);
+			System.out.println("ÃœberprÃ¼fe: " + pfade[j]);
 			Assert.assertEquals("Fehler in " + pfade[j], ist, soll[j]);
 		}
 	}

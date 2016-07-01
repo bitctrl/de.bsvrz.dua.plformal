@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -46,9 +46,9 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Diese Klasse stellt die Informationen der Attributgruppe
- * <code>atg.plausibilitätsPrüfungFormal</code> für einen möglichst schnellen
- * Zugriff zur Verfügung. Mittels der Methode
- * <code>getAttributSpezifikationenFuer(..)</code> kann für ein
+ * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> fÃ¼r einen mÃ¶glichst schnellen
+ * Zugriff zur VerfÃ¼gung. Mittels der Methode
+ * <code>getAttributSpezifikationenFuer(..)</code> kann fÃ¼r ein
  * ResultData-Objekt erfragt werden, wie dieses formal zu plausibilisieren ist.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -79,12 +79,12 @@ public class PPFPlausibilisierungsBeschreibungen {
 	}
 
 	/**
-	 * Fügt diesem Objekt einen neuen Parametersatz der Attributgruppe
-	 * <code>atg.plausibilitätsPrüfungFormal</code> hinzu.
+	 * FÃ¼gt diesem Objekt einen neuen Parametersatz der Attributgruppe
+	 * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> hinzu.
 	 *
 	 * @param parameterSatz
 	 *            ein Parametersatz der Attributgruppe
-	 *            <code>atg.plausibilitätsPrüfungFormal</code>
+	 *            <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code>
 	 * @throws PlFormalException
 	 *             falls Fehler beim Auslesen des DAV-Datensatzes auftreten
 	 */
@@ -139,7 +139,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 	}
 
 	/**
-	 * Erfragt die Menge von Attributspezifikationen für ein übergebenes
+	 * Erfragt die Menge von Attributspezifikationen fÃ¼r ein Ã¼bergebenes
 	 * <code>ResultData</code>-Objekt.
 	 *
 	 * @param resultat
@@ -156,19 +156,19 @@ public class PPFPlausibilisierungsBeschreibungen {
 				ergebnis.addAll(objBeschr.getAttributSpezifikationen());
 			} else {
 				PPFPlausibilisierungsBeschreibungen.LOGGER
-						.fine("Es wurde keine Plausibilisierungsvorschrift" + " gefunden für: " + resultat);
+						.fine("Es wurde keine Plausibilisierungsvorschrift" + " gefunden fÃ¼r: " + resultat);
 			}
 		} else {
 			PPFPlausibilisierungsBeschreibungen.LOGGER
-					.warning("Übergebenes ResultData-Objekt ist " + DUAKonstanten.NULL);
+					.warning("Ãœbergebenes ResultData-Objekt ist " + DUAKonstanten.NULL);
 		}
 
 		return ergebnis;
 	}
 
 	/**
-	 * Erfragt die Objektanmeldungen, die notwendig sind, um die Daten, die für
-	 * die formale Plausibilitätsprüfung vorgesehen sind empfangen zu können.
+	 * Erfragt die Objektanmeldungen, die notwendig sind, um die Daten, die fÃ¼r
+	 * die formale PlausibilitÃ¤tsprÃ¼fung vorgesehen sind empfangen zu kÃ¶nnen.
 	 *
 	 * @return eine (ggf. leere) Menge von Objektanmeldungen
 	 */
@@ -194,10 +194,10 @@ public class PPFPlausibilisierungsBeschreibungen {
 	}
 
 	/**
-	 * Speichert alle Informationen, die für die Plausibilisierung <b>eines</b>
+	 * Speichert alle Informationen, die fÃ¼r die Plausibilisierung <b>eines</b>
 	 * Systemobjektes unter <b>einer</b> Datenbeschreibung notwendig sind (bzw.
 	 * alle Informationen, die innerhalb eines Datensatzes der Attributgruppe
-	 * <code>atg.plausibilitätsPrüfungFormal</code> in der Attributliste
+	 * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> in der Attributliste
 	 * <code>AttributSpezifikation</code> stehen).
 	 *
 	 * @author BitCtrl Systems GmbH, Thierfelder
@@ -207,7 +207,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 
 		/**
 		 * Menge von Plausibilisierungsspezifikationen (Attributspezifikationen)
-		 * für ein Objekt unter einer Datenbeschreibung.
+		 * fÃ¼r ein Objekt unter einer Datenbeschreibung.
 		 */
 		private final Collection<PPFAttributSpezifikation> attSpez = new HashSet<PPFAttributSpezifikation>();
 
@@ -217,7 +217,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 		 * @param attSpezDatum
 		 *            eine neue <code>AttributSpezifikation</code>
 		 * @throws PlFormalException
-		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
+		 *             wenn das Auslesen der Daten nicht vollstÃ¤ndig erfolgreich
 		 *             war
 		 */
 		protected BeschreibungFuerObjekt(final Data attSpezDatum) throws PlFormalException {
@@ -225,13 +225,13 @@ public class PPFPlausibilisierungsBeschreibungen {
 		}
 
 		/**
-		 * Fügt diesem Objekt eine neue <code>AttributSpezifikation</code>
+		 * FÃ¼gt diesem Objekt eine neue <code>AttributSpezifikation</code>
 		 * hinzu.
 		 *
 		 * @param attSpezDatum
 		 *            eine neue <code>AttributSpezifikation</code>
 		 * @throws PlFormalException
-		 *             wenn das Auslesen der Daten nicht vollständig erfolgreich
+		 *             wenn das Auslesen der Daten nicht vollstÃ¤ndig erfolgreich
 		 *             war
 		 */
 		protected void addBeschreibung(final Data attSpezDatum) throws PlFormalException {
@@ -245,7 +245,7 @@ public class PPFPlausibilisierungsBeschreibungen {
 		}
 
 		/**
-		 * Erfragt die für dieses Objekt gespeicherten Attributspezifikationen.
+		 * Erfragt die fÃ¼r dieses Objekt gespeicherten Attributspezifikationen.
 		 *
 		 * @return die Attributspezifikationen (ggf. leere Menge)
 		 */

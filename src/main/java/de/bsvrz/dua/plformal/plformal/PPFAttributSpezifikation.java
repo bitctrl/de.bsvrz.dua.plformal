@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit‰tspr¸fung formal
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit√§tspr√ºfung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -30,9 +30,9 @@ import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dua.plformal.plformal.typen.PlausibilisierungsMethode;
 
 /**
- * Diese Klasse repr‰sentiert alle Informationen, die innerhalb <b>eines</b>
+ * Diese Klasse repr√§sentiert alle Informationen, die innerhalb <b>eines</b>
  * Datensatzes <code>AttributSpezifikation</code> in der Attributgruppe
- * <code>atg.plausibilit‰tsPr¸fungFormal</code> enthalten sind.
+ * <code>atg.plausibilit√§tsPr√ºfungFormal</code> enthalten sind.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -64,7 +64,7 @@ public class PPFAttributSpezifikation {
 	 * @param attributSpezifikation
 	 *            <b>ein</b> DAV-Datensatz der Liste
 	 *            <code>AttributSpezifikation</code> der Attributgruppe
-	 *            <code>atg.plausibilit‰tsPr¸fungFormal</code>
+	 *            <code>atg.plausibilit√§tsPr√ºfungFormal</code>
 	 * @throws PlFormalException
 	 *             falls die Parameter fehlerhaft sind
 	 */
@@ -76,7 +76,7 @@ public class PPFAttributSpezifikation {
 		this.methode = PlausibilisierungsMethode.getZustand(
 				attributSpezifikation.getUnscaledValue(PPFKonstanten.ATT_PARA_SATZ_ATT_SPEZ_OPT).intValue());
 		if (min > max) {
-			throw new PlFormalException("MIN (" + this.min + ") ist grˆﬂer als MAX (" + max + ")");
+			throw new PlFormalException("MIN (" + this.min + ") ist gr√∂√üer als MAX (" + max + ")");
 		}
 	}
 

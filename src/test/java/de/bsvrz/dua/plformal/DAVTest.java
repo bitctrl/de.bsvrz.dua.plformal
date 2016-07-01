@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit‰tspr¸fung formal
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit√§tspr√ºfung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -34,7 +34,7 @@ import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 
 /**
- * Stellt eine Datenverteiler-Verbindung zur Verf¸gung.
+ * Stellt eine Datenverteiler-Verbindung zur Verf√ºgung.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -100,12 +100,12 @@ public final class DAVTest {
 	}
 
 	/**
-	 * Erfragt einen Array mit zuf‰lligen Zahlen von 0 bis <code>anzahl</code>.
+	 * Erfragt einen Array mit zuf√§lligen Zahlen von 0 bis <code>anzahl</code>.
 	 * Jede Zahl darf nur einmal im Array vorkommen.
 	 *
 	 * @param anzahl
 	 *            die Obergrenze
-	 * @return Array mit zuf‰lligen Zahlen von 0 bis <code>anzahl</code>
+	 * @return Array mit zuf√§lligen Zahlen von 0 bis <code>anzahl</code>
 	 */
 	public static int[] getZufaelligeZahlen(final int anzahl) {
 		int belegt = 0;

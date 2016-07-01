@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -49,7 +49,7 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltungMitGuete;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Implementierung des Moduls PL-Prüfung formal.
+ * Implementierung des Moduls PL-PrÃ¼fung formal.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -63,7 +63,7 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	private IPPFVersorger ppfParameter;
 
 	/**
-	 * Parameter zur Datenflusssteuerung für diese SWE und dieses Modul.
+	 * Parameter zur Datenflusssteuerung fÃ¼r diese SWE und dieses Modul.
 	 */
 	private IDatenFlussSteuerungFuerModul iDfsMod = DFSKonstanten.STANDARD;
 
@@ -77,8 +77,8 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	 * Standardkonstruktor.
 	 *
 	 * @param stdAspekte
-	 *            Informationen zu den Standardpublikationsaspekten für diese
-	 *            Instanz des Moduls Pl-Prüfung formal
+	 *            Informationen zu den Standardpublikationsaspekten fÃ¼r diese
+	 *            Instanz des Moduls Pl-PrÃ¼fung formal
 	 */
 	public PlPruefungFormal(final IStandardAspekte stdAspekte) {
 		if (stdAspekte != null) {
@@ -111,12 +111,12 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	}
 
 	/**
-	 * Diese Methode verändert die Anmeldungen für die Publikation der
+	 * Diese Methode verÃ¤ndert die Anmeldungen fÃ¼r die Publikation der
 	 * plausibilisierten Daten.<br>
-	 * Sie wird nur innerhalb dieses Moduls benötigt, da die Menge der
+	 * Sie wird nur innerhalb dieses Moduls benÃ¶tigt, da die Menge der
 	 * betrachteten Objekte nicht (wie bei anderen Modulen der DUA) statisch
 	 * ist, sondern sich mit der Parametrierung der formalen
-	 * Plausibilitätsprüfung ändert.
+	 * PlausibilitÃ¤tsprÃ¼fung Ã¤ndert.
 	 */
 	private void aktualisierePublikationIntern() {
 		if (isPublizieren()) {
@@ -185,7 +185,7 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 			}
 
 			/**
-			 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
+			 * Weiterreichen der Daten an den nÃ¤chsten Bearbeitungsknoten
 			 */
 			if (getKnoten() != null) {
 				getKnoten().aktualisiereDaten(weiterzuleitendeResultate.toArray(new ResultData[0]));
@@ -196,7 +196,7 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implemen
 	}
 
 	/**
-	 * Sendet das übergebene Datum (wenn nötig).
+	 * Sendet das Ã¼bergebene Datum (wenn nÃ¶tig).
 	 *
 	 * @param resultat
 	 *            ein zu publizierendes DAV-Datum

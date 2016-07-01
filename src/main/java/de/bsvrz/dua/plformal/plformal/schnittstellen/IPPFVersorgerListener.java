@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -28,7 +28,7 @@ package de.bsvrz.dua.plformal.plformal.schnittstellen;
 
 /**
  * Dieses Interface muss von allen Klassen implementiert werden, die aktuellen
- * Informationen über die Parameter zur formalen Plausibilisierung über das
+ * Informationen Ã¼ber die Parameter zur formalen Plausibilisierung Ã¼ber das
  * Interface <code>IPPFVersorger</code> empfangen wollen.
  *
  * @author BitCtrl Systems GmbH, Thierfelder

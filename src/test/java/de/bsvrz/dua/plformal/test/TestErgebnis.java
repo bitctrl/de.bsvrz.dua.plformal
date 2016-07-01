@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -29,9 +29,9 @@ package de.bsvrz.dua.plformal.test;
 import java.util.Arrays;
 
 /**
- * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>.
+ * Hilfsklasse fÃ¼r eigentlichen Test <code>PlPruefungFormalTest</code>.
  *
- * Klasse zur Repräsentation eines Ergebnisses wie in Tabelle 5-5 (S.16)
+ * Klasse zur ReprÃ¤sentation eines Ergebnisses wie in Tabelle 5-5 (S.16)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -97,7 +97,7 @@ public class TestErgebnis {
 	 * Ermittelt die Kennung aus dem Bool-Array.
 	 *
 	 * @param k
-	 *            Bool-Array mit verschlüsselter Kennung
+	 *            Bool-Array mit verschlÃ¼sselter Kennung
 	 * @return die Kennung
 	 */
 	private String getKennung(final boolean[] k) {

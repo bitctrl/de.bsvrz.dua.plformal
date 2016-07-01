@@ -1,5 +1,5 @@
 /*
- * Segment 4 Daten¸bernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit‰tspr¸fung formal
+ * Segment 4 Daten√ºbernahme und Aufbereitung (DUA), SWE 4.1 Plausibilit√§tspr√ºfung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weiﬂenfelser Straﬂe 67<br>
+ * Wei√üenfelser Stra√üe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -40,11 +40,11 @@ import de.bsvrz.dua.plformal.DAVTest;
 import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
 
 /**
- * Tests f¸r die Klasse <code>DAVObjektAnmeldung</code>.
+ * Tests f√ºr die Klasse <code>DAVObjektAnmeldung</code>.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-@Ignore("Datenverteileranmeldung pr¸fen")
+@Ignore("Datenverteileranmeldung pr√ºfen")
 public class TestDAVObjektAnmeldung {
 
 	/**
@@ -53,7 +53,7 @@ public class TestDAVObjektAnmeldung {
 	private static ClientDavInterface verbindung;
 
 	/**
-	 * Anzahl der Durchl‰ufe im Aufbau von zuf‰lligen DAVObjektAnmeldung-B‰umen.
+	 * Anzahl der Durchl√§ufe im Aufbau von zuf√§lligen DAVObjektAnmeldung-B√§umen.
 	 */
 	private static final int GENAUIGKEIT = 20;
 
@@ -193,7 +193,7 @@ public class TestDAVObjektAnmeldung {
 					testSet.add(doppel[j]);
 				}
 
-				Assert.assertTrue("Grˆﬂe der Menge: " + testSet.size() + ", " + zahlen.length,
+				Assert.assertTrue("Gr√∂√üe der Menge: " + testSet.size() + ", " + zahlen.length,
 						testSet.size() == zahlen.length);
 				for (final DAVObjektAnmeldung anmeldung : a) {
 					Assert.assertTrue(testSet.contains(anmeldung));
@@ -232,7 +232,7 @@ public class TestDAVObjektAnmeldung {
 					testSet.add(element);
 				}
 
-				Assert.assertTrue("Grˆﬂe der Menge: " + testSet.size() + ", 14", testSet.size() == 14);
+				Assert.assertTrue("Gr√∂√üe der Menge: " + testSet.size() + ", 14", testSet.size() == 14);
 				for (final DAVObjektAnmeldung anmeldung : a1) {
 					Assert.assertTrue(testSet.contains(anmeldung));
 				}
@@ -264,7 +264,7 @@ public class TestDAVObjektAnmeldung {
 					testSet.add(element);
 				}
 
-				Assert.assertTrue("Grˆﬂe der Menge: " + testSet.size() + ", 16", testSet.size() == 16);
+				Assert.assertTrue("Gr√∂√üe der Menge: " + testSet.size() + ", 16", testSet.size() == 16);
 				for (final DAVObjektAnmeldung anmeldung : a2) {
 					Assert.assertTrue(testSet.contains(anmeldung));
 				}

@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -40,22 +40,22 @@ import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVEmpfangsAnmeldungsVerwaltung;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.SWETyp;
 
 /**
- * Implementierung des Moduls Verwaltung der SWE PL-Prüfung formal. Dieses Modul
- * erfragt die zu überprüfenden Daten aus der Parametrierung und initialisiert
- * damit das Modul PL-Prüfung formal, das dann die eigentliche Prüfung
- * durchführt.
+ * Implementierung des Moduls Verwaltung der SWE PL-PrÃ¼fung formal. Dieses Modul
+ * erfragt die zu Ã¼berprÃ¼fenden Daten aus der Parametrierung und initialisiert
+ * damit das Modul PL-PrÃ¼fung formal, das dann die eigentliche PrÃ¼fung
+ * durchfÃ¼hrt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGuete implements IPPFVersorgerListener {
 
 	/**
-	 * Instanz des Moduls PL-Prüfung formal.
+	 * Instanz des Moduls PL-PrÃ¼fung formal.
 	 */
 	private PlPruefungFormal plPruefungFormal;
 
 	/**
-	 * Verwaltung für alle Empfangsanmeldungen dieses Moduls.
+	 * Verwaltung fÃ¼r alle Empfangsanmeldungen dieses Moduls.
 	 */
 	private DAVEmpfangsAnmeldungsVerwaltung empfangsVerwaltung;
 
@@ -67,7 +67,7 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGue
 	@Override
 	public void aktualisiereParameter(final IPPFVersorger parameter) {
 		/**
-		 * Die Menge der für diese SWE betrachteten Objekte ändert sich
+		 * Die Menge der fÃ¼r diese SWE betrachteten Objekte Ã¤ndert sich
 		 * dynamisch
 		 */
 		setSystemObjekte(parameter.getBetrachteteObjekte());
@@ -88,7 +88,7 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGue
 
 		/**
 		 * An dieser Stelle werden die Parameter der formalen Plausibilisierung
-		 * auch ausgewertet, da sich hier aus Gründen der Systemarchitektur auf
+		 * auch ausgewertet, da sich hier aus GrÃ¼nden der Systemarchitektur auf
 		 * die Daten angemeldet werden muss, die innerhalb der Untermodule
 		 * plausibilisiert werden sollen.
 		 */
@@ -111,11 +111,11 @@ public class VerwaltungPlPruefungFormal extends AbstraktVerwaltungsAdapterMitGue
 	}
 
 	/**
-	 * Standard-Gütefaktor für Ersetzungen (90%).<br>
-	 * Wenn das Modul Pl-Prüfung logisch LVE einen Messwert ersetzt (eigentlich
-	 * nur bei Wertebereichsprüfung) so vermindert sich die Güte des
-	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert über die
-	 * Kommandozeile übergeben wurde)
+	 * Standard-GÃ¼tefaktor fÃ¼r Ersetzungen (90%).<br>
+	 * Wenn das Modul Pl-PrÃ¼fung logisch LVE einen Messwert ersetzt (eigentlich
+	 * nur bei WertebereichsprÃ¼fung) so vermindert sich die GÃ¼te des
+	 * Ausgangswertes um diesen Faktor (wenn kein anderer Wert Ã¼ber die
+	 * Kommandozeile Ã¼bergeben wurde)
 	 */
 	@Override
 	public double getStandardGueteFaktor() {

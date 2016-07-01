@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -31,8 +31,8 @@ import de.bsvrz.sys.funclib.bitctrl.dua.StandardAspekteVersorger;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
 
 /**
- * Diese Klasse repräsentiert die Versorgung des Moduls Pl-Prüfung formal
- * (innerhalb der SWE Pl-Prüfung formal) mit Standard-Publikationsinformationen
+ * Diese Klasse reprÃ¤sentiert die Versorgung des Moduls Pl-PrÃ¼fung formal
+ * (innerhalb der SWE Pl-PrÃ¼fung formal) mit Standard-Publikationsinformationen
  * (Zuordnung von Objekt-Datenbeschreibung-Kombination zu Standard-
  * Publikationsaspekt).
  *
@@ -61,16 +61,16 @@ public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 		// this.standardAspekte = new StandardAspekteAdapter(
 		// new StandardPublikationsZuordnung[] {
 		// new StandardPublikationsZuordnung(
-		// "typ.testPlPrüfungFormal",
-		// "atg.testPlPrüfungFormal",
+		// "typ.testPlPrÃ¼fungFormal",
+		// "atg.testPlPrÃ¼fungFormal",
 		// "asp.testAusgang",
 		// "asp.testEingang") });
 
 		setStandardAspekte(new StandardAspekteAdapter(new StandardPublikationsZuordnung[] {
 				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenKurzZeitIntervall",
-						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal"),
+						"asp.externeErfassung", "asp.plausibilitÃ¤tsPrÃ¼fungFormal"),
 				new StandardPublikationsZuordnung("typ.fahrStreifen", "atg.verkehrsDatenLangZeitIntervall",
-						"asp.externeErfassung", "asp.plausibilitätsPrüfungFormal") }));
+						"asp.externeErfassung", "asp.plausibilitÃ¤tsPrÃ¼fungFormal") }));
 
 	}
 }

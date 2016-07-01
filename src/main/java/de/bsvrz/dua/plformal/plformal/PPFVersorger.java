@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -53,11 +53,11 @@ import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
  * Diese Klasse meldet sich auf die Attributgruppe
- * <code>atg.plausibilitätsPrüfungFormal</code> eines Objekts vom Typ
- * <code>typ.plausibilitätsPrüfungFormal</code> an. Es stellt die darin
- * enthaltenen Informationen über die Schnittstelle <code>IPPFVersorger</code>
+ * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code> eines Objekts vom Typ
+ * <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code> an. Es stellt die darin
+ * enthaltenen Informationen Ã¼ber die Schnittstelle <code>IPPFVersorger</code>
  * allen angemeldeten Instanzen von <code>IPPFVersorgerListener</code> zur
- * Verfügung. Sie führt die Plausibilisierung von Daten durch
+ * VerfÃ¼gung. Sie fÃ¼hrt die Plausibilisierung von Daten durch
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -82,7 +82,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 
 	/**
 	 * die aktuellen Informationen der Attributgruppe
-	 * <code>atg.plausibilitätsPrüfungFormal</code>.
+	 * <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code>.
 	 */
 	private PPFPlausibilisierungsBeschreibungen plBeschreibungen;
 
@@ -103,10 +103,10 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 	 *            Verbindung zum Verwaltungsmodul
 	 * @param plausbibilisierungsObjekt
 	 *            das Objekt vom Typ
-	 *            <code>typ.plausibilitätsPrüfungFormal</code>, auf dessen Daten
+	 *            <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code>, auf dessen Daten
 	 *            sich angemeldet werden soll
 	 * @throws DUAInitialisierungsException
-	 *             falls die Datenanmeldung fehl schlägt
+	 *             falls die Datenanmeldung fehl schlÃ¤gt
 	 */
 	private PPFVersorger(final IVerwaltungMitGuete verwaltung, final SystemObject plausbibilisierungsObjekt)
 			throws DUAInitialisierungsException {
@@ -117,7 +117,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 			throw new DUAInitialisierungsException("Keine Verbindung" + " zum Datenverteiler");
 		}
 		if (plausbibilisierungsObjekt == null) {
-			throw new DUAInitialisierungsException("Ungültiges" + " Plausibilisierungsobjekt");
+			throw new DUAInitialisierungsException("UngÃ¼ltiges" + " Plausibilisierungsobjekt");
 		}
 		this.verwaltung = verwaltung;
 
@@ -135,22 +135,22 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 					"Unerwarteter" + " Fehler beim Initialisieren der" + " formalen Plausibilisierung", t);
 		}
 
-		PPFVersorger.LOGGER.config("Initialisierung erfolgreich.\n" + "Für die formale Plausibilisierung"
+		PPFVersorger.LOGGER.config("Initialisierung erfolgreich.\n" + "FÃ¼r die formale Plausibilisierung"
 				+ " wird das Objekt " + plausbibilisierungsObjekt + " verwendet.");
 	}
 
 	/**
 	 * Erfragt die statische Instanz dieser Klasse.<br>
 	 * <b>Achtung:</b> Es wird erst innerhalb der dem Verwaltungsmodul
-	 * übergebenen Konfigurationsbereiche und dann im Standard-
+	 * Ã¼bergebenen Konfigurationsbereiche und dann im Standard-
 	 * Konfigurationsbereich nach einem Objekt vom Typ
-	 * <code>typ.plausibilitätsPrüfungFormal</code> gesucht.
+	 * <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code> gesucht.
 	 *
 	 * @param verwaltung
 	 *            Verbindung zum Verwaltungsmodul
 	 * @return die statische Instanz dieser Klasse
 	 * @throws DUAInitialisierungsException
-	 *             falls die Datenanmeldung fehl schlägt
+	 *             falls die Datenanmeldung fehl schlÃ¤gt
 	 */
 	public static synchronized PPFVersorger getInstanz(final IVerwaltungMitGuete verwaltung)
 			throws DUAInitialisierungsException {
@@ -173,7 +173,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 			if (plausibilisierungsObjekte.length == 0) {
 				/**
 				 * nochmal suchen, ob im Standardkonfigurationsbereich ein
-				 * Objekt vom Typ <code>typ.plausibilitätsPrüfungFormal</code>
+				 * Objekt vom Typ <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code>
 				 * vorhanden ist
 				 */
 				plausibilisierungsObjekte = DUAUtensilien.getBasisInstanzen(typPPF, verwaltung.getVerbindung(), null)
@@ -218,7 +218,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 						PPFVersorger.LOGGER.fine(parameterSaetze.getItem(i).toString());
 					}
 				} catch (final PlFormalException e) {
-					PPFVersorger.LOGGER.warning("Parameterdatensatz für die formale" + " Plausibilisierung konnte nicht"
+					PPFVersorger.LOGGER.warning("Parameterdatensatz fÃ¼r die formale" + " Plausibilisierung konnte nicht"
 							+ " ausgelesen werden", e);
 					fehler = true;
 				}
@@ -265,7 +265,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 
 		if (plBeschreibungen == null) {
 			PPFVersorger.LOGGER
-			.finest("Es wurden noch keine Parameter" + " für die formale Plausibilisierung empfangen");
+			.finest("Es wurden noch keine Parameter" + " fÃ¼r die formale Plausibilisierung empfangen");
 		} else if ((resultat != null) && resultat.hasData() && (resultat.getData() != null)) {
 			final Collection<PPFAttributSpezifikation> attSpezifikationen = this.plBeschreibungen
 					.getAttributSpezifikationenFuer(resultat);
@@ -284,7 +284,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 				.finest("ResultData " + resultat + " ist nicht zur formalen Plausibilisierung vorgesehen.");
 			}
 		} else {
-			PPFVersorger.LOGGER.finest("Das formal zu prüfende Datum" + " enthält keine sinnvollen Daten: "
+			PPFVersorger.LOGGER.finest("Das formal zu prÃ¼fende Datum" + " enthÃ¤lt keine sinnvollen Daten: "
 					+ (resultat == null ? DUAKonstanten.NULL : resultat));
 		}
 
@@ -292,17 +292,17 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 	}
 
 	/**
-	 * Führt die formale Plausibilisierung für ein bestimmtes Attribut innerhalb
-	 * eines Datensatzes durch und gibt für dieses Attribut plausibilisierten
-	 * Datensatz zurück.
+	 * FÃ¼hrt die formale Plausibilisierung fÃ¼r ein bestimmtes Attribut innerhalb
+	 * eines Datensatzes durch und gibt fÃ¼r dieses Attribut plausibilisierten
+	 * Datensatz zurÃ¼ck.
 	 *
 	 * @param datum
 	 *            der Datensatz
 	 * @param attSpez
 	 *            die Spezifikation des Attributs und die Parameter der formalen
 	 *            Plausibilisierung desselben
-	 * @return für dieses Attribut plausibilisierten Datensatz (<b>so dieser
-	 *         verändert werden musste</b>), oder <code>null</code> sonst
+	 * @return fÃ¼r dieses Attribut plausibilisierten Datensatz (<b>so dieser
+	 *         verÃ¤ndert werden musste</b>), oder <code>null</code> sonst
 	 *
 	 */
 	private Data plausibilisiereAttribut(final Data datum, final PPFAttributSpezifikation attSpez) {
@@ -366,13 +366,13 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 					}
 
 					/**
-					 * Veränderung des Rückgabedatums
+					 * VerÃ¤nderung des RÃ¼ckgabedatums
 					 */
 					ergebnis = dummy;
 				}
 			} else {
 				PPFVersorger.LOGGER.warning(
-						"Für Datum " + datum + " ist die Attributspezifikation " + "unvollständig: " + attSpez);
+						"FÃ¼r Datum " + datum + " ist die Attributspezifikation " + "unvollstÃ¤ndig: " + attSpez);
 			}
 		}
 
@@ -380,7 +380,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 	}
 
 	/**
-	 * Fügt diesem Element einen Listener hinzu.
+	 * FÃ¼gt diesem Element einen Listener hinzu.
 	 *
 	 * @param listener
 	 *            der neue Listener
@@ -419,7 +419,7 @@ public final class PPFVersorger implements IPPFVersorger, ClientReceiverInterfac
 	}
 
 	/**
-	 * Setzt den Wert eines bestimmten Status-Flags (MIN/MAX) für ein bistimmtes
+	 * Setzt den Wert eines bestimmten Status-Flags (MIN/MAX) fÃ¼r ein bistimmtes
 	 * Attribut innerhalb einer bestimmten Attributgruppe. (So dieser vorhanden
 	 * ist!)
 	 *

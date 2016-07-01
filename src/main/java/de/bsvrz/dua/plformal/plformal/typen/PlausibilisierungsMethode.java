@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -32,9 +32,9 @@ import java.util.Map;
 import de.bsvrz.sys.funclib.bitctrl.daf.AbstractDavZustand;
 
 /**
- * Über diese Klasse werden alle im DAV-Enumerationstyp
- * <code>att.optionenPlausibilitätsPrüfungFormalGlobal</code> beschriebenen
- * Werte zur Verfügung gestellt.
+ * Ãœber diese Klasse werden alle im DAV-Enumerationstyp
+ * <code>att.optionenPlausibilitÃ¤tsPrÃ¼fungFormalGlobal</code> beschriebenen
+ * Werte zur VerfÃ¼gung gestellt.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
@@ -46,35 +46,35 @@ public final class PlausibilisierungsMethode extends AbstractDavZustand {
 	private static Map<Integer, PlausibilisierungsMethode> werteBereich = new HashMap<Integer, PlausibilisierungsMethode>();
 
 	/**
-	 * Wertebereichsprüfung wird NICHT durchgeführt. Wert wird nicht verändert,
+	 * WertebereichsprÃ¼fung wird NICHT durchgefÃ¼hrt. Wert wird nicht verÃ¤ndert,
 	 * es werden keine Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = new PlausibilisierungsMethode("Keine Prüfung", 0);
+	public static final PlausibilisierungsMethode KEINE_PRUEFUNG = new PlausibilisierungsMethode("Keine PrÃ¼fung", 0);
 
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Fehlerhafte Werte werden nicht
-	 * verändert, es werden nur die Statusflags gesetzt
+	 * WertebereichsprÃ¼fung wird durchgefÃ¼hrt. Fehlerhafte Werte werden nicht
+	 * verÃ¤ndert, es werden nur die Statusflags gesetzt
 	 */
-	public static final PlausibilisierungsMethode NUR_PRUEFUNG = new PlausibilisierungsMethode("NurPrüfung", 1);
+	public static final PlausibilisierungsMethode NUR_PRUEFUNG = new PlausibilisierungsMethode("NurPrÃ¼fung", 1);
 
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunter- bzw.
-	 * überschreitung wird der Wert auf den parametrierten Min- bzw. /Max-Wert
+	 * WertebereichsprÃ¼fung wird durchgefÃ¼hrt. Bei Bereichsunter- bzw.
+	 * Ã¼berschreitung wird der Wert auf den parametrierten Min- bzw. /Max-Wert
 	 * korrigiert und die Statusflags gesetzt
 	 */
 	public static final PlausibilisierungsMethode SETZE_MIN_MAX = new PlausibilisierungsMethode("Setze MinMax", 2);
 
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsunterschreitung wird
+	 * WertebereichsprÃ¼fung wird durchgefÃ¼hrt. Bei Bereichsunterschreitung wird
 	 * der Wert auf den parametrierten Min-Wert korrigiert und die Statusflags
-	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
+	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrÃ¼fen"
 	 */
 	public static final PlausibilisierungsMethode SETZE_MIN = new PlausibilisierungsMethode("Setze Min", 3);
 
 	/**
-	 * Wertebereichsprüfung wird durchgeführt. Bei Bereichsüberschreitung wird
+	 * WertebereichsprÃ¼fung wird durchgefÃ¼hrt. Bei BereichsÃ¼berschreitung wird
 	 * der Wert auf den parametrierten Max-Wert korrigiert und die Statusflags
-	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrüfen"
+	 * gesetzt, ansonsten Verhalten wie bei Option "NurPrÃ¼fen"
 	 */
 	public static final PlausibilisierungsMethode SETZE_MAX = new PlausibilisierungsMethode("Setze Max", 4);
 
@@ -92,11 +92,11 @@ public final class PlausibilisierungsMethode extends AbstractDavZustand {
 	}
 
 	/**
-	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * Erfragt den Wert dieses DAV-Enumerationstypen mit dem Ã¼bergebenen Code.
 	 *
 	 * @param code
 	 *            der Code des Enumerations-Wertes
-	 * @return den Wert dieses DAV-Enumerationstypen mit dem übergebenen Code.
+	 * @return den Wert dieses DAV-Enumerationstypen mit dem Ã¼bergebenen Code.
 	 */
 	public static PlausibilisierungsMethode getZustand(final int code) {
 		return PlausibilisierungsMethode.werteBereich.get(code);

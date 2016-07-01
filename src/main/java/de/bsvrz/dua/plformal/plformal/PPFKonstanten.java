@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -27,26 +27,26 @@
 package de.bsvrz.dua.plformal.plformal;
 
 /**
- * Konstanten, die für die Pl-Prüfung formal benötigt werden.
+ * Konstanten, die fÃ¼r die Pl-PrÃ¼fung formal benÃ¶tigt werden.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
 public final class PPFKonstanten {
 
 	/**
-	 * Pid <code>typ.plausibilitätsPrüfungFormal</code>.
+	 * Pid <code>typ.plausibilitÃ¤tsPrÃ¼fungFormal</code>.
 	 */
-	public static final String TYP = "typ.plausibilitätsPrüfungFormal";
+	public static final String TYP = "typ.plausibilitÃ¤tsPrÃ¼fungFormal";
 
 	/**
-	 * Pid <code>atg.plausibilitätsPrüfungFormal</code>.
+	 * Pid <code>atg.plausibilitÃ¤tsPrÃ¼fungFormal</code>.
 	 */
-	public static final String ATG = "atg.plausibilitätsPrüfungFormal";
+	public static final String ATG = "atg.plausibilitÃ¤tsPrÃ¼fungFormal";
 
 	/**
-	 * Name <code>ParameterSatzPlausibilitätsPrüfungFormal</code>.
+	 * Name <code>ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal</code>.
 	 */
-	public static final String ATL_PARA_SATZ = "ParameterSatzPlausibilitätsPrüfungFormal";
+	public static final String ATL_PARA_SATZ = "ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal";
 
 	/**
 	 * Name <code>Attributgruppe</code>.
@@ -106,7 +106,7 @@ public final class PPFKonstanten {
 	/**
 	 * Attribut-Pfad <code>Status.MessWertErsetzung.Implausibel</code>.
 	 */
-	public static final String ATT_GUETE = "Güte.Index";
+	public static final String ATT_GUETE = "GÃ¼te.Index";
 
 	/**
 	 * Standardkonstruktor.

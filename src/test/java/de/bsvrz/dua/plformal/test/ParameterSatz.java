@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -29,9 +29,9 @@ package de.bsvrz.dua.plformal.test;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 
 /**
- * Hilfsklasse für eigentlichen Test <code>PlPruefungFormalTest</code>
+ * Hilfsklasse fÃ¼r eigentlichen Test <code>PlPruefungFormalTest</code>
  *
- * Klasse für die Parametersätze, die zur formalen Prüfung der Testobjekte
+ * Klasse fÃ¼r die ParametersÃ¤tze, die zur formalen PrÃ¼fung der Testobjekte
  * herangezogen werden.
  *
  * @author BitCtrl Systems GmbH, Thierfelder
@@ -44,12 +44,12 @@ public class ParameterSatz {
 	public SystemObject obj;
 
 	/**
-	 * Test-Intervall für Ganzzahl-Attribut.
+	 * Test-Intervall fÃ¼r Ganzzahl-Attribut.
 	 */
 	public long min1, max1;
 
 	/**
-	 * Test-Intervall für Kommazahl-Attribut.
+	 * Test-Intervall fÃ¼r Kommazahl-Attribut.
 	 */
 	public long min2, max2;
 
@@ -59,13 +59,13 @@ public class ParameterSatz {
 	 * @param obj
 	 *            das Testobjekt
 	 * @param min1
-	 *            Test-Intervallanfang für Ganzzahl-Attribut
+	 *            Test-Intervallanfang fÃ¼r Ganzzahl-Attribut
 	 * @param max1
-	 *            Test-Intervallende für Ganzzahl-Attribut
+	 *            Test-Intervallende fÃ¼r Ganzzahl-Attribut
 	 * @param min2
-	 *            Test-Intervallanfang für Kommazahl-Attribut
+	 *            Test-Intervallanfang fÃ¼r Kommazahl-Attribut
 	 * @param max2
-	 *            Test-Intervallende für Kommazahl-Attribut
+	 *            Test-Intervallende fÃ¼r Kommazahl-Attribut
 	 */
 	public ParameterSatz(final SystemObject obj, final long min1, final long max1, final long min2, final long max2) {
 		this.obj = obj;

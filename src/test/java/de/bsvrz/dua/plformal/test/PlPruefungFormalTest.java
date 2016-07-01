@@ -1,5 +1,5 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
+ * Segment 4 DatenÃ¼bernahme und Aufbereitung (DUA), SWE 4.1 PlausibilitÃ¤tsprÃ¼fung formal
  * Copyright (C) 2007-2015 BitCtrl Systems GmbH
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,7 +18,7 @@
  *
  * Contact Information:<br>
  * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
+ * WeiÃŸenfelser StraÃŸe 67<br>
  * 04229 Leipzig<br>
  * Phone: +49 341-490670<br>
  * mailto: info@bitctrl.de
@@ -55,19 +55,19 @@ import de.bsvrz.sys.funclib.bitctrl.dua.DUAKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAUtensilien;
 
 /**
- * Diese Applikation testet die SWE 4.1 (PL-Prüfung formal) nach den Vorgaben
- * der Prüfspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0) bzw.
- * Änderungsantrag (PID: AeA_SWE4.1_VRZ3_Nr001)
+ * Diese Applikation testet die SWE 4.1 (PL-PrÃ¼fung formal) nach den Vorgaben
+ * der PrÃ¼fspezifikation (PID: QS-02.04.00.00.00-PrSpez-2.0) bzw.
+ * Ã„nderungsantrag (PID: AeA_SWE4.1_VRZ3_Nr001)
  *
  * @author BitCtrl Systems GmbH, Thierfelder
  */
-@Ignore("Datenverteilerverbindung prüfen")
+@Ignore("Datenverteilerverbindung prÃ¼fen")
 public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiverInterface {
 
 	/**
 	 * Kumulation der verschiedenen Kennungen in einen Wert. Da die Kennungen
 	 * nach der Plausibilisierung nicht als ein Wert sondern als drei (boolsche)
-	 * Werte zur Verfügung stehen muss hier eine Übersetzung dieser Werte
+	 * Werte zur VerfÃ¼gung stehen muss hier eine Ãœbersetzung dieser Werte
 	 * vorgenommen werden. Dabei gilt:
 	 *
 	 * kennung[0] = Attribut --&gt; Status.PlFormal.WertMin kennung[1] =
@@ -95,17 +95,17 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	/**
 	 * Pid von TestObj1.
 	 */
-	private static final String OBJ1_PID = "objekt1.testPlPrüfungFormal";
+	private static final String OBJ1_PID = "objekt1.testPlPrÃ¼fungFormal";
 
 	/**
 	 * Pid von TestObj2.
 	 */
-	private static final String OBJ2_PID = "objekt2.testPlPrüfungFormal";
+	private static final String OBJ2_PID = "objekt2.testPlPrÃ¼fungFormal";
 
 	/**
 	 * Pid von Test-Atg.
 	 */
-	private static final String ATG_PID = "atg.testPlPrüfungFormal";
+	private static final String ATG_PID = "atg.testPlPrÃ¼fungFormal";
 
 	/**
 	 * Pid von Test-Empfangs-Aspekt.
@@ -120,7 +120,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	/**
 	 * Pid von Test-Objekt-Typ.
 	 */
-	private static final String TYP = "typ.testPlPrüfungFormal";
+	private static final String TYP = "typ.testPlPrÃ¼fungFormal";
 
 	/**
 	 * Verbindung zum Datenverteiler.
@@ -138,32 +138,32 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	private SystemObject obj2;
 
 	/**
-	 * Datenbeschreibung für zu sendende Daten.
+	 * Datenbeschreibung fÃ¼r zu sendende Daten.
 	 */
 	private DataDescription ddAusgang;
 
 	/**
-	 * Datenbeschreibung für zu empfangene Daten.
+	 * Datenbeschreibung fÃ¼r zu empfangene Daten.
 	 */
 	private DataDescription ddEingang;
 
 	/**
-	 * Parameter der Pl-Prüfung (Vorgabe).
+	 * Parameter der Pl-PrÃ¼fung (Vorgabe).
 	 */
 	private DataDescription ddParamVor;
 
 	/**
-	 * Parameter der Pl-Prüfung (Soll).
+	 * Parameter der Pl-PrÃ¼fung (Soll).
 	 */
 	private DataDescription ddParamSoll;
 
 	/**
-	 * Testdatensätze.
+	 * TestdatensÃ¤tze.
 	 */
 	private RohdatenSatz[] testDatenSaetze;
 
 	/**
-	 * Durchläufe.
+	 * DurchlÃ¤ufe.
 	 */
 	private Durchlauf[] durchlaeufe;
 
@@ -193,7 +193,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	private ParameterSatz[] parameter;
 
 	/**
-	 * Das Objekt der PL-Prüfung formal.
+	 * Das Objekt der PL-PrÃ¼fung formal.
 	 */
 	private SystemObject ppfObjekt;
 
@@ -244,10 +244,10 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		atgData.getItem("Urlasser").getTextValue("Veranlasser").setText("");
 
 		atgData.getArray("ParameterSatz").setLength(1);
-		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE").setText("SWE_PL_Prüfung_formal");
+		atgData.getArray("ParameterSatz").getItem(0).getUnscaledValue("SWE").setText("SWE_PL_PrÃ¼fung_formal");
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
-				.getUnscaledValue("ModulTyp").setText("PlPrüfungFormal");
+				.getUnscaledValue("ModulTyp").setText("PlPrÃ¼fungFormal");
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
 				.getReferenceValue("PublikationsAspekt")
 				.setSystemObject(dav1.getDataModel().getAspect("asp.testEingang"));
@@ -255,12 +255,12 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 				.getReferenceArray("Objekt").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
 				.getReferenceArray("Objekt").getReferenceValue(0)
-				.setSystemObject(dav1.getDataModel().getType("typ.testPlPrüfungFormal"));
+				.setSystemObject(dav1.getDataModel().getType("typ.testPlPrÃ¼fungFormal"));
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
 				.getReferenceArray("AttributGruppe").setLength(1);
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
 				.getReferenceArray("AttributGruppe").getReferenceValue(0)
-				.setSystemObject(dav1.getDataModel().getObject("atg.testPlPrüfungFormal"));
+				.setSystemObject(dav1.getDataModel().getObject("atg.testPlPrÃ¼fungFormal"));
 		atgData.getArray("ParameterSatz").getItem(0).getArray("PublikationsZuordnung").getItem(0)
 				.getUnscaledValue("Publizieren").set(DUAKonstanten.JA);
 
@@ -328,7 +328,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		}
 
 		/**
-		 * Testdatensätze wie in Tabelle 5-3 (bzw. Änderungsantrag
+		 * TestdatensÃ¤tze wie in Tabelle 5-3 (bzw. Ã„nderungsantrag
 		 * AeA_SWE4.1_VRZ3_Nr001)
 		 */
 		this.testDatenSaetze = new RohdatenSatz[] { new RohdatenSatz(obj1, -4, -2.00000901),
@@ -337,14 +337,14 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 				new RohdatenSatz(obj1, 5, 67), new RohdatenSatz(obj2, 5, 67), };
 
 		/**
-		 * Testparameter wie in Tabelle 5-2 (bzw. Änderungsantrag
+		 * Testparameter wie in Tabelle 5-2 (bzw. Ã„nderungsantrag
 		 * AeA_SWE4.1_VRZ3_Nr001)
 		 */
 		this.parameter = new ParameterSatz[] { new ParameterSatz(this.obj1, -3, 17, -2, 73),
 				new ParameterSatz(this.obj2, -251, -2, -2, 63) };
 
 		/**
-		 * Durchläufe wie in Tabelle 5-4
+		 * DurchlÃ¤ufe wie in Tabelle 5-4
 		 */
 		this.durchlaeufe = new Durchlauf[] {
 				new Durchlauf(PlausibilisierungsMethode.KEINE_PRUEFUNG.getCode(),
@@ -422,7 +422,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	}
 
 	/**
-	 * Alle Testfälle durchführen und Auswertung anzeigen.
+	 * Alle TestfÃ¤lle durchfÃ¼hren und Auswertung anzeigen.
 	 */
 	@Test
 	public void testeAlles() {
@@ -444,21 +444,21 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	}
 
 	/**
-	 * Führt einen Testlauf durch und produziert eine Ergebniszeile analog der
+	 * FÃ¼hrt einen Testlauf durch und produziert eine Ergebniszeile analog der
 	 * Tabelle 5-5.
 	 *
 	 * @param dl
 	 *            ein Durchlauf
 	 * @param ds
 	 *            ein Rohdatensatz
-	 * @return das Ergebnis der Prüfung
+	 * @return das Ergebnis der PrÃ¼fung
 	 */
 	private TestErgebnis testLauf(final Durchlauf dl, final RohdatenSatz ds) {
 		/**
 		 * Parameter setzen
 		 */
 		final Data data = this.dav.createData(this.dav.getDataModel().getAttributeGroup(PPFKonstanten.ATG));
-		final Data.Array ps = data.getItem("ParameterSatzPlausibilitätsPrüfungFormal").asArray();
+		final Data.Array ps = data.getItem("ParameterSatzPlausibilitÃ¤tsPrÃ¼fungFormal").asArray();
 		ps.setLength(2);
 
 		final Data ps0 = ps.getItem(0);
@@ -504,10 +504,10 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		attSpez4.getUnscaledValue("Optionen").set(dl.testAtt2);
 		final ResultData parameter1 = new ResultData(this.ppfObjekt, this.ddParamVor, System.currentTimeMillis(), data);
 
-		System.out.println("Setze PL-Parameter für " + this.parameter[0]);
-		System.out.println("Setze PL-Parameter für " + this.parameter[1]);
-		System.out.println("Methode für Obj1: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt1)
-				+ ", Methode für Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
+		System.out.println("Setze PL-Parameter fÃ¼r " + this.parameter[0]);
+		System.out.println("Setze PL-Parameter fÃ¼r " + this.parameter[1]);
+		System.out.println("Methode fÃ¼r Obj1: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt1)
+				+ ", Methode fÃ¼r Obj2: " + PlausibilisierungsMethode.getZustand((int) dl.testAtt2));
 
 		long letzteZeit = paraZeit;
 		try {
@@ -517,7 +517,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		}
 
 		/**
-		 * Warten bis die Parameter über den Datenverteiler angekommen ist
+		 * Warten bis die Parameter Ã¼ber den Datenverteiler angekommen ist
 		 */
 		int timeout = 100;
 		while (this.paraZeit <= letzteZeit) {
@@ -527,7 +527,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 			try {
 				Thread.sleep(50L);
 			} catch (final InterruptedException ex) {
-				// wird vernachlässigt
+				// wird vernachlÃ¤ssigt
 			}
 		}
 
@@ -537,7 +537,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 		sendeDatum(ds.obj, ds.att1, ds.att2);
 
 		/**
-		 * Warten bis das Ergebnis über den Datenverteiler angekommen ist
+		 * Warten bis das Ergebnis Ã¼ber den Datenverteiler angekommen ist
 		 */
 		timeout = 100;
 		while (this.ergebnisZeit <= letzteZeit) {
@@ -547,7 +547,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 			try {
 				Thread.sleep(50L);
 			} catch (final InterruptedException ex) {
-				// wird vernachlässigt
+				// wird vernachlÃ¤ssigt
 			}
 		}
 
@@ -555,7 +555,7 @@ public class PlPruefungFormalTest implements ClientSenderInterface, ClientReceiv
 	}
 
 	/**
-	 * Sendet ein Datum für ein bestimmtes Objekt an den Datenverteiler.
+	 * Sendet ein Datum fÃ¼r ein bestimmtes Objekt an den Datenverteiler.
 	 *
 	 * @param obj
 	 *            Das Objekt

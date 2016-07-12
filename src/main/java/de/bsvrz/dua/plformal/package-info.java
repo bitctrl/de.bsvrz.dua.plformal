@@ -1,6 +1,5 @@
 /*
  * Segment Datenübernahme und Aufbereitung (DUA), SWE PL-Prüfung formal
- * Copyright (C) 2007 BitCtrl Systems GmbH 
  * Copyright 2016 by Kappich Systemberatung Aachen
  * 
  * This file is part of de.bsvrz.dua.plformal.
@@ -27,9 +26,6 @@
  */
 
 /**
- * Klassen für die Implementierung des Moduls
- * Pl-Prüfung formal
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE PL-Prüfung formal
  */
-
-package de.bsvrz.dua.plformal.plformal;
-
+package de.bsvrz.dua.plformal;

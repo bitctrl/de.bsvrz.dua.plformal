@@ -1,216 +1,93 @@
 /*
- * Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Plausibilitätsprüfung formal
- * Copyright (C) 2007-2015 BitCtrl Systems GmbH
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- * Contact Information:<br>
- * BitCtrl Systems GmbH<br>
- * Weißenfelser Straße 67<br>
- * 04229 Leipzig<br>
- * Phone: +49 341-490670<br>
- * mailto: info@bitctrl.de
+ * Segment Datenübernahme und Aufbereitung (DUA), SWE PL-Prüfung formal
+ * Copyright (C) 2007 BitCtrl Systems GmbH 
+ * Copyright 2016 by Kappich Systemberatung Aachen
+ * 
+ * This file is part of de.bsvrz.dua.plformal.
+ * 
+ * de.bsvrz.dua.plformal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * de.bsvrz.dua.plformal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with de.bsvrz.dua.plformal.  If not, see <http://www.gnu.org/licenses/>.
+
+ * Contact Information:
+ * Kappich Systemberatung
+ * Martin-Luther-Straße 14
+ * 52062 Aachen, Germany
+ * phone: +49 241 4090 436 
+ * mail: <info@kappich.de>
  */
 
 package de.bsvrz.dua.plformal.plformal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import de.bsvrz.dav.daf.main.Data;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorger;
-import de.bsvrz.dua.plformal.plformal.schnittstellen.IPPFVersorgerListener;
 import de.bsvrz.sys.funclib.bitctrl.dua.DUAInitialisierungsException;
 import de.bsvrz.sys.funclib.bitctrl.dua.adapter.AbstraktBearbeitungsKnotenAdapter;
-import de.bsvrz.sys.funclib.bitctrl.dua.av.DAVObjektAnmeldung;
-import de.bsvrz.sys.funclib.bitctrl.dua.dfs.DFSKonstanten;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerung;
-import de.bsvrz.sys.funclib.bitctrl.dua.dfs.schnittstellen.IDatenFlussSteuerungFuerModul;
 import de.bsvrz.sys.funclib.bitctrl.dua.dfs.typen.ModulTyp;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IStandardAspekte;
 import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
-import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltungMitGuete;
-import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Implementierung des Moduls PL-Prüfung formal.
- *
+ * Implementierung des Moduls PL-Prüfung formal. Es handelt sich hier um eine Basis-Implementierung, die die Daten nur an
+ * den nächsten Knoten weiterleitet.
+ * 
  * @author BitCtrl Systems GmbH, Thierfelder
+ * 
+ * @version $Id$
  */
-public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter implements IPPFVersorgerListener {
-
-	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
-	 * die Parameter der formalen Plausibilisierung.
-	 */
-	private IPPFVersorger ppfParameter;
-
-	/**
-	 * Parameter zur Datenflusssteuerung für diese SWE und dieses Modul.
-	 */
-	private IDatenFlussSteuerungFuerModul iDfsMod = DFSKonstanten.STANDARD;
-
-	/**
-	 * Mapt jedes hier betrachtete Objekt auf seinen aktuellen Zustanz.
-	 * <code>keine Daten</code>
-	 */
-	private final Map<SystemObject, Boolean> keineDaten = new HashMap<SystemObject, Boolean>();
+public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter {
 
 	/**
 	 * Standardkonstruktor.
-	 *
+	 * 
 	 * @param stdAspekte
 	 *            Informationen zu den Standardpublikationsaspekten für diese
 	 *            Instanz des Moduls Pl-Prüfung formal
 	 */
 	public PlPruefungFormal(final IStandardAspekte stdAspekte) {
 		if (stdAspekte != null) {
-			setStandardAspekte(stdAspekte);
+			this.standardAspekte = stdAspekte;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void initialisiere(final IVerwaltung dieVerwaltung) throws DUAInitialisierungsException {
+	public void initialisiere(IVerwaltung dieVerwaltung)
+			throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
-		PPFVersorger.getInstanz((IVerwaltungMitGuete) getVerwaltung()).addListener(this);
-		this.aktualisierePublikationIntern();
 	}
 
-	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public ModulTyp getModulTyp() {
 		return ModulTyp.PL_PRUEFUNG_FORMAL;
 	}
 
-	@Override
-	public void aktualisierePublikation(final IDatenFlussSteuerung iDfs) {
-		this.iDfsMod = iDfs.getDFSFuerModul(getVerwaltung().getSWETyp(), this.getModulTyp());
-		aktualisierePublikationIntern();
-	}
-
-	@Override
-	public void aktualisiereParameter(final IPPFVersorger parameter) {
-		ppfParameter = parameter;
-		this.aktualisierePublikationIntern();
+	/**
+	 * {@inheritDoc}
+	 */
+	public void aktualisierePublikation(IDatenFlussSteuerung dfs) {
+		// hier wird nicht publiziert
 	}
 
 	/**
-	 * Diese Methode verändert die Anmeldungen für die Publikation der
-	 * plausibilisierten Daten.<br>
-	 * Sie wird nur innerhalb dieses Moduls benötigt, da die Menge der
-	 * betrachteten Objekte nicht (wie bei anderen Modulen der DUA) statisch
-	 * ist, sondern sich mit der Parametrierung der formalen
-	 * Plausibilitätsprüfung ändert.
+	 * {@inheritDoc}.
 	 */
-	private void aktualisierePublikationIntern() {
-		if (isPublizieren()) {
-			final Collection<SystemObject> objektFilter = new ArrayList<>();
-
-			if (this.ppfParameter != null) {
-				objektFilter.addAll(ppfParameter.getBetrachteteObjekte());
-			}
-
-			Collection<DAVObjektAnmeldung> anmeldungenStd = new ArrayList<DAVObjektAnmeldung>();
-
-			if (getStandardAspekte() != null) {
-				anmeldungenStd = getStandardAspekte().getStandardAnmeldungen(objektFilter.toArray(new SystemObject[objektFilter.size()]));
-			}
-
-			final Collection<DAVObjektAnmeldung> anmeldungen = this.iDfsMod.getDatenAnmeldungen(objektFilter.toArray(new SystemObject[objektFilter.size()]),
-					anmeldungenStd);
-
-			synchronized (this) {
-				getPublikationsAnmeldungen().modifiziereObjektAnmeldung(anmeldungen);
-			}
+	public void aktualisiereDaten(ResultData[] resultate) {
+		if (this.knoten != null) {
+			this.knoten.aktualisiereDaten(resultate);
 		}
 	}
-
-	@Override
-	public void aktualisiereDaten(final ResultData[] resultate) {
-		if (this.ppfParameter == null) {
-			PlPruefungFormal.LOGGER.fine("Es wurden noch keine" + " Plausibilisierungsparameter empfangen");
-			if (getKnoten() != null) {
-				PlPruefungFormal.LOGGER.fine("Die Datenwerden nur" + " weitergereicht an: " + getKnoten());
-				getKnoten().aktualisiereDaten(resultate);
-			}
-		} else if ((resultate != null) && (resultate.length > 0)) {
-			final Collection<ResultData> weiterzuleitendeResultate = new ArrayList<ResultData>();
-
-			for (final ResultData resultat : resultate) {
-
-				if (resultat.getData() != null) {
-					final Data pData = this.ppfParameter.plausibilisiere(resultat);
-					if (pData != null) {
-						final ResultData ersetztesResultat = new ResultData(resultat.getObject(),
-								resultat.getDataDescription(), resultat.getDataTime(), pData);
-						weiterzuleitendeResultate.add(ersetztesResultat);
-
-						if (isPublizieren()) {
-							final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, pData,
-									getStandardAspekte().getStandardAspekt(resultat));
-							if (publikationsDatum != null) {
-								this.sendeSinnvoll(publikationsDatum);
-							}
-						}
-					} else {
-						weiterzuleitendeResultate.add(resultat);
-					}
-				} else {
-					weiterzuleitendeResultate.add(resultat);
-
-					if (isPublizieren()) {
-						final ResultData publikationsDatum = iDfsMod.getPublikationsDatum(resultat, null,
-								getStandardAspekte().getStandardAspekt(resultat));
-						if (publikationsDatum != null) {
-							this.sendeSinnvoll(publikationsDatum);
-						}
-					}
-				}
-			}
-
-			/**
-			 * Weiterreichen der Daten an den nächsten Bearbeitungsknoten
-			 */
-			if (getKnoten() != null) {
-				getKnoten().aktualisiereDaten(weiterzuleitendeResultate.toArray(new ResultData[0]));
-			}
-		} else {
-			PlPruefungFormal.LOGGER.fine("Es wurden keine sinnvollen Daten empfangen");
-		}
-	}
-
-	/**
-	 * Sendet das übergebene Datum (wenn nötig).
-	 *
-	 * @param resultat
-	 *            ein zu publizierendes DAV-Datum
-	 */
-	private void sendeSinnvoll(final ResultData resultat) {
-		if (resultat.getData() == null) {
-			final Boolean keineDaten1 = this.keineDaten.get(resultat.getObject());
-			if ((keineDaten1 != null) && !keineDaten1) {
-				getPublikationsAnmeldungen().sende(resultat);
-			}
-		} else {
-			getPublikationsAnmeldungen().sende(resultat);
-		}
-		this.keineDaten.put(resultat.getObject(), resultat.getData() == null);
-	}
-
 }

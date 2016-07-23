@@ -1,11 +1,12 @@
-********************************************************************************
-*  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal  *
-********************************************************************************
+[![Build Status](https://travis-ci.org/bitctrl/de.bsvrz.dua.plformal.svg?branch=develop)](https://travis-ci.org/bitctrl/de.bsvrz.dua.plformal)
+[![Build Status](https://api.bintray.com/packages/bitctrl/maven/de.bsvrz.dua.plformal/images/download.svg)](https://bintray.com/bitctrl/maven/de.bsvrz.dua.plformal)
+
+
+#  Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal  
 
 Version: ${version}
 
-Übersicht
-=========
+## Übersicht
 
 Aufgabe der SWE Pl-Prüfung formal ist es, die Werte aller parametrierten
 Attribute nach formalen Kriterien zu überprüfen. Je Attribut müssen dazu
@@ -14,50 +15,58 @@ ermöglicht die SWE Pl-Prüfung formal, alle terminalen numerischen Attribute
 zu überprüfen, die innerhalb einer Datenidentifikation vorkommen können.
 
 
-Versionsgeschichte
-==================
+## Versionsgeschichte
 
-1.5.0
-=====
+### 2.0.0
+
+Release-Datum: 31.05.2016
+
+#### Neue Abhängigkeiten
+Die SWE benötigt nun das Distributionspaket de.bsvrz.sys.funclib.bitctrl.dua in Mindestversion 1.5.0 und de.bsvrz.sys.funclib.bitctrl in Mindestversion 1.4.0.
+
+#### Änderungen
+Folgende Änderungen gegenüber vorhergehenden Versionen wurden durchgeführt:
+
+- Die formale Plausibilitätsprüfung (Anforderung DUA–11) wurde gestrichen, 
+  wodurch die SWE Pl-Prüfung Formal keine Prüfungen mehr durchführen muss, da die formelle Prüfung 
+  der Wertebereiche bereits implizit von der Datenverteilersoftware durchgeführt wird. 
+  Die SWE wurde daher so modifiziert, dass sie als Modul (bzw. Bearbeitungsknoten im Sinne des Softwareentwurfs)
+  alle übergebenen Daten unverändert an den nächsten Bearbeitungsknoten weiterleitet.
+- Der Parameterdatensatz atg.plausibilitätsPrüfungFormal wird nicht mehr ausgewertet.
+- Die SWE kann nicht mehr eigenständig gestartet werden und dient nur noch als Bibliothek.
+  
+### 1.5.0
 - Umstellung auf Java 8 und UTF-8
 
-1.4.1
+### 1.4.1
 - Kompatibilität zu DuA-2.0 hergestellt
 
-1.4.0
+### 1.4.0
 - Umstellung auf Funclib-BitCtrl-Dua
 
-1.3.0
+### 1.3.0
 - Umstellung auf Maven-Build
 
-1.0.0
-
-  - Erste Auslieferung
-
-1.1.0
-
-  - Umpacketierung
-
-1.2.0
-
-  - Anpassung an neue Kernsoftware
-
-
-1.2.1
-
-  - Bash-Startfile hinzu
-  
-1.2.2
- 
-  - Güteanpassung wird jetzt durchgeführt, wenn ein Gütefaktor via -gueteFaktor angegeben wurde
-
-1.2.3
-
+### 1.2.3
   - Sämtliche Konstruktoren DataDescription(atg, asp, sim)
     ersetzt durch DataDescription(atg, asp)
 
-Bemerkungen
-===========
+### 1.2.2
+  - Güteanpassung wird jetzt durchgeführt, wenn ein Gütefaktor via -gueteFaktor angegeben wurde
+
+### 1.2.1
+- Bash-Startfile hinzu
+  
+### 1.2.0
+  - Anpassung an neue Kernsoftware
+
+### 1.1.0
+  - Umpacketierung
+
+### 1.0.0
+  - Erste Auslieferung
+
+## Bemerkungen
 
 - Tests:
 
@@ -106,8 +115,7 @@ Bemerkungen
 	- Informationen, die nur zum Debugging interessant sind 
 
 
-Disclaimer
-==========
+## Disclaimer
 
 Segment 4 Datenübernahme und Aufbereitung (DUA), SWE 4.1 Pl-Prüfung formal
 Copyright (C) 2007 BitCtrl Systems GmbH 
@@ -127,8 +135,7 @@ this program; if not, write to the Free Software Foundation, Inc., 51
 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
-Kontakt
-=======
+## Kontakt
 
 BitCtrl Systems GmbH
 Weißenfelser Straße 67

@@ -41,8 +41,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
  * den nächsten Knoten weiterleitet.
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter {
 
@@ -59,32 +57,20 @@ public class PlPruefungFormal extends AbstraktBearbeitungsKnotenAdapter {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void initialisiere(IVerwaltung dieVerwaltung)
 			throws DUAInitialisierungsException {
 		super.initialisiere(dieVerwaltung);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public ModulTyp getModulTyp() {
 		return ModulTyp.PL_PRUEFUNG_FORMAL;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void aktualisierePublikation(IDatenFlussSteuerung dfs) {
 		// hier wird nicht publiziert
 	}
 
-	/**
-	 * {@inheritDoc}.
-	 */
 	public void aktualisiereDaten(ResultData[] resultate) {
 		if (this.knoten != null) {
 			this.knoten.aktualisiereDaten(resultate);

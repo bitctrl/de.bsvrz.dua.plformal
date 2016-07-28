@@ -39,8 +39,6 @@ import de.bsvrz.sys.funclib.bitctrl.dua.schnittstellen.IVerwaltung;
  * Publikationsaspekt).
  * 
  * @author BitCtrl Systems GmbH, Thierfelder
- * 
- * @version $Id$
  */
 public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 
@@ -55,9 +53,6 @@ public class PPFStandardAspekteVersorger extends StandardAspekteVersorger {
 		super(verwaltung);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void init() throws DUAInitialisierungsException {
 		this.standardAspekte = new StandardAspekteAdapter(

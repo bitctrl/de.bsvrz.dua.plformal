@@ -352,6 +352,7 @@
 							<goal>build-classpath</goal>
 						</goals>
 						<configuration>
+							<fileSeparator>/</fileSeparator>
 							<outputProperty>nonBsvrzClasspath</outputProperty>
 							<prefix>lib</prefix>
 							<includeScope>runtime</includeScope>
